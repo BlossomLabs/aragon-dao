@@ -181,15 +181,15 @@ const ThisVoting = ({ showTag }) => (
 
 const VoteGroups = React.memo(({ openVotes, closedVotes, onSelectVote }) => {
   const voteGroups = [
-    ['Open votes', openVotes],
-    ['Closed votes', closedVotes],
+    ['Open votes', openVotes, openVotes.length],
+    ['Closed votes', closedVotes.slice(0, 20), closedVotes.length],
   ]
 
   return (
     <React.Fragment>
-      {voteGroups.map(([groupName, votes]) =>
+      {voteGroups.map(([groupName, votes, length]) =>
         votes.length ? (
-          <VoteCardGroup title={groupName} count={votes.length} key={groupName}>
+          <VoteCardGroup title={groupName} count={length} key={groupName}>
             {votes.map(vote => (
               <VoteCard key={vote.voteId} vote={vote} onOpen={onSelectVote} />
             ))}
