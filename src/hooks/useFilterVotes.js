@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { startOfDay, endOfDay, isAfter, isBefore } from 'date-fns'
-import { useCurrentApp } from '@aragon/api-react'
+import { useCurrentApp } from '../hooks/shared'
 import { useSettings } from '../vote-settings-manager'
 import {
   VOTE_STATUS_ONGOING,

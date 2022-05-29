@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useAragonApi } from '@aragon/api-react'
+import { useAragonApi } from '../hooks/shared'
 import tokenBalanceOfAbi from '../abi/token-balanceOf.json'
 import tokenBalanceOfAtAbi from '../abi/token-balanceOfAt.json'
 

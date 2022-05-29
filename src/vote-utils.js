@@ -84,12 +84,12 @@ export async function getCanVote(vote, connectedAccount, api) {
     return vote.data.open
   }
 
-  return api.call('canVote', vote.voteId, connectedAccount).toPromise()
+  return api.call('canVote', vote.voteId, connectedAccount)
 }
 
 export async function getCanExecute(vote, api) {
   if (!vote) {
     return false
   }
-  return api.call('canExecute', vote.voteId).toPromise()
+  return api.call('canExecute', vote.voteId)
 }

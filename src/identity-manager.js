@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react'
 import { Subject } from 'rxjs'
-import { useApi } from '@aragon/api-react'
+import { useApi } from './hooks/shared'
 
 const updates$ = new Subject()
 
@@ -17,10 +17,7 @@ const IdentityContext = React.createContext({
 // Resolve a local identity address
 function useResolveLocalIdentity() {
   const api = useApi()
-  return useCallback(
-    address => api.resolveAddressIdentity(address).toPromise(),
-    [api]
-  )
+  return useCallback(address => api.resolveAddressIdentity(address), [api])
 }
 
 // Request a modification of the local identity

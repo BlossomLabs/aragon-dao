@@ -16,7 +16,7 @@ import {
   useTheme,
   Info,
 } from '@aragon/ui'
-import { useAppState, useConnectedAccount, useNetwork } from '@aragon/api-react'
+import { useAppState, useConnectedAccount, useNetwork } from '../hooks/shared'
 import { format } from 'date-fns'
 import DetailedDescription from '../components/DetailedDescription'
 import LocalIdentityBadge from '../components/LocalIdentityBadge/LocalIdentityBadge'
@@ -64,7 +64,7 @@ function VoteDetail({ vote, onBack, onVote, onExecute }) {
     connectedAccountVote === VOTE_YEA || connectedAccountVote === VOTE_NAY
 
   const Keyword = 'Transfer funds to govern executor'
-  
+
   const handleVoteNo = useCallback(() => {
     onVote(voteId, VOTE_NAY)
   }, [onVote, voteId])

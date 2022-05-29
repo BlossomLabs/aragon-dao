@@ -7,7 +7,7 @@ import {
   SyncIndicator,
   useLayout,
 } from '@aragon/ui'
-import { useGuiStyle } from '@aragon/api-react'
+import { useGuiStyle } from './hooks/shared'
 import NewVotePanel from './components/NewVotePanel'
 import useFilterVotes from './hooks/useFilterVotes'
 import useScrollTop from './hooks/useScrollTop'

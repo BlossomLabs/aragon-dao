@@ -1,6 +1,5 @@
-import React, { useCallback, useMemo } from 'react'
-import { AragonApi, useApi, useAppState, usePath } from '@aragon/api-react'
-import appStateReducer from './app-state-reducer'
+import { useCallback, useMemo } from 'react'
+import { useApi, useAppState, usePath } from './hooks/shared'
 import { EMPTY_CALLSCRIPT } from './evmscript-utils'
 import usePanelState from './hooks/usePanelState'
 import useVotes from './hooks/useVotes'

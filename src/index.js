@@ -1,12 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { AragonApi } from '@aragon/api-react'
-import appStateReducer from './app-state-reducer'
+import { AragonProvider } from './hooks/shared/useAppState'
 import App from './App'
 
 ReactDOM.render(
-  <AragonApi reducer={appStateReducer}>
+  <AragonProvider>
     <App />
-  </AragonApi>,
+  </AragonProvider>,
   document.getElementById('root')
 )
