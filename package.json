@@ -48,10 +48,8 @@
   "scripts": {
     "lint": "eslint ./src",
     "test": "jest",
-    "start": "npm run sync-assets && npm run watch:script & parcel serve index.html -p 3001 --out-dir ./dist/",
-    "build": "rm -rf ./dist/ && npm run sync-assets && npm run build:script && parcel build index.html --no-cache --out-dir ./dist/ --public-url \".\"",
-    "build:script": "parcel build src/script.js --out-dir ./dist/",
-    "watch:script": "parcel watch src/script.js --out-dir .dist/ --no-hmr",
+    "start": "npm run sync-assets & parcel serve index.html -p 3000 --out-dir ./dist/",
+    "build": "rm -rf ./dist/ && npm run sync-assets && parcel build index.html --no-cache --out-dir ./dist/ --public-url \".\"",
     "sync-assets": "copy-aragon-ui-assets -n aragon-ui ./dist && cp -pr ./public/ ./dist/",
     "now-build": "npm run build"
   },
