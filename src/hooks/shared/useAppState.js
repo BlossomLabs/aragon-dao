@@ -1,11 +1,13 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import BN from 'bn.js'
 import { HashRouter } from 'react-router-dom'
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  gql,
+} from '@apollo/client'
 import appStateReducer from '../../app-state-reducer'
-
-import { gql } from '@apollo/client';
-import { useEffect, useState } from 'react';
 
 const GET_VOTES = gql`
   query GetDogs {
@@ -19,6 +21,7 @@ const GET_VOTES = gql`
       originalCreator
       metadata
       executed
+      executedAt
       startDate
       snapshotBlock
       supportRequiredPct
@@ -62,11 +65,12 @@ export const AragonProvider = ({ children }) => {
           tokenDecimals: 18, // ?
           tokenSymbol: 'NFTX', // ?
           pctBase: new BN('1000000000000000000'),
-          voteTime: String(1 * 24 * 60 * 60), // ?
+          voteTime: 1 * 24 * 60 * 60 * 1000, // ?
           votes: data.votes.map(vote => ({
             voteId: vote.voteNum,
             data: {
               executed: vote.executed,
+              executionDate: parseInt(vote.executedAt) * 1000,
               description: vote.metadata || 'No description',
               creator: vote.originalCreator,
               script: vote.script,
