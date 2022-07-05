@@ -6,8 +6,8 @@ import Voting from '../votingConnect/Voting'
 export default function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Voting />} />
-      <Route path="/home" element={<Voting />} />
+      <Route exact path="/" element={<Voting />} />
+      <Route path="/voting" element={<Voting />} />
     </Routes>
   )
 }
