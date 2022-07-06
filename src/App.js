@@ -2,7 +2,7 @@ import React from 'react'
 import { HashRouter } from 'react-router-dom'
 import { Main } from '@aragon/ui'
 import { ConnectProvider as Connect } from './providers/Connect'
-import { OrganizationProvider } from './providers/OrganizatioProvider'
+import { OrganizationProvider } from './providers/OrganizationProvider'
 import useGuiStyle from './hooks/shared/useGuiStyle'
 import Router from './routes/Router'
 
