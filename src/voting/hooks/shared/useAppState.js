@@ -14,7 +14,7 @@ const GET_VOTES = gql`
   query GetDogs {
     votes(
       first: 1000
-      where: { appAddress: "0xf20e3d05813ce460d42994d26eb4b7d85381d117" }
+      where: { appAddress: "0x31a990342682c380301991b722624b87db87d1be" }
       orderBy: voteNum
       orderDirection: desc
     ) {
@@ -47,7 +47,7 @@ const AragonContext = createContext()
 export const AragonProvider = ({ children }) => {
   const [appState, setAppState] = useState({})
   const APIURL =
-    'https://api.thegraph.com/subgraphs/name/1hive/aragon-voting-mainnet'
+    'https://api.thegraph.com/subgraphs/name/aragon/aragon-voting-rinkeby'
 
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -98,7 +98,7 @@ export const AragonProvider = ({ children }) => {
       .catch(err => {
         console.log('Error fetching data: ', err)
       })
-  }, [client])
+  }, [appState, client])
 
   return (
     <AragonContext.Provider value={appState}>

@@ -4,10 +4,10 @@ import { Connect } from '@aragon/connect-react'
 function ConnectProvider({ children }) {
   return (
     <Connect
-      location={'rodrigotest.aragonid.eth'} // for testing purpose.
+      location={'0x8ccbeab14b5ac4a431fffc39f4bec4089020a155'} // {'rodrigotest.aragonid.eth'} // for testing purpose.
       connector="thegraph"
       options={{
-        network: 4,
+        network: 100,
       }}
     >
       {children}
