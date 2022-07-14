@@ -1,19 +1,20 @@
-//VER PORQUE CONNECT DISPUTABLE NO TRAE LAS SETTINGS DE LOS VOTOS Y SOLO TRAE DOS SETTINGS
-
-import React, { useContext } from 'react'
-import { createAppHook, useApp } from '@aragon/connect-react'
-import connectVoting from '@aragon/connect-disputable-voting'
-// import BN from 'bn.js'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useConnect } from '@rperez89/connect-react'
+import connectVoting from '@rperez89/connect-disputable-voting'
+import { useMounted } from '../../hooks/shared/useMounted'
+import BN from 'bn.js'
 
 const VotingContext = React.createContext()
-const useVoting = createAppHook(connectVoting)
+// const useVoting = createAppHook(connectVoting)
 
-// const pctBase = new BN('1')
+const pctBase = new BN('1000000000000000000')
+const pctBaseNum = parseInt(pctBase, 10)
+const tokenDecimalsNum = parseInt(18, 10)
+const tokenDecimalsBaseNum = Math.pow(10, tokenDecimalsNum)
 
-const votingReducer = (err, votes = []) => {
-  console.log('REDUCERRRRR ', votes)
-  if (err || !votes) {
-    return
+const reduceVotes = ((votes = []) => {
+  if (!votes) {
+    return []
   }
   const reducedVotes = votes.map(vote => {
     return {
@@ -33,27 +34,57 @@ const votingReducer = (err, votes = []) => {
         executionTargets: [''],
       },
       numData: {
-        minAcceptQuorum: parseInt(vote.minimumAcceptanceQuorumPct, 10) / pctBaseNum,
+        minAcceptQuorum:
+          parseInt(vote.minimumAcceptanceQuorumPct, 10) / pctBaseNum,
         nay: parseInt(vote.nays, 10) / tokenDecimalsBaseNum,
         supportRequired: parseInt(vote.supportRequiredPct, 10) / pctBaseNum,
         votingPower: parseInt(vote.totalPower, 10) / tokenDecimalsBaseNum,
-        yea: parseInt(vote.yeas, 10) / tokenDecimalsBaseNum
+        yea: parseInt(vote.yeas, 10) / tokenDecimalsBaseNum,
       },
     }
   })
-  console.log('reducedVotes ', reducedVotes)
-  return reducedVotes
-}
+
+   return reducedVotes
+})
 
 function VotingProvider({ children }) {
-  const [voting] = useApp('disputable-voting')
+  const [votes, setVotes] = useState([])
+  const mounted = useMounted()
+  const [voting, votingStatus] = useConnect((org) => {
+    return connectVoting(org.onApp('disputable-voting'))
+  })
 
-  const [votes] = useVoting(voting, app => app.onVotes({}, votingReducer), [])
+  const [connectVotes, voteStatus] = useConnect(() => {
+     return voting?.onVotes()
+  }, [voting])
 
-  console.log('votes!! ', votes)
+  useEffect(() => {
+    const reducedVotes = reduceVotes(connectVotes)
+    if(mounted()){
+      setVotes(reducedVotes)
+    }
+  }, [connectVotes])
+
+  console.log('VOTES ', votes)
 
   return (
-    <VotingContext.Provider value={{ votes: votes }}>
+    <VotingContext.Provider
+      value={{
+        isSyncing: false,
+        ready: true,
+        tokenAddress: '0x71850b7e9ee3f13ab46d67167341e4bdc905eef9', // ?
+        tokenDecimals: new BN(18),
+        tokenSymbol: 'HNY', // ?
+        pctBase,
+        voteTime: 432000 * 1000,
+        numData: {
+          pctBase: pctBaseNum,
+          tokenDecimals: tokenDecimalsNum,
+        },
+
+        votes: votes,
+      }}
+    >
       {children}
     </VotingContext.Provider>
   )

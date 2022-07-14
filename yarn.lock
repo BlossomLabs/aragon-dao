@@ -51,68 +51,6 @@
     "@babel/runtime" "^7.1.2"
     rxjs "^6.5.2"
 
-"@aragon/connect-core@^0.8.0-alpha.5", "@aragon/connect-core@^0.8.0-alpha.6":
-  version "0.8.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@aragon/connect-core/-/connect-core-0.8.0-alpha.7.tgz#a831191b3bf41af7330ea852145a5fb85a7b5517"
-  integrity sha512-Xjqm82O7SYddmqfXx34OquFtZDIEsTk/vONjOx7il1zwb4MMoQtzdnrIJSJjmSlPBnINAohUAjSbG4Jcm/nDmw==
-  dependencies:
-    ethers "^5.0.7"
-    radspec "^2.0.0-rc.2"
-
-"@aragon/connect-disputable-voting@0.0.0-beta.12":
-  version "0.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@aragon/connect-disputable-voting/-/connect-disputable-voting-0.0.0-beta.12.tgz#9d465e5d7467b5aff029a24313115c3da988214b"
-  integrity sha512-pp5MbhGUCdG+nCMd2uphtqLw2YFVtjappO+HB7gTXXtwgHxF1mZsJVd5i12sYBImHKIL8uuucbcjaWhCrxq3iw==
-  dependencies:
-    "@aragon/connect-core" "^0.8.0-alpha.5"
-    "@aragon/connect-thegraph" "^0.8.0-alpha.5"
-    graphql-tag "^2.10.3"
-
-"@aragon/connect-ethereum@^0.8.0-alpha.6":
-  version "0.8.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@aragon/connect-ethereum/-/connect-ethereum-0.8.0-alpha.7.tgz#4f9d6792d0a9445a578f59adef0c060cca8e51ec"
-  integrity sha512-mrQUGh6bOHqt+hkWeA26HrjXF1D6sa3C2aqnjJfzA6fBp9aOgiZQyL9bK6VTEtEPLQn1Y4KRSM5rEptlW0RS8w==
-  dependencies:
-    "@aragon/connect-core" "^0.8.0-alpha.6"
-
-"@aragon/connect-react@0.8.0-alpha.7":
-  version "0.8.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@aragon/connect-react/-/connect-react-0.8.0-alpha.7.tgz#f26b399d0d917291021d11f1041811615381d360"
-  integrity sha512-1rix6FZ63UZ7dmEW6r1pWGwdna/ZqkJMSsHwoniGF5xe/qxuUgeygsiMVvoNg0Tjau2ZFZ2Z7UZ2bmangij7Gw==
-  dependencies:
-    "@aragon/connect" "^0.8.0-alpha.6"
-
-"@aragon/connect-thegraph@^0.8.0-alpha.5", "@aragon/connect-thegraph@^0.8.0-alpha.6":
-  version "0.8.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@aragon/connect-thegraph/-/connect-thegraph-0.8.0-alpha.7.tgz#1fdf2e73818ef400794a2a98c6fedca7b4b7c0cb"
-  integrity sha512-kec4CjMyXAPWcUOU+YNpUu4GcIvgSTPlozSuJ50LdfpuaSgDvdjF4BK9g+lrHiBn90Um2T/pAq7vST6uJHBjOw==
-  dependencies:
-    "@aragon/connect-core" "^0.8.0-alpha.6"
-    "@urql/core" "^1.11.7"
-    graphql "^15.0.0"
-    graphql-tag "^2.10.3"
-    isomorphic-unfetch "^3.0.0"
-    isomorphic-ws "^4.0.1"
-    subscriptions-transport-ws "^0.9.16"
-
-"@aragon/connect-voting@0.8.0-alpha.10":
-  version "0.8.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/@aragon/connect-voting/-/connect-voting-0.8.0-alpha.10.tgz#c68ac61c8d8eda3ffff79daa093395ed5edf64eb"
-  integrity sha512-5MsS6Uor7l4TjmN40folnk2moNoGgfPncYsGpawgZyZ3/561MKprPnhAIgJm6/vlWvMLj9dvaGrQmMOoL4a2Vg==
-  dependencies:
-    "@aragon/connect-core" "^0.8.0-alpha.6"
-    "@aragon/connect-thegraph" "^0.8.0-alpha.6"
-    graphql-tag "^2.10.3"
-
-"@aragon/connect@^0.8.0-alpha.6":
-  version "0.8.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@aragon/connect/-/connect-0.8.0-alpha.7.tgz#0f272d100e5e05ca9f57181e61ee179a73f67eb6"
-  integrity sha512-UinSt0KUvtxP4nWPvrayRZJs2GH2Pssz+amToy4CmYglfZ451PDJFWiX2jQ1Ip0ETMl3/lSJE3xB3ZmtcVzg8g==
-  dependencies:
-    "@aragon/connect-core" "^0.8.0-alpha.6"
-    "@aragon/connect-ethereum" "^0.8.0-alpha.6"
-    "@aragon/connect-thegraph" "^0.8.0-alpha.6"
-
 "@aragon/rpc-messenger@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@aragon/rpc-messenger/-/rpc-messenger-2.0.0.tgz#84d621fca88a723dc01db4f67b3936b6387a2c33"
@@ -1712,6 +1650,68 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
+"@rperez89/connect-core@^0.8.0-alpha.6", "@rperez89/connect-core@^0.8.0-alpha.8":
+  version "0.8.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-core/-/connect-core-0.8.0-alpha.8.tgz#838f35f5bc3804674f2324ca3c8acd9b9062c0a4"
+  integrity sha512-zcg39aD32NgMGth+0LU4CNOwhZPbrbFuJhtKHO45GXUWDKML6AADLjI5+K/7GOleuCSQs/CV67y9hAlxq5VDwQ==
+  dependencies:
+    "@rperez89/connect-types" "^0.8.0-alpha.6"
+    ethers "^5.0.7"
+    radspec "^2.0.0-rc.2"
+
+"@rperez89/connect-disputable-voting@^0.8.0-alpha.6":
+  version "0.8.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-disputable-voting/-/connect-disputable-voting-0.8.0-alpha.6.tgz#55ab14b09825a84bb5e8b19ccbcdacc02d9109ec"
+  integrity sha512-YajYCQHftG0OGo6+j7L0gVbf6+Epe4NpRzrrTBs82jFUwn8K1KTM/YqX0iUIWOXS39J07j30CvQYZaHBt3X8Vg==
+  dependencies:
+    "@rperez89/connect-core" "^0.8.0-alpha.6"
+    "@rperez89/connect-thegraph" "^0.8.0-alpha.6"
+    graphql-tag "^2.10.3"
+
+"@rperez89/connect-ethereum@^0.8.0-alpha.7":
+  version "0.8.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-ethereum/-/connect-ethereum-0.8.0-alpha.7.tgz#88e80dd8a977b7602f967cfdd90cdf34b582b5a1"
+  integrity sha512-aj+adbgrVG2aqfWTJYNzwDiy4hxzUn5WwD+iZZ6FjIqahkwZ5MGsR1WQOBOcd4SM+GO3XVdRQ4t8BCcoyUxyog==
+  dependencies:
+    "@rperez89/connect-core" "^0.8.0-alpha.8"
+    "@rperez89/connect-types" "^0.8.0-alpha.6"
+
+"@rperez89/connect-react@^0.8.0-alpha.9":
+  version "0.8.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-react/-/connect-react-0.8.0-alpha.9.tgz#3de752d8500f87bc0067b6936cea15277ec4a446"
+  integrity sha512-tcbjuselycd/97h/5Syk2NErhdwPFz31oD56A56GWE4+fuvf0wv0CFHbnzaBBXEXLorfc1UZJA6qKsUbHmx4Rg==
+  dependencies:
+    "@rperez89/connect" "^0.8.0-alpha.8"
+    "@rperez89/connect-types" "^0.8.0-alpha.6"
+
+"@rperez89/connect-thegraph@^0.8.0-alpha.6":
+  version "0.8.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-thegraph/-/connect-thegraph-0.8.0-alpha.7.tgz#39c0d8a1c75874833177d0385045d7306ca1a76a"
+  integrity sha512-KVIn0Rbgib14hAVEubFk6wLDhyU0gBFZkcfLlfN1exEGMqbRA7DNjV5/nvYsK7CmzGdrroVOSBjwKF2uPchA2g==
+  dependencies:
+    "@rperez89/connect-core" "^0.8.0-alpha.8"
+    "@urql/core" "^1.11.7"
+    graphql "^15.0.0"
+    graphql-tag "^2.10.3"
+    isomorphic-unfetch "^3.0.0"
+    isomorphic-ws "^4.0.1"
+    subscriptions-transport-ws "^0.9.16"
+
+"@rperez89/connect-types@^0.8.0-alpha.6":
+  version "0.8.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-types/-/connect-types-0.8.0-alpha.6.tgz#5482c2816df8e9aab666d43fbb37f1f7550ff33b"
+  integrity sha512-DqDJE76Pgh9Wh+xzxUU8/Lj35gvqmekcaCLkv3sPkGGCf4srZAj5acjSI0PIBocnPOjI0eM0nivImWRUxjRyLw==
+
+"@rperez89/connect@^0.8.0-alpha.8":
+  version "0.8.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect/-/connect-0.8.0-alpha.8.tgz#623110134fc4f11884fd8bf43c72efd304d2ae34"
+  integrity sha512-46l5S31YNAJYmDWaQ59FePEzRbrDCewhmqkGUfsp2yWKuaPhe35AJ+P0CfmIr2qo22D3wkM2sNtgO8Rywv+ITA==
+  dependencies:
+    "@rperez89/connect-core" "^0.8.0-alpha.8"
+    "@rperez89/connect-ethereum" "^0.8.0-alpha.7"
+    "@rperez89/connect-thegraph" "^0.8.0-alpha.6"
+    "@rperez89/connect-types" "^0.8.0-alpha.6"
+
 "@sentry/core@5.30.0":
   version "5.30.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.30.0.tgz#6b203664f69e75106ee8b5a2fe1d717379b331f3"
@@ -1874,9 +1874,9 @@
   integrity sha512-ssE3Vlrys7sdIzs5LOxCzTVMsU7i9oa/IaW92wF32JFb3CVczqOkru2xspuKczHEbG3nvmPY7IFqVmGGHdNbYw==
 
 "@types/node@*":
-  version "18.0.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.3.tgz#463fc47f13ec0688a33aec75d078a0541a447199"
-  integrity sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ==
+  version "18.0.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.4.tgz#48aedbf35efb3af1248e4cd4d792c730290cd5d6"
+  integrity sha512-M0+G6V0Y4YV8cqzHssZpaNCqvYwlCiulmm0PwpNLF55r/+cT8Ol42CHRU1SEaYFH2rTwiiE1aYg/2g2rrtGdPA==
 
 "@types/pbkdf2@^3.0.0":
   version "3.1.0"
@@ -2892,13 +2892,13 @@ browserify-zlib@^0.2.0:
     pako "~1.0.5"
 
 browserslist@^4.0.0, browserslist@^4.1.0, browserslist@^4.20.2, browserslist@^4.21.1:
-  version "4.21.1"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.21.1.tgz#c9b9b0a54c7607e8dc3e01a0d311727188011a00"
-  integrity sha512-Nq8MFCSrnJXSc88yliwlzQe3qNe3VntIjhsArW9IJOEPSHNx23FalwApUVbzAWABLhYJJ7y8AynWI/XM8OdfjQ==
+  version "4.21.2"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.21.2.tgz#59a400757465535954946a400b841ed37e2b4ecf"
+  integrity sha512-MonuOgAtUB46uP5CezYbRaYKBNt2LxP0yX+Pmj4LkcDFGkn9Cbpi83d9sCjwQDErXsIJSzY5oKGDbgOlF/LPAA==
   dependencies:
-    caniuse-lite "^1.0.30001359"
-    electron-to-chromium "^1.4.172"
-    node-releases "^2.0.5"
+    caniuse-lite "^1.0.30001366"
+    electron-to-chromium "^1.4.188"
+    node-releases "^2.0.6"
     update-browserslist-db "^1.0.4"
 
 bs58@^4.0.0:
@@ -3093,10 +3093,10 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001359:
-  version "1.0.30001365"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001365.tgz#72c2c3863b1a545cfd3d9953535bd2ee17568158"
-  integrity sha512-VDQZ8OtpuIPMBA4YYvZXECtXbddMCUFJk1qu8Mqxfm/SZJNSr1cy4IuLCOL7RJ/YASrvJcYg1Zh+UEUQ5m6z8Q==
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001366:
+  version "1.0.30001366"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001366.tgz#c73352c83830a9eaf2dea0ff71fb4b9a4bbaa89c"
+  integrity sha512-yy7XLWCubDobokgzudpkKux8e0UOOnLHE6mlNJBzT3lZJz6s5atSEzjoL+fsCPkI0G8MP5uVdDx1ur/fXEWkZA==
 
 capture-exit@^1.2.0:
   version "1.2.0"
@@ -4126,10 +4126,10 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
-electron-to-chromium@^1.4.172:
-  version "1.4.186"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.186.tgz#a811bba15f0868d3f4164b0f4ede8adc8773831b"
-  integrity sha512-YoVeFrGd/7ROjz4R9uPoND1K/hSRC/xADy9639ZmIZeJSaBnKdYx3I6LMPsY7CXLpK7JFgKQVzeZ/dk2br6Eaw==
+electron-to-chromium@^1.4.188:
+  version "1.4.189"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.189.tgz#4e5b221dc44e09e9dddc9abbc6457857dee7ba25"
+  integrity sha512-dQ6Zn4ll2NofGtxPXaDfY2laIa6NyCQdqXYHdwH90GJQW0LpJJib0ZU/ERtbb0XkBEmUD2eJtagbOie3pdMiPg==
 
 elliptic@6.5.4, elliptic@^6.5.2, elliptic@^6.5.3, elliptic@^6.5.4:
   version "6.5.4"
@@ -7838,7 +7838,7 @@ node-notifier@^5.2.1:
     shellwords "^0.1.1"
     which "^1.3.0"
 
-node-releases@^2.0.5:
+node-releases@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.6.tgz#8a7088c63a55e493845683ebf3c828d8c51c5503"
   integrity sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==
@@ -9196,7 +9196,7 @@ react-spring@^7.2.11:
   dependencies:
     "@babel/runtime" "^7.0.0"
 
-react@^16.8.4:
+react@^16.13.1:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
   integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
@@ -10435,9 +10435,9 @@ terser@^3.7.3:
     source-map-support "~0.5.10"
 
 terser@^5.6.1:
-  version "5.14.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.14.1.tgz#7c95eec36436cb11cf1902cc79ac564741d19eca"
-  integrity sha512-+ahUAE+iheqBTDxXhTisdA8hgvbEG1hHOQ9xmNjeUJSoi6DU/gMrKNcfZjHkyY6Alnuyc+ikYJaxxfHkT3+WuQ==
+  version "5.14.2"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.14.2.tgz#9ac9f22b06994d736174f4091aa368db896f1c10"
+  integrity sha512-oL0rGeM/WFQCUd0y2QrWxYnq7tfSuKBiqTjRPWrRgB46WD/kiwHwF8T23z78H6Q6kGCuuHcPB+KULHRdxvVGQA==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Connect } from '@aragon/connect-react'
+import { Connect } from '@rperez89/connect-react'
 
 function ConnectProvider({ children }) {
   return (

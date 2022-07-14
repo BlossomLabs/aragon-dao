@@ -1,12 +1,18 @@
 import React, { useContext } from 'react'
-import { useApps, useOrganization, usePermissions } from '@aragon/connect-react'
+import {
+  useApps,
+  useConnect,
+  // usePermissions,
+} from '@rperez89/connect-react'
 
 const OrganizationContext = React.createContext()
 
 function OrganizationProvider({ children }) {
-  const [org, orgStatus] = useOrganization()
+  const [org, orgStatus] = useConnect()
   const [apps, appsStatus] = useApps()
-  const [permissions, permissionsStatus] = usePermissions()
+  const [permissions, permissionsStatus] = useConnect((org) => org.permissions())
+
+  console.log('Permissions ', permissions)
 
   const loading =
     orgStatus.loading || appsStatus.loading || permissionsStatus.loading

@@ -10,6 +10,7 @@ export default function Router() {
       <Route exact path="/" element={<App />} />
       <Route path="/voting" element={<App />} />
       <Route path="/legacy" element={<LegacyVoting />} />
+      <Route path="/test" element={<div>hello</div>} />
     </Routes>
   )
 }
