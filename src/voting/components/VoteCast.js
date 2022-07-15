@@ -1,6 +1,6 @@
 import React from 'react'
 import { GU, IconCheck, RADIUS, textStyle, useTheme } from '@aragon/ui'
-import useAppState from '../hooks/shared/useAppState'
+import { useAppState } from '../providers/VotingProvider'
 import useExtendedVoteData from '../hooks/useExtendedVoteData'
 import { VOTE_YEA } from '../vote-types'
 
