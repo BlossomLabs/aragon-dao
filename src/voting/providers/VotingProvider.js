@@ -8,7 +8,6 @@ import React, {
 import { useConnect } from '@rperez89/connect-react'
 import connectVoting from '@rperez89/connect-disputable-voting'
 import { useMounted } from '../../hooks/shared/useMounted'
-import { decodeTransactionPath } from '../evmscript-utils'
 import BN from 'bn.js'
 
 const VotingContext = React.createContext()

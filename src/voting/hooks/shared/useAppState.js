@@ -8,7 +8,6 @@ import {
   gql,
 } from '@apollo/client'
 import appStateReducer from '../../app-state-reducer'
-import { decodeTransactionPath } from '../../evmscript-utils'
 
 const GET_VOTES = gql`
   query GetDogs {
@@ -73,7 +72,6 @@ export const AragonProvider = ({ children }) => {
               executed: vote.executed,
               executionDate: parseInt(vote.executedAt) * 1000,
               // description: vote.metadata || 'No description',
-              description: JSON.stringify(decodeTransactionPath(vote.script)),
               creator: vote.originalCreator,
               script: vote.script,
               yea: vote.yea,

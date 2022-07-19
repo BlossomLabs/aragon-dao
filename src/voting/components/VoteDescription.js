@@ -5,6 +5,7 @@ import AutoLink from '../components/AutoLink'
 // Render a description associated to a vote.
 // Usually vote.data.metadata and vote.data.description.
 const VoteDescription = React.memo(function VoteDescription({
+  emptyScript,
   disabled,
   description,
   prefix,

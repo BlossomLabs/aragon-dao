@@ -44,6 +44,7 @@ export function useDescribeVote(script, voteId) {
     async function describe() {
       try {
         const { describedSteps } = await organization.describeScript(script)
+        console.log('describedSteps ', describedSteps)
 
         if (mounted()) {
           setDescription(describedSteps)

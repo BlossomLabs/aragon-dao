@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { Card, GU, Timer, textStyle, useTheme } from '@aragon/ui'
+import { useDescribeVote } from '../../hooks/useDescribeVote'
 import { noop } from '../../utils'
 import { VOTE_YEA, VOTE_NAY } from '../../vote-types'
 import LocalLabelAppBadge from '..//LocalIdentityBadge/LocalLabelAppBadge'
@@ -19,7 +20,11 @@ function VoteCard({ vote, onOpen }) {
     voteId,
   } = vote
   const { votingPower, yea, nay } = numData
-  const { open, metadata, description, endDate } = data
+  const { open, metadata, script, endDate } = data
+  const { description, emptyScript, loading } = useDescribeVote(script, voteId)
+
+  console.log('DESCRIPTION ', description)
+
   const options = useMemo(
     () => [
       {
@@ -90,6 +95,7 @@ function VoteCard({ vote, onOpen }) {
         {hasConnectedAccountVoted && <VotedIndicator expand={highlighted} />}
       </div>
       <VoteDescription
+        emptyScript={emptyScript}
         disabled
         prefix={<span css="font-weight: bold">#{voteId}: </span>}
         description={description || metadata}
