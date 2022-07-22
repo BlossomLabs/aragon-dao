@@ -65,6 +65,8 @@ function VotingProvider({ children }) {
     return voting?.onVotes()
   }, [voting])
 
+  console.log('CONNECT VOTES ', connectVotes)
+
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)
     if (mounted()) {

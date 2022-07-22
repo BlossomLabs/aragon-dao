@@ -95,20 +95,16 @@ function VoteCard({ vote, onOpen }) {
         {hasConnectedAccountVoted && <VotedIndicator expand={highlighted} />}
       </div>
       <VoteDescription
-        emptyScript={emptyScript}
-        disabled
-        prefix={<span css="font-weight: bold">#{voteId}: </span>}
-        description={description || metadata}
-        title={`#${voteId}: ${description || metadata}`}
-        css={`
-          overflow: hidden;
-          ${textStyle('body1')};
-          line-height: ${27}px; // 27px = line-height of textstyle('body1')
-          height: ${27 * 3}px; // 27px * 3 = line-height * 3 lines
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3;
-        `}
+        vote={vote}
+        // css={`
+        //   overflow: hidden;
+        //   ${textStyle('body1')};
+        //   line-height: ${27}px; // 27px = line-height of textstyle('body1')
+        //   height: ${27 * 3}px; // 27px * 3 = line-height * 3 lines
+        //   display: -webkit-box;
+        //   -webkit-box-orient: vertical;
+        //   -webkit-line-clamp: 3;
+        // `}
       />
       <VoteOptions options={options} votingPower={votingPower} />
       <div
