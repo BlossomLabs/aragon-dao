@@ -6,7 +6,6 @@ import { DisputableStatusType } from '../types/disputable-statuses'
 import BN from 'bn.js'
 
 const VotingContext = React.createContext()
-// const useVoting = createAppHook(connectVoting)
 
 const pctBase = new BN('1000000000000000000')
 const pctBaseNum = parseInt(pctBase, 10)

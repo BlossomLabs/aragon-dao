@@ -55,11 +55,6 @@ function VoteCard({ vote, onProposalClick }) {
     theme
   )
 
-  // console.log('VOTE ID ', voteId)
-  // console.log('script!!! ', script)
-  // console.log('DESCRIPTION ', description)
-  // console.log('targetApp ', targetApp)
-
   return (
     <Card onClick={() => onProposalClick(voteId)}>
       <div
