@@ -1,13 +1,8 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useConnect } from '@rperez89/connect-react'
 import connectVoting from '@rperez89/connect-disputable-voting'
 import { useMounted } from '../../hooks/shared/useMounted'
+import { DisputableStatusType } from '../types/disputable-statuses'
 import BN from 'bn.js'
 
 const VotingContext = React.createContext()
@@ -25,7 +20,10 @@ const reduceVotes = (votes = []) => {
   const reducedVotes = votes.map(vote => {
     return {
       voteId: vote.voteId,
+      id: vote.id,
       data: {
+        status: DisputableStatusType[vote.status],
+        context: vote.context,
         // description: JSON.stringify(decodeTransactionPath(vote.script)),
         executed: vote.status === 'Executed',
         executionDate: vote.executedAt && new Date(vote.executedAt),
@@ -65,16 +63,12 @@ function VotingProvider({ children }) {
     return voting?.onVotes()
   }, [voting])
 
-  console.log('CONNECT VOTES ', connectVotes)
-
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)
     if (mounted()) {
       setVotes(reducedVotes)
     }
   }, [connectVotes, mounted])
-
-  console.log('VOTES ', votes)
 
   return (
     <VotingContext.Provider

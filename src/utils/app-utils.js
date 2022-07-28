@@ -22,3 +22,7 @@ export function getAppPresentation(app) {
 
   return null
 }
+
+export function getAppByName(apps, appName) {
+  return apps.find(({ name }) => name === appName) || null
+}

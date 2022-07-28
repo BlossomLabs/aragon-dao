@@ -1,35 +1,34 @@
 import React from 'react'
-import { Badge, GU, Tag, useTheme } from '@aragon/ui'
-import AragonAppBadge from './AragonAppBadge'
-import { getNetwork } from '../../utils/web3-utils'
+import { PropTypes } from 'prop-types'
+import { GU, IdentityBadge, useTheme } from '@aragon/ui'
 
-function Description({ disableBadgeInteraction, path, ...props }) {
-  const network = getNetwork(100) // TODO: Handle chains
+function Description({ disableBadgeInteraction, path }) {
   return (
-    <span>
+    <span
+      css={`
+        // overflow-wrap:anywhere and hyphens:auto are not supported yet by
+        // the latest versions of Safari (as of June 2020), which
+        // is why word-break:break-word has been added here.
+        hyphens: auto;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      `}
+    >
       {path
         ? path.map((step, index) => (
             <DescriptionStep
-              network={network}
               disableBadgeInteraction={disableBadgeInteraction}
               key={index}
               step={step}
-              {...props}
             />
           ))
-        : 'No description'}
+        : ''}
     </span>
   )
 }
 
 /* eslint-disable react/prop-types */
-function DescriptionStep({
-  network,
-  step,
-  disableBadgeInteraction,
-  dotIndicator = true,
-  ...props
-}) {
+function DescriptionStep({ step, disableBadgeInteraction }) {
   const theme = useTheme()
 
   const description = []
@@ -42,47 +41,25 @@ function DescriptionStep({
         if (type === 'address' || type === 'any-account') {
           return (
             <span key={key}>
-              <Badge
+              {' '}
+              <IdentityBadge
                 badgeOnly={disableBadgeInteraction}
                 compact
                 entity={type === 'any-account' ? 'Any account' : value}
-                explorerProvider={network.explorer}
-                networkType={network.type}
               />
             </span>
           )
         }
 
-        if (type === 'app') {
-          return (
-            <span key={key}>
-              <AragonAppBadge app={value} />
-            </span>
-          )
-        }
-
-        if (type === 'role' || type === 'kernelNamespace') {
-          return (
-            <Tag key={key} color="#000">
-              {value.name}
-            </Tag>
-          )
+        if (type === 'role' || type === 'kernelNamespace' || type === 'app') {
+          return <span key={key}> “{value.name}”</span>
         }
 
         if (type === 'apmPackage') {
           return <span key={key}> “{value.artifact.appName}”</span>
         }
 
-        return (
-          <span
-            key={key}
-            css={`
-              margin-right: ${0.5 * GU}px;
-            `}
-          >
-            {value.description || value}
-          </span>
-        )
+        return <span key={key}> {value.description || value}</span>
       })
     )
   } else {
@@ -100,62 +77,50 @@ function DescriptionStep({
   })
 
   return (
-    <div
-      {...props}
-      css={`
-        margin-bottom: ${1 * GU}px;
-        display: flex;
-        align-items: flex-start;
-      `}
-    >
-      {dotIndicator && (
-        <div
+    <>
+      <span>{description}</span>
+      {childrenDescriptions.length > 0 && (
+        <ul
           css={`
-            height: 6px;
-            flex-basis: 6px;
-            flex-grow: 0;
-            flex-shrink: 0;
-            background-color: ${theme.accent};
-            margin-top: ${1 * GU}px;
-            margin-right: ${1 * GU}px;
+            list-style-type: none;
+            margin-left: 0;
+            padding-left: ${0.5 * GU}px;
+            text-indent: -${0.5 * GU}px;
           `}
-        />
-      )}
-      <div>
-        <span>{description}</span>
-        {childrenDescriptions.length > 0 && (
-          <ul
+        >
+          <li
             css={`
-              list-style-type: none;
-              margin-left: 0;
-              padding-left: ${0.5 * GU}px;
-              text-indent: -${0.5 * GU}px;
+              padding-left: ${2 * GU}px;
+              &:before {
+                content: '';
+                width: ${0.5 * GU}px;
+                height: ${0.5 * GU}px;
+                background: ${theme.accent};
+                border-radius: 50%;
+                display: inline-block;
+              }
+              span {
+                display: inline;
+                color: ${theme.surfaceContentSecondary};
+              }
             `}
           >
-            <li
-              css={`
-                padding-left: ${2 * GU}px;
-                &:before {
-                  content: '';
-                  width: ${0.5 * GU}px;
-                  height: ${0.5 * GU}px;
-                  background: ${theme.accent};
-                  border-radius: 50%;
-                  display: inline-block;
-                }
-                span {
-                  display: inline;
-                  color: ${theme.surfaceContentSecondary};
-                }
-              `}
-            >
-              {childrenDescriptions}
-            </li>
-          </ul>
-        )}
-      </div>
-    </div>
+            {childrenDescriptions}
+          </li>
+        </ul>
+      )}
+    </>
   )
+}
+/* eslint-enable react/prop-types */
+
+Description.propTypes = {
+  disableBadgeInteraction: PropTypes.bool,
+  path: PropTypes.array,
+}
+
+Description.defaultProps = {
+  disableBadgeInteraction: false,
 }
 
 export default Description

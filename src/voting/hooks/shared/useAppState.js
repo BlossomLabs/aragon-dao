@@ -57,7 +57,6 @@ export const AragonProvider = ({ children }) => {
     client
       .query({ query: GET_VOTES })
       .then(({ data }) => {
-        console.log('Subgraph data: ', data)
         const newAppState = {
           isSyncing: false,
           ready: true,

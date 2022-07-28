@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useConnect } from '@rperez89/connect-react'
 import connectVoting from '@rperez89/connect-disputable-voting'
 import { useMounted } from '../../hooks/shared/useMounted'
@@ -12,7 +18,7 @@ const pctBaseNum = parseInt(pctBase, 10)
 const tokenDecimalsNum = parseInt(18, 10)
 const tokenDecimalsBaseNum = Math.pow(10, tokenDecimalsNum)
 
-const reduceVotes = ((votes = []) => {
+const reduceVotes = (votes = []) => {
   if (!votes) {
     return []
   }
@@ -44,28 +50,26 @@ const reduceVotes = ((votes = []) => {
     }
   })
 
-   return reducedVotes
-})
+  return reducedVotes
+}
 
 function VotingProvider({ children }) {
   const [votes, setVotes] = useState([])
   const mounted = useMounted()
-  const [voting, votingStatus] = useConnect((org) => {
+  const [voting, votingStatus] = useConnect(org => {
     return connectVoting(org.onApp('disputable-voting'))
   })
 
   const [connectVotes, voteStatus] = useConnect(() => {
-     return voting?.onVotes()
+    return voting?.onVotes()
   }, [voting])
 
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)
-    if(mounted()){
+    if (mounted()) {
       setVotes(reducedVotes)
     }
-  }, [connectVotes])
-
-  console.log('VOTES ', votes)
+  }, [connectVotes, mounted])
 
   return (
     <VotingContext.Provider

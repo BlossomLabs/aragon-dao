@@ -10,9 +10,9 @@ const OrganizationContext = React.createContext()
 function OrganizationProvider({ children }) {
   const [org, orgStatus] = useConnect()
   const [apps, appsStatus] = useApps()
-  const [permissions, permissionsStatus] = useConnect((org) => org.permissions())
+  const [permissions, permissionsStatus] = useConnect(org => org.permissions())
 
-  console.log('Permissions ', permissions)
+  console.log('apps ', apps)
 
   const loading =
     orgStatus.loading || appsStatus.loading || permissionsStatus.loading
