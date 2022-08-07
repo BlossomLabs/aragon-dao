@@ -41,7 +41,7 @@ function getAttributes(status, theme) {
   )
 }
 
-function VoteCard({ vote, onProposalClick }) {
+function VoteCard({ vote, onVoteClick }) {
   const theme = useTheme()
   const { voteId, id, data, numData } = vote
   const { yea, nay, votingPower } = numData
@@ -56,7 +56,7 @@ function VoteCard({ vote, onProposalClick }) {
   )
 
   return (
-    <Card onClick={() => onProposalClick(voteId)}>
+    <Card onClick={() => onVoteClick(voteId)}>
       <div
         css={`
           display: grid;
@@ -146,7 +146,7 @@ function VoteCard({ vote, onProposalClick }) {
 
 VoteCard.propTypes = {
   vote: PropTypes.object,
-  onProposalClick: PropTypes.func.isRequired,
+  onVoteClick: PropTypes.func.isRequired,
 }
 
 /* eslint-disable react/prop-types */

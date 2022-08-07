@@ -1,13 +1,16 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Switch } from 'react-router-dom'
 
-import VotingApp from '../voting/App'
+// import VotingApp from '../voting/App'
+import VotingRouter from '../voting/routes/Router'
 
-export default function Router() {
+function Router() {
   return (
-    <Routes>
-      <Route exact path="/" element={<VotingApp />} />
-      <Route path="/voting" element={<VotingApp />} />
-    </Routes>
+    <Switch>
+      <Route exact path="/" component={VotingRouter} />
+      <Route path="/votes" component={VotingRouter} />
+    </Switch>
   )
 }
+
+export default Router

@@ -1,10 +1,18 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { springs, useTheme, RADIUS } from '@aragon/ui'
+import { Spring, animated } from 'react-spring/renderprops'
 import styled from 'styled-components'
-import { RADIUS, springs, useTheme } from '@aragon/ui'
-import { Spring, animated } from 'react-spring'
 
-function SummaryBar({ positiveSize, negativeSize, requiredSize, ...props }) {
+function SummaryBar({
+  disabledProgressBars,
+  positiveSize,
+  negativeSize,
+  requiredSize,
+  ...props
+}) {
   const theme = useTheme()
+
   return (
     <Spring
       from={{ progress: 0 }}
@@ -18,9 +26,11 @@ function SummaryBar({ positiveSize, negativeSize, requiredSize, ...props }) {
             {!!positiveSize && (
               <BarPart
                 style={{
-                  backgroundColor: theme.positive,
+                  backgroundColor: disabledProgressBars
+                    ? theme.surfaceOpened
+                    : theme.positive,
                   transform: progress.interpolate(
-                    v => `scale3d(${positiveSize * v}, 1, 1)`
+                    (v) => `scale3d(${positiveSize * v}, 1, 1)`
                   ),
                 }}
               />
@@ -28,12 +38,14 @@ function SummaryBar({ positiveSize, negativeSize, requiredSize, ...props }) {
             {!!negativeSize && (
               <BarPart
                 style={{
-                  backgroundColor: theme.negative,
+                  backgroundColor: disabledProgressBars
+                    ? theme.controlUnder
+                    : theme.negative,
                   transform: progress.interpolate(
-                    v => `
-                      translate3d(${100 * positiveSize * v}%, 0, 0)
-                      scale3d(${negativeSize * v}, 1, 1)
-                    `
+                    (v) => `
+                    translate3d(${100 * positiveSize * v}%, 0, 0)
+                    scale3d(${negativeSize * v}, 1, 1)
+                  `
                   ),
                 }}
               />
@@ -43,10 +55,10 @@ function SummaryBar({ positiveSize, negativeSize, requiredSize, ...props }) {
             <RequiredSeparatorWrapper
               style={{
                 transform: progress.interpolate(
-                  v => `
-                    translate3d(${100 * requiredSize * v}%, 0, 0)
-                    scale3d(1, ${requiredSize > 0 ? v : 0}, 1)
-                  `
+                  (v) => `
+                  translate3d(${100 * requiredSize * v}%, 0, 0)
+                  scale3d(1, ${requiredSize > 0 ? v : 0}, 1)
+                `
                 ),
               }}
             >
@@ -77,7 +89,7 @@ const Main = styled.div`
   height: 25px;
 `
 
-const CombinedBar = props => {
+const CombinedBar = (props) => {
   const theme = useTheme()
   return (
     <div
@@ -116,5 +128,12 @@ const RequiredSeparatorClip = styled.div`
 const RequiredSeparatorWrapper = styled(animated.div)`
   height: 100%;
 `
+
+SummaryBar.propTypes = {
+  disabledProgressBars: PropTypes.bool,
+  positiveSize: PropTypes.number,
+  negativeSize: PropTypes.number,
+  requiredSize: PropTypes.number,
+}
 
 export default SummaryBar

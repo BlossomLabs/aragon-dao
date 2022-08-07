@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { useApps, useConnect } from '@rperez89/connect-react'
+import connectVoting from '@rperez89/connect-disputable-voting'
 
 const OrganizationContext = React.createContext()
 
@@ -12,9 +13,22 @@ function OrganizationProvider({ children }) {
     orgStatus.loading || appsStatus.loading || permissionsStatus.loading
   const error = orgStatus.error || appsStatus.error || permissionsStatus.error
 
+  const [connectedDisputableApp, connectedDisputableAppStatus] = useConnect(
+    org => {
+      return connectVoting(org.onApp('disputable-voting'))
+    }
+  )
+
   return (
     <OrganizationContext.Provider
-      value={{ organization: org, apps, permissions, loading, error }}
+      value={{
+        organization: org,
+        apps,
+        connectedDisputableApp,
+        permissions,
+        loading,
+        error,
+      }}
     >
       {children}
     </OrganizationContext.Provider>
