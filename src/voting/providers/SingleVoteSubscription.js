@@ -19,7 +19,6 @@ import { useMounted } from '../../hooks/shared/useMounted'
 const SingleVoteSubscriptionContext = React.createContext()
 
 function SingleVoteSubscriptionProvider({ voteId, children }) {
-  console.log('SUBSCRIPTIONNNNNNNNN!!!!')
   const account = '0xdf8f53B9f83e611e1154402992c6F6CB7Daf246c' // TODO- implement wallet provider
   const { connectedDisputableApp } = useOrganizationState()
 
@@ -28,8 +27,6 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
       `${connectedDisputableApp.address}-vote-${voteId}`
     )
   }, [connectedDisputableApp, voteId])
-
-  console.log('vote ', vote)
 
   const voteUpdateValue = JSON.stringify(vote)
 
@@ -40,8 +37,6 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
   const [castVote, { error: castVoteError }] = useConnect(() => {
     return vote && account ? vote.onCastVote(account) : null
   }, [account, voteUpdateValue])
-
-  console.log('Cast vote ', castVote)
 
   // Use caseVote as a dependency value for storing the latest vote
   const castVoteUpdateValue = JSON.stringify(castVote)
@@ -66,16 +61,23 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
   //   }
   // }, [vote])
 
-  console.log('extended vote ', extendedVote)
-
   if (error) {
     // captureErrorWithSentry(error)
     console.error(error)
   }
 
   const SingleVoteSubscriptionState = useMemo(() => {
-    return [extendedVote, extendedVoteLoading]
-  }, [extendedVote, extendedVoteLoading])
+    return [
+      {
+        ...extendedVote,
+        voterInfo: {
+          ...extendedVote.voterInfo,
+          supports: castVote && castVote.supports,
+        },
+      },
+      extendedVoteLoading,
+    ]
+  }, [extendedVote, extendedVoteLoading, castVote])
 
   return (
     <SingleVoteSubscriptionContext.Provider value={SingleVoteSubscriptionState}>

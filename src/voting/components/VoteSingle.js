@@ -9,7 +9,6 @@ import VoteDetails from './VoteDetails/VoteDetails'
 import { useSingleVote } from '../hooks/useSingleVote'
 
 function VoteSingle({ match }) {
-  console.log('VOTE SINGLE!!!!')
   const { id } = match.params
 
   return (
@@ -24,7 +23,7 @@ function VoteSingleContent() {
   const [vote, loading] = useSingleVote()
 
   const handleBack = useCallback(() => {
-    history.push(`/proposals`)
+    history.push(`/votes`)
   }, [history])
 
   return (
@@ -34,7 +33,7 @@ function VoteSingleContent() {
         <Bar>
           <BackButton onClick={handleBack} />
         </Bar>
-        <LoadingSection loading={loading} title="Loading proposal">
+        <LoadingSection loading={loading} title="Loading vote">
           <VoteDetails vote={vote} />
         </LoadingSection>
       </LayoutLimiter>

@@ -82,6 +82,8 @@ function VoteDetails({ vote }) {
     disputableStatus,
   } = vote
 
+  console.log('VOTE!!! ', vote)
+
   const { description, targetApp, loading, emptyScript } = useDescribeVote(
     script,
     id
@@ -158,7 +160,7 @@ function VoteDetails({ vote }) {
               />
               {accountHasVoted && (
                 <VoteCast
-                  voteSupported={accountHasVoted.supports}
+                  voteSupported={voterInfo.supports}
                   balance={voterInfo.accountBalance}
                   tokenSymbol={votingToken.symbol}
                 />
