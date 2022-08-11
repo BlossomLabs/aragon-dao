@@ -23,8 +23,8 @@ import {
 } from '../../types/disputable-statuses'
 import InfoField from '../InfoField'
 import InfoBoxes from './InfoBoxes'
-import LayoutColumns from '../Layout/LayoutColumns'
-import LayoutBox from '../Layout/LayoutBox'
+import LayoutColumns from '../../../components/Layout/LayoutColumns'
+import LayoutBox from '../../../components/Layout/LayoutBox'
 import { safeDiv } from '../../math-utils'
 import SummaryBar from './SummaryBar'
 import SummaryRow from './SummaryRow'
@@ -38,7 +38,7 @@ import { addressesEqual } from '../../web3-utils'
 import { getIpfsUrlFromUri } from '../../../utils/ipfs-utils'
 import { useDescribeVote } from '../../hooks/useDescribeVote'
 import LoadingSkeleton from '../Loading/LoadingSkeleton'
-// import { useWallet } from '../../../providers/Wallet'
+import { useWallet } from '../../../providers/Wallet'
 // import MultiModal from '../../MultiModal/MultiModal'
 // import VoteOnProposalScreens from '../../ModalFlows/VoteOnProposalScreens/VoteOnProposalScreens'
 // import ChallengeProposalScreens from '../../ModalFlows/ChallengeProposalScreens/ChallengeProposalScreens'
@@ -81,8 +81,6 @@ function VoteDetails({ vote }) {
     votingToken,
     disputableStatus,
   } = vote
-
-  console.log('VOTE!!! ', vote)
 
   const { description, targetApp, loading, emptyScript } = useDescribeVote(
     script,
@@ -354,8 +352,7 @@ function DescriptionWithSkeleton({ description, loading }) {
 }
 
 function SummaryInfo({ vote, disabledProgressBars }) {
-  // const { account: connectedAccount } = useWallet()
-  const connectedAccount = '0xdf8f53B9f83e611e1154402992c6F6CB7Daf246c'
+  const { account: connectedAccount } = useWallet()
   const theme = useTheme()
 
   const { yeas, nays, settledAt } = vote

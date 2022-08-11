@@ -13,13 +13,13 @@ import { useOrganizationState } from '../../providers/OrganizationProvider'
 // import { captureErrorWithSentry } from '../sentry'
 // import { connectorConfig } from '../current-environment'
 // import { ProposalNotFound } from '../errors'
-// import { useWallet } from '../providers/Wallet'
+import { useWallet } from '../../providers/Wallet'
 import { useMounted } from '../../hooks/shared/useMounted'
 
 const SingleVoteSubscriptionContext = React.createContext()
 
 function SingleVoteSubscriptionProvider({ voteId, children }) {
-  const account = '0xdf8f53B9f83e611e1154402992c6F6CB7Daf246c' // TODO- implement wallet provider
+  const { account } = useWallet()
   const { connectedDisputableApp } = useOrganizationState()
 
   const [vote, voteStatus] = useConnect(() => {
@@ -93,7 +93,7 @@ SingleVoteSubscriptionProvider.propTypes = {
 
 function useExtendVote(vote, proposalId) {
   const mounted = useMounted()
-  const account = '0xdf8f53B9f83e611e1154402992c6F6CB7Daf246c' // TODO- implement wallet provider
+  const { account } = useWallet()
   const [extendedVote, setExtendedVote] = useState({})
   const [status, setStatus] = useState({ loading: true, error: null })
 
