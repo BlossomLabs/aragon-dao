@@ -1,12 +1,16 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   Button,
   Header,
+  GU,
   IconPlus,
+  IconToken,
   Main,
   SyncIndicator,
   useLayout,
 } from '@aragon/ui'
+import MultiModal from '../components/MultiModal/MultiModal'
+import DelegateVotingScreens from './components/ModalFlows/DelegateVotingScreens/DelegateVotingScreens'
 import { useGuiStyle } from './hooks/shared'
 import NewVotePanel from './components/NewVotePanel'
 import useFilterVotes from './hooks/useFilterVotes'
@@ -19,6 +23,9 @@ import { SettingsProvider } from './vote-settings-manager'
 import { VotingProvider } from './providers/VotingProvider'
 
 const App = React.memo(function App() {
+  const [voteDelegationModalVisible, setVoteDelegationModalVisible] = useState(
+    false
+  )
   const {
     actions,
     executionTargets,
@@ -76,13 +83,25 @@ const App = React.memo(function App() {
               primary="Voting"
               secondary={
                 !selectedVote && (
-                  <Button
-                    mode="strong"
-                    onClick={newVotePanel.requestOpen}
-                    label="New vote"
-                    icon={<IconPlus />}
-                    display={compactMode ? 'icon' : 'label'}
-                  />
+                  <>
+                    <Button
+                      mode="normal"
+                      onClick={() => setVoteDelegationModalVisible(true)}
+                      label="Vote Delegation"
+                      icon={<IconToken />}
+                      display={compactMode ? 'icon' : 'label'}
+                      css={`
+                        margin-right: ${1 * GU}px;
+                      `}
+                    />
+                    <Button
+                      mode="strong"
+                      onClick={newVotePanel.requestOpen}
+                      label="New vote"
+                      icon={<IconPlus />}
+                      display={compactMode ? 'icon' : 'label'}
+                    />
+                  </>
                 )
               }
             />
@@ -110,6 +129,12 @@ const App = React.memo(function App() {
           panelState={newVotePanel}
         />
       </React.Fragment>
+      <MultiModal
+        visible={voteDelegationModalVisible}
+        onClose={() => setVoteDelegationModalVisible(false)}
+      >
+        <DelegateVotingScreens />
+      </MultiModal>
     </Main>
   )
 })

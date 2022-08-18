@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react'
 import { providers as EthersProviders } from 'ethers'
 import { UseWalletProvider, useWallet } from 'use-wallet'
-import { getUseWalletConnectors } from '../utils/web3-utils'
+import { getUseWalletConnectors, getDefaultProvider } from '../utils/web3-utils'
 // import { networkEnvironment } from '../current-environment'
 
 /* eslint-disable react/prop-types */
@@ -17,7 +17,10 @@ function WalletAugmented({ children }) {
   const { ethereum } = wallet
 
   const ethers = useMemo(
-    () => (ethereum ? new EthersProviders.Web3Provider(ethereum) : null),
+    () =>
+      ethereum
+        ? new EthersProviders.Web3Provider(ethereum)
+        : getDefaultProvider(),
     [ethereum]
   )
 
