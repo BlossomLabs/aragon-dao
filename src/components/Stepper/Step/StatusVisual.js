@@ -46,7 +46,7 @@ const pulseAnimation = css`
   `} 0.75s linear alternate infinite;
 `
 
-function StatusVisual({ status, color, number, ...props }) {
+function StatusVisual({ status, color, number, withoutFirstStep, ...props }) {
   const theme = useTheme()
   const [animationDisabled, enableAnimation] = useDisableAnimation()
 
@@ -55,9 +55,13 @@ function StatusVisual({ status, color, number, ...props }) {
 
     return [
       Icon && <Icon />,
-      <StepIllustration number={number} status={status} />,
+      <StepIllustration
+        number={number}
+        status={status}
+        withoutFirstStep={withoutFirstStep}
+      />,
     ]
-  }, [status, number])
+  }, [status, number, withoutFirstStep])
 
   return (
     <div
@@ -177,12 +181,16 @@ StatusVisual.propTypes = {
 }
 
 /* eslint-disable react/prop-types */
-function StepIllustration({ number, status }) {
+function StepIllustration({ number, status, withoutFirstStep }) {
   const theme = useTheme()
 
   const renderIllustration =
-    status === STEP_WORKING || status === STEP_ERROR || status === STEP_SUCCESS
+    status === STEP_WORKING ||
+    status === STEP_ERROR ||
+    status === STEP_SUCCESS ||
+    withoutFirstStep
 
+  console.log('status ', status)
   return (
     <div
       css={`

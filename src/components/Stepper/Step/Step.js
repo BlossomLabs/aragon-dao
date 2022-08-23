@@ -25,6 +25,8 @@ function Step({
   number,
   transactionHash,
   showDivider,
+  withoutFirstStep,
+
   ...props
 }) {
   const theme = useTheme()
@@ -81,6 +83,7 @@ function Step({
           css={`
             margin-bottom: ${3 * GU}px;
           `}
+          withoutFirstStep={withoutFirstStep}
         />
         <h2
           css={`

@@ -1,8 +1,17 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { STEP_ERROR, STEP_SUCCESS, STEP_WORKING } from '../stepper-statuses'
+import {
+  STEP_ERROR,
+  STEP_SUCCESS,
+  STEP_WORKING,
+  STEP_PROMPTING,
+} from '../stepper-statuses'
 
 const gradients = {
+  [STEP_PROMPTING]: [
+    ['#98f9ff', '#00c2ff'],
+    ['#01e8f7', '#00c2ff'],
+  ],
   [STEP_WORKING]: [
     ['#98f9ff', '#00c2ff'],
     ['#01e8f7', '#00c2ff'],
@@ -22,10 +31,10 @@ function Illustration({ status, index }) {
   const [foregroundFrom, foregroundTo] = gradients[status][1]
 
   // Inline SVGs don't scope their defs so we have to provide unique ids
-  const gradientId = useCallback(
-    (id) => `${status.description}-${index}-${id}`,
-    [status, index]
-  )
+  const gradientId = useCallback(id => `${status.description}-${index}-${id}`, [
+    status,
+    index,
+  ])
 
   return (
     <svg
@@ -99,7 +108,12 @@ function Illustration({ status, index }) {
 }
 
 Illustration.propTypes = {
-  status: PropTypes.oneOf([STEP_WORKING, STEP_SUCCESS, STEP_ERROR]),
+  status: PropTypes.oneOf([
+    STEP_WORKING,
+    STEP_SUCCESS,
+    STEP_ERROR,
+    STEP_PROMPTING,
+  ]),
   index: PropTypes.number,
 }
 

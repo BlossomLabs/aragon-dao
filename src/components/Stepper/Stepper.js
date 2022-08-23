@@ -74,6 +74,7 @@ function Stepper({ steps, onComplete, ...props }) {
             status={status}
             showDivider={showDivider}
             transactionHash={hash}
+            withoutFirstStep={steps.length === 1}
           />
         </li>
       )

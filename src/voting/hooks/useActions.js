@@ -4,7 +4,7 @@ import { useOrganizationState } from '../../providers/OrganizationProvider'
 import { useWallet } from '../../providers/Wallet'
 import { getAppByName } from '../../utils/app-utils'
 import radspec from '../../radspec'
-import votingActions from '../actions/voting-actions-types'
+import votingActions from '../actions/voting-action-types'
 
 const GAS_LIMIT = 550000
 
