@@ -20,16 +20,13 @@ export function useTokenBalances(account, token) {
     let cancelled = false
 
     const pollAccountBalance = async () => {
-      console.log('POLL!!!!!! ')
       try {
         let contractNewBalance = new BN(-1)
         if (account) {
           contractNewBalance = await tokenContract.balanceOf(account)
-          console.log('contractNewBalance ', contractNewBalance)
         }
 
         const contractTotalSupply = await tokenContract.totalSupply()
-        console.log('contractTotalSupply ', contractTotalSupply)
 
         if (!cancelled) {
           const newBalance = new BN(contractNewBalance.toString())
@@ -38,7 +35,6 @@ export function useTokenBalances(account, token) {
             !newTotalSupply.eq(balances.totalSupply) ||
             !newBalance.eq(balances.balance)
           ) {
-            console.log('SET BALANCES ')
             setBalances({
               balance: newBalance,
               totalSupply: newTotalSupply,

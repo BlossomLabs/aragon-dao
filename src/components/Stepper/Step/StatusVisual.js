@@ -190,7 +190,6 @@ function StepIllustration({ number, status, withoutFirstStep }) {
     status === STEP_SUCCESS ||
     withoutFirstStep
 
-  console.log('status ', status)
   return (
     <div
       css={`
