@@ -1,4 +1,6 @@
 import { isBefore } from 'date-fns'
+import BN from 'bn.js'
+import { addressesEqual } from './web3-utils'
 import {
   VOTE_ABSENT,
   VOTE_YEA,
@@ -92,4 +94,25 @@ export async function getCanExecute(vote, api) {
     return false
   }
   return api.call('canExecute', vote.voteId)
+}
+
+export function getAccountCastDelegatedStake(vote, account) {
+  // Takes into account delegated cast stakes (casts done by account where account === caster !== supporter, supporter being caster´s principal)
+  const totalDelegatedStake = vote.casts
+    .filter(
+      cast =>
+        addressesEqual(cast.caster, account) &&
+        !addressesEqual(cast.voter.address, account)
+    )
+    .reduce((acc, cast) => acc.add(new BN(cast.stake)), new BN(0))
+
+  return totalDelegatedStake
+}
+
+export function getAccountCastStake(vote, account) {
+  const userCast = vote.casts.find(cast =>
+    addressesEqual(cast.voter.address, account)
+  )
+
+  return new BN(userCast?.stake || 0)
 }

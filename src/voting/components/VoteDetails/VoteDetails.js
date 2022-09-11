@@ -39,11 +39,8 @@ import { getIpfsUrlFromUri } from '../../../utils/ipfs-utils'
 import { useDescribeVote } from '../../hooks/useDescribeVote'
 import LoadingSkeleton from '../Loading/LoadingSkeleton'
 import { useWallet } from '../../../providers/Wallet'
-// import MultiModal from '../../MultiModal/MultiModal'
-// import VoteOnProposalScreens from '../../ModalFlows/VoteOnProposalScreens/VoteOnProposalScreens'
-// import ChallengeProposalScreens from '../../ModalFlows/ChallengeProposalScreens/ChallengeProposalScreens'
-// import SettleProposalScreens from '../../ModalFlows/SettleProposalScreens/SettleProposalScreens'
-// import RaiseDisputeScreens from '../../ModalFlows/RaiseDisputeScreens/RaiseDisputeScreens'
+import MultiModal from '../../../components/MultiModal/MultiModal'
+import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
 
 function getPresentation(disputableStatus) {
   const disputablePresentation = {
@@ -106,8 +103,7 @@ function VoteDetails({ vote }) {
   )
 
   const accountHasVoted = voterInfo && voterInfo.hasVoted
-  const showVoteActions =
-    disputableStatus === VOTE_SCHEDULED && !accountHasVoted
+  const showVoteActions = !accountHasVoted
 
   return (
     <>
@@ -157,11 +153,7 @@ function VoteDetails({ vote }) {
                 disabledProgressBars={disabledProgressBars}
               />
               {accountHasVoted && (
-                <VoteCast
-                  voteSupported={voterInfo.supports}
-                  balance={voterInfo.accountBalance}
-                  tokenSymbol={votingToken.symbol}
-                />
+                <VoteCast voteSupported={voterInfo.supports} vote={vote} />
               )}
               {showVoteActions && (
                 <VoteActions
@@ -188,26 +180,13 @@ function VoteDetails({ vote }) {
           </>
         }
       />
-      {/* <MultiModal
+      <MultiModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onClosed={() => setModalMode(null)}
       >
-        {modalMode === 'vote' && (
-          <VoteOnProposalScreens
-            voteId={voteId}
-            voteSupported={voteSupported}
-          />
-        )}
-
-        {modalMode === 'challenge' && <ChallengeProposalScreens />}
-
-        {modalMode === 'settle' && (
-          <SettleProposalScreens actionId={actionId} />
-        )}
-
-        {modalMode === 'raise' && <RaiseDisputeScreens actionId={actionId} />}
-      </MultiModal> */}
+        <VoteScreens voteId={voteId} voteSupported={voteSupported} />
+      </MultiModal>
     </>
   )
 }

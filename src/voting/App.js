@@ -52,11 +52,7 @@ const App = React.memo(function App() {
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
 
-  console.log('account ', account)
-
   const { voter, voterStatus } = useVoterState()
-
-  console.log('VOTER ', voter, voterStatus)
 
   const handleShowModal = useCallback(mode => {
     setModalVisible(true)

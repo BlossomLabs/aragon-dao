@@ -13,8 +13,6 @@ const DelegatedBy = React.memo(function DelegatedBy() {
 
   const { voter, voterStatus } = useVoterState()
 
-  console.log('VOTERRRRRRRR ', voter, voterStatus)
-
   const [delegatorsBalances, loading] = useDelegatorsBalance(
     voter?.representativeFor
   )
