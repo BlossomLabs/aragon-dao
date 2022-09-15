@@ -10,9 +10,10 @@ export async function getUserBalanceAt(
     return -1
   }
 
-  const balance = await tokenContract
-    .balanceOfAt(connectedAccount, snapshotBlock)
-    .toPromise()
+  const balance = await tokenContract.balanceOfAt(
+    connectedAccount,
+    snapshotBlock
+  )
 
   return Math.floor(parseInt(balance, 10) / Math.pow(10, tokenDecimals))
 }

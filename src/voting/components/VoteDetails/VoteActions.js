@@ -14,7 +14,7 @@ import {
 } from '@aragon/ui'
 import { dateFormat } from '../../utils/date-utils'
 
-function VoteActions({ vote, onVoteYes, onVoteNo, onExecute }) {
+function VoteActions({ vote, onVoteYes, onVoteNo, onExecute, onVote }) {
   const theme = useTheme()
   const { snapshotBlock, startDate, hasEnded, voterInfo, votingToken } = vote
 
@@ -59,55 +59,56 @@ function VoteActions({ vote, onVoteYes, onVoteNo, onExecute }) {
     )
   }
 
-  if (hasEnded) {
-    return (
-      <>
-        {voterInfo.canExecute && (
-          <>
-            <Button mode="strong" onClick={onExecute} wide>
-              Enact this vote
-            </Button>
-            <Info>
-              The voting period is closed and the vote has passed.{' '}
-              <strong>Anyone</strong> can now enact this vote to execute its
-              action.
-            </Info>
-          </>
-        )}
-      </>
-    )
-  }
+  // if (hasEnded) {
+  //   return (
+  //     <>
+  //       {voterInfo.canExecute && (
+  //         <>
+  //           <Button mode="strong" onClick={onExecute} wide>
+  //             Enact this vote
+  //           </Button>
+  //           <Info>
+  //             The voting period is closed and the vote has passed.{' '}
+  //             <strong>Anyone</strong> can now enact this vote to execute its
+  //             action.
+  //           </Info>
+  //         </>
+  //       )}
+  //     </>
+  //   )
+  // }
 
-  if (voterInfo.canVote) {
-    return (
-      <>
-        <Buttons onVoteYes={onVoteYes} onVoteNo={onVoteNo} />
-        <TokenReference
-          snapshotBlock={snapshotBlock}
-          startDate={startDate}
-          tokenSymbol={votingToken.symbol}
-          accountBalance={voterInfo.accountBalance}
-          accountBalanceNow={voterInfo.accountBalanceNow}
-        />
-      </>
-    )
-  }
-
+  // if (voterInfo.canVote || canUserVoteOnBehalfOf) {
   return (
-    <div>
-      <Buttons disabled />
-      <Info mode="warning">
-        {voterInfo.accountBalanceNow > 0
-          ? 'Although the currently connected account holds tokens, it'
-          : 'The currently connected account'}{' '}
-        did not hold any <strong>{votingToken.symbol}</strong> tokens when this
-        vote began ({dateFormat(startDate)}) and therefore cannot participate in
-        this vote. Make sure your accounts are holding{' '}
-        <strong>{votingToken.symbol}</strong> at the time a vote begins if you'd
-        like to vote using this Voting app.
-      </Info>
-    </div>
+    <>
+      <Buttons onVoteYes={onVoteYes} onVoteNo={onVoteNo} />
+      <TokenReference
+        snapshotBlock={snapshotBlock}
+        startDate={startDate}
+        tokenSymbol={votingToken.symbol}
+        accountBalance={voterInfo.accountBalance}
+        accountBalanceNow={voterInfo.accountBalanceNow}
+        principalsBalance={voterInfo.principalsBalance}
+      />
+    </>
   )
+  // }
+
+  // return (
+  //   <div>
+  //     <Buttons disabled />
+  //     <Info mode="warning">
+  //       {voterInfo.accountBalanceNow > 0
+  //         ? 'Although the currently connected account holds tokens, it'
+  //         : 'The currently connected account'}{' '}
+  //       did not hold any <strong>{votingToken.symbol}</strong> tokens when this
+  //       vote began ({dateFormat(startDate)}) and therefore cannot participate in
+  //       this vote. Make sure your accounts are holding{' '}
+  //       <strong>{votingToken.symbol}</strong> at the time a vote begins if you'd
+  //       like to vote using this Voting app.
+  //     </Info>
+  //   </div>
+  // )
 }
 
 /* eslint-disable react/prop-types */
@@ -169,28 +170,43 @@ const TokenReference = ({
   tokenSymbol,
   accountBalance,
   accountBalanceNow,
-}) => (
-  <Info>
-    Voting with{' '}
-    <strong>
-      {accountBalance} {tokenSymbol}
-    </strong>{' '}
-    . This was your balance when the vote started (block{' '}
-    <strong>{snapshotBlock}</strong>, mined at{' '}
-    <strong>{dateFormat(startDate)}</strong>).{' '}
-    {accountBalance !== accountBalanceNow ? (
-      <span>
-        Your current balance is{' '}
+  canUserVoteOnBehalfOf,
+  principalsBalance,
+}) => {
+  console.log('TOKEN REFERENCE ', canUserVoteOnBehalfOf, principalsBalance)
+  return (
+    <Info>
+      <div>
+        Voting with{' '}
         <strong>
-          {accountBalanceNow} {tokenSymbol}
-        </strong>
-        )
-      </span>
-    ) : (
-      ''
-    )}
-  </Info>
-)
+          {accountBalance} {tokenSymbol}
+        </strong>{' '}
+        . This was your balance when the vote started (block{' '}
+        <strong>{snapshotBlock}</strong>, mined at{' '}
+        <strong>{dateFormat(startDate)}</strong>).{' '}
+        {accountBalance !== accountBalanceNow ? (
+          <span>
+            Your current balance is{' '}
+            <strong>
+              {accountBalanceNow} {tokenSymbol}
+            </strong>
+            )
+          </span>
+        ) : (
+          ''
+        )}
+      </div>
+      {canUserVoteOnBehalfOf && principalsBalance > 0 && (
+        <div>
+          Delegated voting power:{' '}
+          <strong>
+            {principalsBalance} {tokenSymbol}
+          </strong>
+        </div>
+      )}
+    </Info>
+  )
+}
 
 /* eslint-disable react/prop-types */
 

@@ -116,3 +116,16 @@ export function getAccountCastStake(vote, account) {
 
   return new BN(userCast?.stake || 0)
 }
+
+export async function getCanUserVoteOnBehalfOf(
+  votingContract,
+  voteId,
+  voters,
+  representative
+) {
+  if (!votingContract || !voters.length || !representative) {
+    return false
+  }
+
+  return votingContract.canVoteOnBehalfOf(voteId, voters, representative)
+}

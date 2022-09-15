@@ -60,6 +60,7 @@ function VotingProvider({ children }) {
     return connectedDisputableApp?.onVotes()
   }, [connectedDisputableApp])
 
+  console.log('connectedDisputableApp ', connectedDisputableApp?.address)
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)
     if (mounted()) {
@@ -82,7 +83,6 @@ function VotingProvider({ children }) {
           pctBase: pctBaseNum,
           tokenDecimals: tokenDecimalsNum,
         },
-
         votes: votes,
       }}
     >

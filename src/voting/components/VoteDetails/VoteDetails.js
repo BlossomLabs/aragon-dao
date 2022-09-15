@@ -103,7 +103,7 @@ function VoteDetails({ vote }) {
   )
 
   const accountHasVoted = voterInfo && voterInfo.hasVoted
-  const showVoteActions = !accountHasVoted
+  const showVoteActions = true //! accountHasVoted
 
   return (
     <>
@@ -152,9 +152,9 @@ function VoteDetails({ vote }) {
                 vote={vote}
                 disabledProgressBars={disabledProgressBars}
               />
-              {accountHasVoted && (
+              {/* {accountHasVoted && (
                 <VoteCast voteSupported={voterInfo.supports} vote={vote} />
-              )}
+              )} */}
               {showVoteActions && (
                 <VoteActions
                   vote={vote}

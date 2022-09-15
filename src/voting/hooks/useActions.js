@@ -49,7 +49,7 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[actions.VOTE]({
+      const description = radspec[votingActions.VOTE]({
         voteId,
         supports,
       })

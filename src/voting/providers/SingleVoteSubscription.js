@@ -10,11 +10,23 @@ import { useConnect } from '@rperez89/connect-react'
 // import connectVoting from '@aragon/connect-disputable-voting'
 import { formatTokenAmount } from '@aragon/ui'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
+import { useAppState } from '../providers/VotingProvider'
 // import { captureErrorWithSentry } from '../sentry'
 // import { connectorConfig } from '../current-environment'
 // import { ProposalNotFound } from '../errors'
 import { useWallet } from '../../providers/Wallet'
 import { useMounted } from '../../hooks/shared/useMounted'
+import { useContractReadOnly } from '../../hooks/shared/useContract'
+import { useVoterState } from './VoterProvider'
+import usePromise from '../hooks/usePromise'
+// import { addressesEqual } from '../web3-utils'
+import { getUserBalanceAt } from '../token-utils'
+import { getCanUserVoteOnBehalfOf } from '../vote-utils'
+import votingAbi from '../abi/voting.json'
+import minimeTokenAbi from '../../abi/minimeToken.json'
+
+const emptyPromise = defaultValue =>
+  new Promise(resolve => resolve(defaultValue))
 
 const SingleVoteSubscriptionContext = React.createContext()
 
@@ -91,11 +103,22 @@ SingleVoteSubscriptionProvider.propTypes = {
   children: PropTypes.node,
 }
 
-function useExtendVote(vote, proposalId) {
+function useExtendVote(vote, voteId) {
   const mounted = useMounted()
   const { account } = useWallet()
   const [extendedVote, setExtendedVote] = useState({})
   const [status, setStatus] = useState({ loading: true, error: null })
+
+  const {
+    canUserVoteOnBehalfOf,
+    canUserVoteOnBehalfOfPromise,
+  } = useCanUserVoteOnBehalfOf(vote)
+
+  const {
+    principals,
+    principalsBalance,
+    principalsBalancePromise,
+  } = usePrincipals(vote)
 
   const getFeeInfo = useCallback(async () => {
     const [submitterFee, challengerFee] = await Promise.all([
@@ -146,9 +169,22 @@ function useExtendVote(vote, proposalId) {
         hasVoted: hasVoted,
         canExecute: canExecute,
         canVote: canVote,
+        canUserVoteOnBehalfOf,
+        canUserVoteOnBehalfOfPromise,
+        principals,
+        principalsBalance,
+        principalsBalancePromise,
       }
     },
-    [vote, account]
+    [
+      account,
+      vote,
+      canUserVoteOnBehalfOf,
+      canUserVoteOnBehalfOfPromise,
+      principals,
+      principalsBalance,
+      principalsBalancePromise,
+    ]
   )
 
   useEffect(() => {
@@ -196,9 +232,106 @@ function useExtendVote(vote, proposalId) {
     if (mounted()) {
       setStatus({ loading: true, error: null })
     }
-  }, [proposalId, mounted])
+  }, [voteId, mounted])
 
   return [extendedVote, status]
+}
+
+function useCanUserVoteOnBehalfOf(vote) {
+  const chainId = 100 // TODO- handle chains
+  const { account: connectedAccount } = useWallet()
+  const { connectedDisputableApp } = useOrganizationState()
+
+  const principals = useUserPrincipals(vote)
+
+  const votingContract = useContractReadOnly(
+    connectedDisputableApp?.address,
+    votingAbi,
+    chainId
+  )
+
+  const canUserVoteOnBehalfOfPromise = useMemo(() => {
+    return getCanUserVoteOnBehalfOf(
+      votingContract,
+      vote?.voteId,
+      principals,
+      connectedAccount
+    )
+  }, [connectedAccount, principals, votingContract, vote])
+
+  const canUserVoteOnBehalfOf = usePromise(
+    canUserVoteOnBehalfOfPromise,
+    [],
+    false
+  )
+
+  return { canUserVoteOnBehalfOf, canUserVoteOnBehalfOfPromise }
+}
+
+function usePrincipals(vote) {
+  const chainId = 100 // TODO- handle chains
+  const {
+    tokenAddress,
+    numData: { tokenDecimals },
+  } = useAppState()
+
+  const principals = useUserPrincipals(vote)
+  const tokenContract = useContractReadOnly(
+    tokenAddress,
+    minimeTokenAbi,
+    chainId
+  )
+
+  // User balance
+  const principalsBalancePromise = useMemo(() => {
+    if (!vote?.id || !principals.length) {
+      return emptyPromise([])
+    }
+    return Promise.all(
+      principals.map(principal =>
+        getUserBalanceAt(
+          principal,
+          vote.snapshotBlock,
+          tokenContract,
+          tokenDecimals
+        )
+      )
+    )
+  }, [principals, tokenContract, tokenDecimals, vote])
+  const principalsBalancesResult = usePromise(principalsBalancePromise, [], [])
+
+  const principalsBalance = useMemo(
+    () =>
+      principalsBalancesResult.reduce(
+        (acc, balance) => acc + Math.max(0, balance),
+        -1
+      ),
+    [principalsBalancesResult]
+  )
+
+  return { principals, principalsBalance, principalsBalancePromise }
+}
+
+function useUserPrincipals(vote) {
+  const { voter, voterStatus } = useVoterState()
+
+  // We´ll get all the user principals that haven´t already voted
+  const principals = useMemo(() => {
+    if (voterStatus.loading || voterStatus.error || !vote) {
+      return []
+    }
+    return (
+      voter?.representativeFor
+        .filter(
+          principal =>
+            vote.casts.findIndex(cast => cast.caster === principal.address) ===
+            -1
+        )
+        .map(principal => principal.address) || []
+    )
+  }, [voterStatus.loading, voterStatus.error, vote, voter])
+
+  return principals
 }
 
 function useSingleVoteSubscription() {
