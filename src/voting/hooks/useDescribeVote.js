@@ -7,7 +7,6 @@ import { useOrganizationState } from '../../providers/OrganizationProvider'
 const cachedDescriptions = new Map([])
 
 export function useDescribeVote(script, voteId) {
-  console.log('SCRIPT ', voteId, script)
   const mounted = useMounted()
 
   const { organization, apps: installedApps } = useOrganizationState()
@@ -45,8 +44,6 @@ export function useDescribeVote(script, voteId) {
     async function describe() {
       try {
         const { describedSteps } = await organization.describeScript(script)
-
-        console.log('DESCRIBED ', describedSteps)
 
         if (mounted()) {
           setDescription(describedSteps)

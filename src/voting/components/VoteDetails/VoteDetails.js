@@ -69,15 +69,7 @@ function VoteDetails({ vote }) {
   const [modalVisible, setModalVisible] = useState(false)
   const [modalMode, setModalMode] = useState(null)
   const [voteSupported, setVoteSupported] = useState(false)
-  const {
-    actionId,
-    voteId,
-    id,
-    script,
-    voterInfo,
-    votingToken,
-    disputableStatus,
-  } = vote
+  const { voteId, id, script, voterInfo, votingToken, disputableStatus } = vote
 
   const { description, targetApp, loading, emptyScript } = useDescribeVote(
     script,
@@ -103,7 +95,7 @@ function VoteDetails({ vote }) {
   )
 
   const accountHasVoted = voterInfo && voterInfo.hasVoted
-  const showVoteActions = true //! accountHasVoted
+  const showVoteActions = !accountHasVoted
 
   return (
     <>
@@ -152,9 +144,9 @@ function VoteDetails({ vote }) {
                 vote={vote}
                 disabledProgressBars={disabledProgressBars}
               />
-              {/* {accountHasVoted && (
+              {accountHasVoted && (
                 <VoteCast voteSupported={voterInfo.supports} vote={vote} />
-              )} */}
+              )}
               {showVoteActions && (
                 <VoteActions
                   vote={vote}
@@ -167,12 +159,7 @@ function VoteDetails({ vote }) {
         }
         secondary={
           <>
-            <DisputableActionStatus
-              vote={vote}
-              onSettle={() => handleShowModal('settle')}
-              onChallenge={() => handleShowModal('challenge')}
-              onRaise={() => handleShowModal('raise')}
-            />
+            <DisputableActionStatus vote={vote} />
             <InfoBoxes
               vote={vote}
               disabledProgressBars={disabledProgressBars}
@@ -199,7 +186,7 @@ function Details({
   emptyScript,
   description,
 }) {
-  const { context, creator, collateral } = vote
+  const { context, creator } = vote
 
   const { layoutName } = useLayout()
 
@@ -264,31 +251,6 @@ function Details({
 
       <InfoField label="Status">
         <DisputableStatusLabel status={disputableStatus} />
-      </InfoField>
-
-      <InfoField label="Action collateral">
-        <div
-          css={`
-            display: flex;
-            align-items: center;
-          `}
-        >
-          <TokenAmount
-            address={collateral.token.id}
-            amount={collateral.actionAmount}
-            decimals={collateral.token.decimals}
-            symbol={collateral.token.symbol}
-          />
-
-          <span
-            css={`
-              display: inline-flex;
-              padding-left: ${1 * GU}px;
-            `}
-          >
-            <IconLock size="small" />
-          </span>
-        </div>
       </InfoField>
       <InfoField label="Submitted By">
         <div

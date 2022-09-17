@@ -59,56 +59,57 @@ function VoteActions({ vote, onVoteYes, onVoteNo, onExecute, onVote }) {
     )
   }
 
-  // if (hasEnded) {
-  //   return (
-  //     <>
-  //       {voterInfo.canExecute && (
-  //         <>
-  //           <Button mode="strong" onClick={onExecute} wide>
-  //             Enact this vote
-  //           </Button>
-  //           <Info>
-  //             The voting period is closed and the vote has passed.{' '}
-  //             <strong>Anyone</strong> can now enact this vote to execute its
-  //             action.
-  //           </Info>
-  //         </>
-  //       )}
-  //     </>
-  //   )
-  // }
+  if (hasEnded) {
+    return (
+      <>
+        {voterInfo.canExecute && (
+          <>
+            <Button mode="strong" onClick={onExecute} wide>
+              Enact this vote
+            </Button>
+            <Info>
+              The voting period is closed and the vote has passed.{' '}
+              <strong>Anyone</strong> can now enact this vote to execute its
+              action.
+            </Info>
+          </>
+        )}
+      </>
+    )
+  }
 
-  // if (voterInfo.canVote || canUserVoteOnBehalfOf) {
+  if (voterInfo.canVote || voterInfo.canUserVoteOnBehalfOf) {
+    return (
+      <>
+        <Buttons onVoteYes={onVoteYes} onVoteNo={onVoteNo} />
+        <TokenReference
+          snapshotBlock={snapshotBlock}
+          startDate={startDate}
+          tokenSymbol={votingToken.symbol}
+          accountBalance={voterInfo.accountBalance}
+          accountBalanceNow={voterInfo.accountBalanceNow}
+          canUserVoteOnBehalfOf={voterInfo.canUserVoteOnBehalfOf}
+          principalsBalance={voterInfo.principalsBalance}
+        />
+      </>
+    )
+  }
+
   return (
-    <>
-      <Buttons onVoteYes={onVoteYes} onVoteNo={onVoteNo} />
-      <TokenReference
-        snapshotBlock={snapshotBlock}
-        startDate={startDate}
-        tokenSymbol={votingToken.symbol}
-        accountBalance={voterInfo.accountBalance}
-        accountBalanceNow={voterInfo.accountBalanceNow}
-        principalsBalance={voterInfo.principalsBalance}
-      />
-    </>
+    <div>
+      <Buttons disabled />
+      <Info mode="warning">
+        {voterInfo.accountBalanceNow > 0
+          ? 'Although the currently connected account holds tokens, it'
+          : 'The currently connected account'}{' '}
+        did not hold any <strong>{votingToken.symbol}</strong> tokens when this
+        vote began ({dateFormat(startDate)}) and therefore cannot participate in
+        this vote. Make sure your accounts are holding{' '}
+        <strong>{votingToken.symbol}</strong> at the time a vote begins if you'd
+        like to vote using this Voting app.
+      </Info>
+    </div>
   )
-  // }
-
-  // return (
-  //   <div>
-  //     <Buttons disabled />
-  //     <Info mode="warning">
-  //       {voterInfo.accountBalanceNow > 0
-  //         ? 'Although the currently connected account holds tokens, it'
-  //         : 'The currently connected account'}{' '}
-  //       did not hold any <strong>{votingToken.symbol}</strong> tokens when this
-  //       vote began ({dateFormat(startDate)}) and therefore cannot participate in
-  //       this vote. Make sure your accounts are holding{' '}
-  //       <strong>{votingToken.symbol}</strong> at the time a vote begins if you'd
-  //       like to vote using this Voting app.
-  //     </Info>
-  //   </div>
-  // )
 }
 
 /* eslint-disable react/prop-types */
@@ -173,7 +174,6 @@ const TokenReference = ({
   canUserVoteOnBehalfOf,
   principalsBalance,
 }) => {
-  console.log('TOKEN REFERENCE ', canUserVoteOnBehalfOf, principalsBalance)
   return (
     <Info>
       <div>

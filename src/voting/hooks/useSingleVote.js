@@ -2,10 +2,15 @@ import { useMemo } from 'react'
 import { useSingleVoteSubscription } from '../providers/SingleVoteSubscription'
 import { durationToHours, toMs } from '../utils/date-utils'
 import { DisputableStatusType } from '../types/disputable-statuses'
+import {
+  getDelegatedVotingEndDate,
+  getExecutionDelayEndDate,
+} from '../vote-utils'
 
 export function useSingleVote() {
   const [voteInfo, loading] = useSingleVoteSubscription()
 
+  console.log('VOTE INFO ', voteInfo)
   const processedVote = useMemo(() => {
     return voteInfo && !loading ? processVote(voteInfo) : {}
   }, [voteInfo, loading])
@@ -15,28 +20,19 @@ export function useSingleVote() {
 
 // Get and format values
 function processVote(voteInfo) {
-  const {
-    baseVote,
-    collateral,
-    fees,
-    settings,
-    voterInfo,
-    votingToken,
-  } = voteInfo
+  const { baseVote, settings, voterInfo, votingToken } = voteInfo
+  const endDate = baseVote.endDate
+  const delegatedVotingEndDate = getDelegatedVotingEndDate(baseVote)
+  const executionDelayEndDate = getExecutionDelayEndDate(baseVote, endDate)
 
-  const { challengeDuration } = collateral
+  console.log('executionDelayEndDate ', executionDelayEndDate)
 
   return {
     ...baseVote,
-    collateral: {
-      ...collateral,
-      settlementPeriodHours: durationToHours(toMs(challengeDuration)),
-    },
     challengeEndDate: toMs(baseVote.challengeEndDate),
     disputableStatus: DisputableStatusType[baseVote.status],
-    endDate: toMs(baseVote.endDate),
+    endDate: toMs(endDate),
     extendedPeriod: toMs(baseVote.currentQuietEndingExtensionDuration),
-    fees: fees,
     hasEnded: baseVote.hasEnded,
     naysPct: baseVote.naysPct,
     pausedAt: toMs(baseVote.pausedAt),
@@ -47,5 +43,8 @@ function processVote(voteInfo) {
     voterInfo: voterInfo,
     votingToken: votingToken,
     yeasPct: baseVote.yeasPct,
+    delegatedVotingEndDate: toMs(delegatedVotingEndDate),
+    executionDelayEndDate: toMs(executionDelayEndDate),
+    isDelayed: baseVote.hasEnded && toMs(executionDelayEndDate) > Date.now(),
   }
 }

@@ -91,6 +91,7 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
     ]
   }, [extendedVote, extendedVoteLoading, castVote])
 
+  console.log('SingleVoteSubscriptionState ', SingleVoteSubscriptionState)
   return (
     <SingleVoteSubscriptionContext.Provider value={SingleVoteSubscriptionState}>
       {children}
@@ -119,28 +120,6 @@ function useExtendVote(vote, voteId) {
     principalsBalance,
     principalsBalancePromise,
   } = usePrincipals(vote)
-
-  const getFeeInfo = useCallback(async () => {
-    const [submitterFee, challengerFee] = await Promise.all([
-      vote.submitterArbitratorFee(),
-      vote.challengerArbitratorFee(),
-    ])
-
-    return {
-      submitter: submitterFee,
-      challenger: challengerFee,
-    }
-  }, [vote])
-
-  const getCollateralInfo = useCallback(async () => {
-    const collateral = await vote.collateralRequirement()
-    const collateralToken = await collateral.token()
-
-    return {
-      ...collateral,
-      token: collateralToken,
-    }
-  }, [vote])
 
   const getVoterInfo = useCallback(
     async votingToken => {
@@ -192,15 +171,10 @@ function useExtendVote(vote, voteId) {
       try {
         const votingToken = await vote.token()
 
-        const [
-          settings,
-          feeInfo,
-          collateralInfo,
-          voterInfo,
-        ] = await Promise.all([
+        console.log('SINGLE VOTE ', vote)
+
+        const [settings, voterInfo] = await Promise.all([
           vote.setting(),
-          getFeeInfo(),
-          getCollateralInfo(),
           getVoterInfo(votingToken),
         ])
 
@@ -209,9 +183,7 @@ function useExtendVote(vote, voteId) {
             baseVote: vote,
             voterInfo: voterInfo,
             settings: settings,
-            collateral: collateralInfo,
             votingToken: votingToken,
-            fees: feeInfo,
           })
           setStatus({ loading: false, error: null })
         }
@@ -225,7 +197,7 @@ function useExtendVote(vote, voteId) {
     if (vote) {
       getExtendedVote()
     }
-  }, [vote, getFeeInfo, getCollateralInfo, getVoterInfo, mounted])
+  }, [vote, getVoterInfo, mounted])
 
   // Force loading state when updating route via the address bar
   useEffect(() => {
@@ -233,6 +205,8 @@ function useExtendVote(vote, voteId) {
       setStatus({ loading: true, error: null })
     }
   }, [voteId, mounted])
+
+  console.log('EXTENDED VOTE ', extendedVote)
 
   return [extendedVote, status]
 }

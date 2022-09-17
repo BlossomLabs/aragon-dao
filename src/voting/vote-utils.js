@@ -129,3 +129,15 @@ export async function getCanUserVoteOnBehalfOf(
 
   return votingContract.canVoteOnBehalfOf(voteId, voters, representative)
 }
+
+export function getDelegatedVotingEndDate(vote) {
+  const baseDelegatedVotingEndDate =
+    parseInt(vote.startDate) + parseInt(vote.delegatedVotingPeriod)
+
+  console.log('baseDelegatedVotingEndDate ', baseDelegatedVotingEndDate)
+  return baseDelegatedVotingEndDate
+}
+
+export function getExecutionDelayEndDate(vote, endDate) {
+  return parseInt(endDate) + parseInt(vote.executionDelay)
+}

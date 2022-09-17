@@ -7,7 +7,6 @@ const OrganizationContext = React.createContext()
 function OrganizationProvider({ children }) {
   const [org, orgStatus] = useConnect()
   const [apps, appsStatus] = useApps()
-  console.log('apps!!! ', apps)
   const [permissions, permissionsStatus] = useConnect(org => org.permissions())
 
   const loading =
@@ -19,8 +18,6 @@ function OrganizationProvider({ children }) {
       return connectVoting(org.onApp('blossom-tao-voting'))
     }
   )
-
-  console.log('APPS ', apps)
 
   return (
     <OrganizationContext.Provider
