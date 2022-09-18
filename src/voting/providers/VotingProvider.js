@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useConnect } from '@rperez89/connect-react'
-import connectVoting from '@rperez89/connect-disputable-voting'
+import { useOrganizationState } from '../../providers/OrganizationProvider'
 import { useMounted } from '../../hooks/shared/useMounted'
 import { DisputableStatusType } from '../types/disputable-statuses'
 import BN from 'bn.js'
@@ -54,13 +54,11 @@ const reduceVotes = (votes = []) => {
 function VotingProvider({ children }) {
   const [votes, setVotes] = useState([])
   const mounted = useMounted()
-  const [voting, votingStatus] = useConnect(org => {
-    return connectVoting(org.onApp('disputable-voting'))
-  })
+  const { connectedDisputableApp } = useOrganizationState()
 
   const [connectVotes, voteStatus] = useConnect(() => {
-    return voting?.onVotes()
-  }, [voting])
+    return connectedDisputableApp?.onVotes()
+  }, [connectedDisputableApp])
 
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)

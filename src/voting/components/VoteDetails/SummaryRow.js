@@ -1,38 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { GU, textStyle, useTheme } from '@aragon/ui'
-import You from './You'
-import { formatNumber } from '../math-utils'
-import { VOTE_NAY, VOTE_YEA } from '../vote-types'
+import { formatTokenAmount, GU, textStyle, useTheme } from '@aragon/ui'
 
-function SummaryRows({ yea, nay, symbol, connectedAccountVote }) {
-  const theme = useTheme()
-  return (
-    <div
-      css={`
-        ${textStyle('body2')};
-        display: inline-block;
-      `}
-    >
-      <SummaryRow
-        color={theme.positive}
-        label="Yes"
-        pct={yea.pct}
-        token={{ amount: yea.amount, symbol }}
-        youVoted={connectedAccountVote === VOTE_YEA}
-      />
-      <SummaryRow
-        color={theme.negative}
-        label="No"
-        pct={nay.pct}
-        token={{ amount: nay.amount, symbol }}
-        youVoted={connectedAccountVote === VOTE_NAY}
-      />
-    </div>
-  )
-}
-
-function SummaryRow({ color, label, pct, token, youVoted }) {
+/* eslint-disable react/prop-types */
+function SummaryRow({ color, label, pct, token }) {
+  // TODO: get real token decimals
   const theme = useTheme()
   return (
     <div
@@ -43,6 +15,7 @@ function SummaryRow({ color, label, pct, token, youVoted }) {
         align-items: center;
         justify-content: space-between;
         white-space: nowrap;
+        ${textStyle('body2')};
       `}
     >
       <div
@@ -61,7 +34,6 @@ function SummaryRow({ color, label, pct, token, youVoted }) {
           {label}
         </div>
         <div>{pct}%</div>
-        {youVoted && <You />}
       </div>
       <div
         css={`
@@ -69,7 +41,9 @@ function SummaryRow({ color, label, pct, token, youVoted }) {
           margin-left: ${2 * GU}px;
         `}
       >
-        {formatNumber(token.amount, 5)} {token.symbol}
+        {formatTokenAmount(token.amount, token.decimals, {
+          symbol: token.symbol,
+        })}
       </div>
     </div>
   )
@@ -84,5 +58,6 @@ const Bullet = styled.div`
   border-radius: 50%;
   background: ${({ color }) => color};
 `
+/* eslint-disable react/prop-types */
 
-export default React.memo(SummaryRows)
+export default React.memo(SummaryRow)

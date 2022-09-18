@@ -12,7 +12,6 @@ import NewVotePanel from './components/NewVotePanel'
 import useFilterVotes from './hooks/useFilterVotes'
 import useScrollTop from './hooks/useScrollTop'
 import NoVotes from './screens/NoVotes'
-import VoteDetail from './screens/VoteDetail'
 import Votes from './screens/Votes'
 import { useAppLogic } from './app-logic'
 import { IdentityProvider } from './identity-manager'
@@ -34,7 +33,6 @@ const App = React.memo(function App() {
 
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
-  const handleBack = useCallback(() => selectVote(-1), [selectVote])
 
   const {
     filteredVotes,
@@ -88,34 +86,23 @@ const App = React.memo(function App() {
                 )
               }
             />
-            {selectedVote ? (
-              <VoteDetail
-                vote={selectedVote}
-                onBack={handleBack}
-                onVote={actions.vote}
-                onExecute={actions.execute}
-              />
-            ) : (
-              <Votes
-                votes={votes}
-                selectVote={selectVote}
-                executionTargets={executionTargets}
-                filteredVotes={filteredVotes}
-                voteStatusFilter={voteStatusFilter}
-                handleVoteStatusFilterChange={handleVoteStatusFilterChange}
-                voteOutcomeFilter={voteOutcomeFilter}
-                handleVoteOutcomeFilterChange={handleVoteOutcomeFilterChange}
-                voteTrendFilter={voteTrendFilter}
-                handleVoteTrendFilterChange={handleVoteTrendFilterChange}
-                voteAppFilter={voteAppFilter}
-                handleVoteAppFilterChange={handleVoteAppFilterChange}
-                voteDateRangeFilter={voteDateRangeFilter}
-                handleVoteDateRangeFilterChange={
-                  handleVoteDateRangeFilterChange
-                }
-                handleClearFilters={handleClearFilters}
-              />
-            )}
+            <Votes
+              votes={votes}
+              selectVote={selectVote}
+              executionTargets={executionTargets}
+              filteredVotes={filteredVotes}
+              voteStatusFilter={voteStatusFilter}
+              handleVoteStatusFilterChange={handleVoteStatusFilterChange}
+              voteOutcomeFilter={voteOutcomeFilter}
+              handleVoteOutcomeFilterChange={handleVoteOutcomeFilterChange}
+              voteTrendFilter={voteTrendFilter}
+              handleVoteTrendFilterChange={handleVoteTrendFilterChange}
+              voteAppFilter={voteAppFilter}
+              handleVoteAppFilterChange={handleVoteAppFilterChange}
+              voteDateRangeFilter={voteDateRangeFilter}
+              handleVoteDateRangeFilterChange={handleVoteDateRangeFilterChange}
+              handleClearFilters={handleClearFilters}
+            />
           </React.Fragment>
         )}
         <NewVotePanel
