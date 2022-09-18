@@ -36,6 +36,7 @@ const reduceVotes = (votes = []) => {
         snapshotBlock: parseInt(vote.snapshotBlock),
         startDate: new Date(parseInt(vote.startDate) * 1000),
         executionTargets: [''],
+        hasEnded: vote.hasEnded,
       },
       numData: {
         minAcceptQuorum:
