@@ -25,8 +25,6 @@ const DATE_FORMAT = 'YYYY/MM/DD , HH:mm'
 function DisputableActionStatus({ vote }) {
   const theme = useTheme()
 
-  console.log('VOTE!!!!!!!!! ', vote)
-
   const voteEndPeriodNode = usePeriod(vote, vote.endDate)
   const delegatedVotingEndPeriodNode = usePeriod(
     vote,

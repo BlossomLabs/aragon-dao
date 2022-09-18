@@ -21,7 +21,7 @@ import { useVoterState } from './VoterProvider'
 import usePromise from '../hooks/usePromise'
 // import { addressesEqual } from '../web3-utils'
 import { getUserBalanceAt } from '../token-utils'
-import { getCanUserVoteOnBehalfOf } from '../vote-utils'
+import { getCanUserVoteOnBehalfOf, getCanUserVote } from '../vote-utils'
 import votingAbi from '../abi/voting.json'
 import minimeTokenAbi from '../../abi/minimeToken.json'
 
@@ -91,7 +91,6 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
     ]
   }, [extendedVote, extendedVoteLoading, castVote])
 
-  console.log('SingleVoteSubscriptionState ', SingleVoteSubscriptionState)
   return (
     <SingleVoteSubscriptionContext.Provider value={SingleVoteSubscriptionState}>
       {children}
@@ -115,6 +114,8 @@ function useExtendVote(vote, voteId) {
     canUserVoteOnBehalfOfPromise,
   } = useCanUserVoteOnBehalfOf(vote)
 
+  const { canUserVote, canUserVotePromise } = useCanUserVote(vote)
+
   const {
     principals,
     principalsBalance,
@@ -132,13 +133,11 @@ function useExtendVote(vote, voteId) {
         accountBalance,
         hasVoted,
         canExecute,
-        canVote,
       ] = await Promise.all([
         votingToken.balance(account),
         vote.formattedVotingPower(account),
         vote.hasVoted(account),
         vote.canExecute(account),
-        vote.canVote(account),
       ])
 
       return {
@@ -147,7 +146,8 @@ function useExtendVote(vote, voteId) {
         accountBalance: accountBalance,
         hasVoted: hasVoted,
         canExecute: canExecute,
-        canVote: canVote,
+        canVote: canUserVote,
+        canUserVotePromise,
         canUserVoteOnBehalfOf,
         canUserVoteOnBehalfOfPromise,
         principals,
@@ -163,6 +163,8 @@ function useExtendVote(vote, voteId) {
       principals,
       principalsBalance,
       principalsBalancePromise,
+      canUserVote,
+      canUserVotePromise,
     ]
   )
 
@@ -170,8 +172,6 @@ function useExtendVote(vote, voteId) {
     async function getExtendedVote() {
       try {
         const votingToken = await vote.token()
-
-        console.log('SINGLE VOTE ', vote)
 
         const [settings, voterInfo] = await Promise.all([
           vote.setting(),
@@ -205,8 +205,6 @@ function useExtendVote(vote, voteId) {
       setStatus({ loading: true, error: null })
     }
   }, [voteId, mounted])
-
-  console.log('EXTENDED VOTE ', extendedVote)
 
   return [extendedVote, status]
 }
@@ -278,7 +276,7 @@ function usePrincipals(vote) {
     () =>
       principalsBalancesResult.reduce(
         (acc, balance) => acc + Math.max(0, balance),
-        -1
+        0
       ),
     [principalsBalancesResult]
   )
@@ -306,6 +304,26 @@ function useUserPrincipals(vote) {
   }, [voterStatus.loading, voterStatus.error, vote, voter])
 
   return principals
+}
+
+export function useCanUserVote(vote) {
+  const chainId = 100 // TODO- handle chains
+  const { account: connectedAccount } = useWallet()
+  const { connectedDisputableApp } = useOrganizationState()
+
+  const votingContract = useContractReadOnly(
+    connectedDisputableApp?.address,
+    votingAbi,
+    chainId
+  )
+
+  const canUserVotePromise = useMemo(() => {
+    return getCanUserVote(votingContract, vote?.voteId, connectedAccount)
+  }, [connectedAccount, votingContract, vote])
+
+  const canUserVote = usePromise(canUserVotePromise, [], false)
+
+  return { canUserVote, canUserVotePromise }
 }
 
 function useSingleVoteSubscription() {

@@ -41,6 +41,7 @@ import LoadingSkeleton from '../Loading/LoadingSkeleton'
 import { useWallet } from '../../../providers/Wallet'
 import MultiModal from '../../../components/MultiModal/MultiModal'
 import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
+import useActions from '../../hooks/useActions'
 
 function getPresentation(disputableStatus) {
   const disputablePresentation = {
@@ -67,9 +68,12 @@ function getPresentation(disputableStatus) {
 
 function VoteDetails({ vote }) {
   const [modalVisible, setModalVisible] = useState(false)
+  const [modalData, setModalData] = useState({})
   const [modalMode, setModalMode] = useState(null)
   const [voteSupported, setVoteSupported] = useState(false)
   const { voteId, id, script, voterInfo, votingToken, disputableStatus } = vote
+  const { votingActions } = useActions()
+  console.log('vote!!! ', vote)
 
   const { description, targetApp, loading, emptyScript } = useDescribeVote(
     script,
@@ -81,18 +85,14 @@ function VoteDetails({ vote }) {
     [disputableStatus]
   )
 
-  const handleShowModal = useCallback(mode => {
+  const handleVote = useCallback(data => {
     setModalVisible(true)
-    setModalMode(mode)
+    setModalData(data)
   }, [])
 
-  const handleCastVote = useCallback(
-    supports => {
-      handleShowModal('vote')
-      setVoteSupported(supports)
-    },
-    [handleShowModal]
-  )
+  const handleExecute = useCallback(() => {
+    votingActions.executeVote(voteId, script)
+  }, [votingActions, voteId, script])
 
   const accountHasVoted = voterInfo && voterInfo.hasVoted
   const showVoteActions = !accountHasVoted
@@ -147,11 +147,11 @@ function VoteDetails({ vote }) {
               {accountHasVoted && (
                 <VoteCast voteSupported={voterInfo.supports} vote={vote} />
               )}
-              {showVoteActions && (
+              {!vote.hasEnded && (
                 <VoteActions
                   vote={vote}
-                  onVoteYes={() => handleCastVote(true)}
-                  onVoteNo={() => handleCastVote(false)}
+                  onVote={handleVote}
+                  onExecute={handleExecute}
                 />
               )}
             </div>
@@ -172,7 +172,7 @@ function VoteDetails({ vote }) {
         onClose={() => setModalVisible(false)}
         onClosed={() => setModalMode(null)}
       >
-        <VoteScreens voteId={voteId} voteSupported={voteSupported} />
+        <VoteScreens vote={vote} {...modalData} />
       </MultiModal>
     </>
   )

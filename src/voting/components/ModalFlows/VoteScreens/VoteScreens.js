@@ -7,7 +7,7 @@ import useActions from '../../../hooks/useActions'
 function VoteScreens({
   canUserVote,
   canUserVoteOnBehalfOf,
-  proposal,
+  vote,
   principals,
   supports,
 }) {
@@ -16,9 +16,9 @@ function VoteScreens({
 
   const temporatyTrx = useRef([])
 
-  const vote = useCallback(
+  const voteOnProposal = useCallback(
     async (voteId, supports) => {
-      await votingActions.voteOnDecision(voteId, supports, intent => {
+      await votingActions.vote(voteId, supports, intent => {
         temporatyTrx.current = temporatyTrx.current.concat(intent)
       })
     },
@@ -36,11 +36,11 @@ function VoteScreens({
   const getTransactions = useCallback(
     async onComplete => {
       if (canUserVote) {
-        await vote(proposal.number, supports)
+        await voteOnProposal(vote.voteId, supports)
       }
 
       if (canUserVoteOnBehalfOf && principals?.length > 0) {
-        await voteOnBehalfOf(proposal.number, supports, principals)
+        await voteOnBehalfOf(vote.voteId, supports, principals)
       }
 
       setTransactions(temporatyTrx.current)
@@ -50,9 +50,9 @@ function VoteScreens({
       canUserVote,
       canUserVoteOnBehalfOf,
       principals,
-      proposal,
-      supports,
       vote,
+      supports,
+      voteOnProposal,
       voteOnBehalfOf,
     ]
   )

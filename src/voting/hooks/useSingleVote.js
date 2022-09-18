@@ -10,7 +10,6 @@ import {
 export function useSingleVote() {
   const [voteInfo, loading] = useSingleVoteSubscription()
 
-  console.log('VOTE INFO ', voteInfo)
   const processedVote = useMemo(() => {
     return voteInfo && !loading ? processVote(voteInfo) : {}
   }, [voteInfo, loading])
@@ -24,8 +23,6 @@ function processVote(voteInfo) {
   const endDate = baseVote.endDate
   const delegatedVotingEndDate = getDelegatedVotingEndDate(baseVote)
   const executionDelayEndDate = getExecutionDelayEndDate(baseVote, endDate)
-
-  console.log('executionDelayEndDate ', executionDelayEndDate)
 
   return {
     ...baseVote,

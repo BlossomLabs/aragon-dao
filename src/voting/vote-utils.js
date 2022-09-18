@@ -133,11 +133,30 @@ export async function getCanUserVoteOnBehalfOf(
 export function getDelegatedVotingEndDate(vote) {
   const baseDelegatedVotingEndDate =
     parseInt(vote.startDate) + parseInt(vote.delegatedVotingPeriod)
-
-  console.log('baseDelegatedVotingEndDate ', baseDelegatedVotingEndDate)
   return baseDelegatedVotingEndDate
 }
 
 export function getExecutionDelayEndDate(vote, endDate) {
   return parseInt(endDate) + parseInt(vote.executionDelay)
+}
+
+export async function getCanUserVote(votingContract, voteId, account) {
+  if (!votingContract || !account) {
+    return false
+  }
+
+  return votingContract.canVote(voteId, account)
+}
+export function getConnectedAccountCast(vote, account) {
+  const userCast = vote.casts.find(cast =>
+    addressesEqual(cast.voter.address, account)
+  )
+
+  if (userCast) {
+    return {
+      vote: userCast.supports ? VOTE_YEA : VOTE_NAY,
+      caster: userCast.caster,
+    }
+  }
+  return { vote: VOTE_ABSENT }
 }

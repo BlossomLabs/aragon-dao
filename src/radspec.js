@@ -10,4 +10,12 @@ export default {
         : `Remove delegate`
     }`
   },
+  [organizationActions.VOTE_ON_PROPOSAL]: ({ voteId, supports }) => {
+    return `Vote ${supports ? 'Yes' : 'No'} on proposal: #${voteId}`
+  },
+  [organizationActions.VOTE_ON_BEHALF_OF]: ({ voteId, supports }) => {
+    return `Vote ${
+      supports ? 'Yes' : 'No'
+    } on behalf of principals on decision: #${voteId}`
+  },
 }

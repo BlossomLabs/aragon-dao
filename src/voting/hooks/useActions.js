@@ -11,7 +11,7 @@ const GAS_LIMIT = 550000
 export default function useActions() {
   const { account, ethers } = useWallet()
   const { apps: installedApps } = useOrganizationState()
-  const votingApp = getAppByName(installedApps, 'disputable-voting') // TODO move the app name to an env variable
+  const votingApp = getAppByName(installedApps, 'blossom-tao-voting') // TODO move the app name to an env variable
 
   const delegateVoting = useCallback(
     async (representative, onDone = noop) => {
@@ -22,7 +22,6 @@ export default function useActions() {
           actAs: account,
         }
       )
-
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
       const description = radspec[votingActions.DELEGATE_VOTING]({
@@ -49,7 +48,7 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.VOTE]({
+      const description = radspec[votingActions.VOTE_ON_PROPOSAL]({
         voteId,
         supports,
       })
