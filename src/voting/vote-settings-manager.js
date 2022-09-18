@@ -1,7 +1,7 @@
 // This file is separated from vote-settings.js to ensure React
 // doesn’t get included into the background script.
 import React, { useContext } from 'react'
-import useAppState from './hooks/shared/useAppState'
+import { useAppState } from './providers/VotingProvider'
 import BN from 'bn.js'
 
 const SettingsContext = React.createContext({

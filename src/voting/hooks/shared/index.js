@@ -1,5 +1,5 @@
 import useApi from './useApi'
-import useAppState from './useAppState'
+import useAppState from '../../providers/VotingProvider'
 import useConnectedAccount from './useConnectedAccount'
 import useCurrentApp from './useCurrentApp'
 import useGuiStyle from './useGuiStyle'
