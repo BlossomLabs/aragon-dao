@@ -4,7 +4,7 @@ import { Transition, animated } from 'react-spring/renderprops'
 import styled from 'styled-components'
 import { Box, textStyle, LoadingRing, GU } from '@aragon/ui'
 import loadingGraphic from '../../assets/loading.svg'
-import { springs } from '../../style/springs'
+import { springs } from '../../../style/springs'
 
 const AnimatedDiv = styled(animated.div)`
   top: 0;
@@ -30,9 +30,9 @@ function LoadingSection({ children, loading, title }) {
           transform: `translate3d(0, -${0.5 * GU}px, 0)`,
         }}
       >
-        {(loading) =>
+        {loading =>
           loading
-            ? (props) => (
+            ? props => (
                 <AnimatedDiv style={props}>
                   <Box>
                     <div
@@ -100,7 +100,7 @@ function LoadingSection({ children, loading, title }) {
                   </Box>
                 </AnimatedDiv>
               )
-            : (props) => <AnimatedDiv style={props}>{children}</AnimatedDiv>
+            : props => <AnimatedDiv style={props}>{children}</AnimatedDiv>
         }
       </Transition>
     </div>
