@@ -1,6 +1,4 @@
 import { isBefore } from 'date-fns'
-import BN from 'bn.js'
-import { addressesEqual } from './web3-utils'
 import {
   VOTE_ABSENT,
   VOTE_YEA,
@@ -94,69 +92,4 @@ export async function getCanExecute(vote, api) {
     return false
   }
   return api.call('canExecute', vote.voteId)
-}
-
-export function getAccountCastDelegatedStake(vote, account) {
-  // Takes into account delegated cast stakes (casts done by account where account === caster !== supporter, supporter being caster´s principal)
-  const totalDelegatedStake = vote.casts
-    .filter(
-      cast =>
-        addressesEqual(cast.caster, account) &&
-        !addressesEqual(cast.voter.address, account)
-    )
-    .reduce((acc, cast) => acc.add(new BN(cast.stake)), new BN(0))
-
-  return totalDelegatedStake
-}
-
-export function getAccountCastStake(vote, account) {
-  const userCast = vote.casts.find(cast =>
-    addressesEqual(cast.voter.address, account)
-  )
-
-  return new BN(userCast?.stake || 0)
-}
-
-export async function getCanUserVoteOnBehalfOf(
-  votingContract,
-  voteId,
-  voters,
-  representative
-) {
-  if (!votingContract || !voters.length || !representative) {
-    return false
-  }
-
-  return votingContract.canVoteOnBehalfOf(voteId, voters, representative)
-}
-
-export function getDelegatedVotingEndDate(vote) {
-  const baseDelegatedVotingEndDate =
-    parseInt(vote.startDate) + parseInt(vote.delegatedVotingPeriod)
-  return baseDelegatedVotingEndDate
-}
-
-export function getExecutionDelayEndDate(vote, endDate) {
-  return parseInt(endDate) + parseInt(vote.executionDelay)
-}
-
-export async function getCanUserVote(votingContract, voteId, account) {
-  if (!votingContract || !account) {
-    return false
-  }
-
-  return votingContract.canVote(voteId, account)
-}
-export function getConnectedAccountCast(vote, account) {
-  const userCast = vote.casts.find(cast =>
-    addressesEqual(cast.voter.address, account)
-  )
-
-  if (userCast) {
-    return {
-      vote: userCast.supports ? VOTE_YEA : VOTE_NAY,
-      caster: userCast.caster,
-    }
-  }
-  return { vote: VOTE_ABSENT }
 }

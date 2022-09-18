@@ -1,5 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useMemo } from 'react'
 import {
   Bar,
   DropDown,
@@ -180,18 +179,11 @@ const ThisVoting = ({ showTag }) => (
   </div>
 )
 
-const VoteGroups = React.memo(({ openVotes, closedVotes }) => {
-  const history = useHistory()
+const VoteGroups = React.memo(({ openVotes, closedVotes, onSelectVote }) => {
   const voteGroups = [
     ['Open votes', openVotes, openVotes.length],
     ['Closed votes', closedVotes.slice(0, 20), closedVotes.length],
   ]
-  const handleVoteClick = useCallback(
-    voteId => {
-      history.push(`/votes/${voteId}`)
-    },
-    [history]
-  )
 
   return (
     <React.Fragment>
@@ -199,11 +191,7 @@ const VoteGroups = React.memo(({ openVotes, closedVotes }) => {
         votes.length ? (
           <VoteCardGroup title={groupName} count={length} key={groupName}>
             {votes.map(vote => (
-              <VoteCard
-                key={vote.voteId}
-                vote={vote}
-                onVoteClick={handleVoteClick}
-              />
+              <VoteCard key={vote.voteId} vote={vote} onOpen={onSelectVote} />
             ))}
           </VoteCardGroup>
         ) : null

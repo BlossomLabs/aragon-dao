@@ -1,5 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import { AragonProvider } from './voting/hooks/shared/useAppState'
+import App from './voting/App'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <AragonProvider>
+    <App />
+  </AragonProvider>,
+  document.getElementById('root')
+)

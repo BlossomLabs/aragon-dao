@@ -1,6 +1,6 @@
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 export default function usePath() {
   const location = useLocation()
-  const navigate = useHistory()
+  const navigate = useNavigate()
   return [location.pathname, path => navigate(path)]
 }

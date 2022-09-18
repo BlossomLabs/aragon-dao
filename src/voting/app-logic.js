@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { useApi, usePath } from './hooks/shared'
-import { useAppState } from './providers/VotingProvider'
+import { useApi, useAppState, usePath } from './hooks/shared'
 import { EMPTY_CALLSCRIPT } from './evmscript-utils'
 import usePanelState from './hooks/usePanelState'
 import useVotes from './hooks/useVotes'
