@@ -13,7 +13,8 @@ import {
   textStyle,
   useTheme,
 } from '@aragon/ui'
-import { useAppState, useConnectedAccount, useNetwork } from '../hooks/shared'
+import { useConnectedAccount, useNetwork } from '../hooks/shared'
+import { useAppState } from '../providers/VotingProvider'
 import useExtendedVoteData from '../hooks/useExtendedVoteData'
 import { noop, formatDate } from '../utils'
 import { VOTE_NAY, VOTE_YEA } from '../vote-types'

@@ -17,6 +17,7 @@ import Votes from './screens/Votes'
 import { useAppLogic } from './app-logic'
 import { IdentityProvider } from './identity-manager'
 import { SettingsProvider } from './vote-settings-manager'
+import { VotingProvider } from './providers/VotingProvider'
 
 const App = React.memo(function App() {
   const {
@@ -128,8 +129,10 @@ const App = React.memo(function App() {
 
 export default () => (
   <IdentityProvider>
-    <SettingsProvider>
-      <App />
-    </SettingsProvider>
+    <VotingProvider>
+      <SettingsProvider>
+        <App />
+      </SettingsProvider>
+    </VotingProvider>
   </IdentityProvider>
 )

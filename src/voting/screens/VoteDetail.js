@@ -16,7 +16,8 @@ import {
   useTheme,
   Info,
 } from '@aragon/ui'
-import { useAppState, useConnectedAccount, useNetwork } from '../hooks/shared'
+import { useConnectedAccount, useNetwork } from '../hooks/shared'
+import { useAppState } from '../providers/VotingProvider'
 import { format } from 'date-fns'
 import DetailedDescription from '../components/DetailedDescription'
 import LocalIdentityBadge from '../components/LocalIdentityBadge/LocalIdentityBadge'
@@ -72,7 +73,7 @@ function VoteDetail({ vote, onBack, onVote, onExecute }) {
     // if the proposal is about migration, the last voter shouldn't cause vote execution
     // because it will always fail due to access list feature not used as govern uses proxy contracts.
     onVote(voteId, VOTE_YEA, !description.includes(Keyword))
-  }, [onVote, voteId])
+  }, [description, onVote, voteId])
 
   const handleExecute = useCallback(() => {
     onExecute(voteId)

@@ -191,7 +191,11 @@ const VoteGroups = React.memo(({ openVotes, closedVotes, onSelectVote }) => {
         votes.length ? (
           <VoteCardGroup title={groupName} count={length} key={groupName}>
             {votes.map(vote => (
-              <VoteCard key={vote.voteId} vote={vote} onOpen={onSelectVote} />
+              <VoteCard
+                key={vote.voteId}
+                vote={vote}
+                onProposalClick={onSelectVote}
+              />
             ))}
           </VoteCardGroup>
         ) : null
