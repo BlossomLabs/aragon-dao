@@ -4,8 +4,10 @@ import { Route, Switch } from 'react-router-dom'
 import VotingApp from '../App'
 import VoteSingle from '../components/VoteSingle'
 import Test from '../components/Test'
+import { VotingProvider } from '../providers/VotingProvider'
+import { VoterProvider } from '../providers/VoterProvider'
 
-export default function VotingRouter() {
+function VotingRouter() {
   return (
     <Switch>
       {/* <Route path="/votes" component={VotingApp} /> */}
@@ -14,3 +16,11 @@ export default function VotingRouter() {
     </Switch>
   )
 }
+
+export default () => (
+  <VotingProvider>
+    <VoterProvider>
+      <VotingRouter />
+    </VoterProvider>
+  </VotingProvider>
+)

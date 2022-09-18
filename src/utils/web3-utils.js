@@ -1,3 +1,4 @@
+import { ethers, providers as Providers } from 'ethers'
 import { getPreferredChain } from '../local-settings'
 
 const DEFAULT_LOCAL_CHAIN = ''
@@ -7,7 +8,7 @@ const networks = {
     ensRegistry: '0xaafca6b0c89521752e559650206d7c925fd0e530',
     name: 'Gnosis Chain',
     type: 'xdai',
-    defaultEthNode: 'https://rpc.xdaichain.com',
+    defaultEthNode: 'https://rpc.gnosischain.com',
   },
 }
 
@@ -86,4 +87,12 @@ export function getUseWalletConnectors() {
     }
     return connectors
   }, {})
+}
+
+export function getDefaultProvider(chainId = getPreferredChain()) {
+  const { defaultEthNode, type } = getNetwork(chainId)
+
+  return defaultEthNode
+    ? new Providers.StaticJsonRpcProvider(defaultEthNode)
+    : ethers.getDefaultProvider(type, 'x')
 }

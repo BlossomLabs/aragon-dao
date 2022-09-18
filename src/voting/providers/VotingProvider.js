@@ -72,9 +72,9 @@ function VotingProvider({ children }) {
       value={{
         isSyncing: false,
         ready: true,
-        tokenAddress: '0x71850b7e9ee3f13ab46d67167341e4bdc905eef9', // ?
+        tokenAddress: '0xcbaef99fbd8b360258e20db4c5ff175cd9dcc218', // ?
         tokenDecimals: new BN(18),
-        tokenSymbol: 'HNY', // ?
+        tokenSymbol: 'wANT', // ?
         pctBase: pctBase,
         voteTime: 432000 * 1000,
         connectedAccountVotes: [],
@@ -82,7 +82,6 @@ function VotingProvider({ children }) {
           pctBase: pctBaseNum,
           tokenDecimals: tokenDecimalsNum,
         },
-
         votes: votes,
       }}
     >

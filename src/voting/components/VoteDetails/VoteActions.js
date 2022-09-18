@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import {
   Button,
@@ -12,11 +12,45 @@ import {
   textStyle,
   useTheme,
 } from '@aragon/ui'
+import { useWallet } from '../../../providers/Wallet'
 import { dateFormat } from '../../utils/date-utils'
+import { getConnectedAccountCast } from '../../vote-utils'
+import { VOTE_YEA, VOTE_NAY } from '../../vote-types'
 
-function VoteActions({ vote, onVoteYes, onVoteNo, onExecute }) {
+function VoteActions({ vote, onVote, onExecute }) {
   const theme = useTheme()
   const { snapshotBlock, startDate, hasEnded, voterInfo, votingToken } = vote
+  const { account: connectedAccount } = useWallet()
+
+  const connectedAccountCast = getConnectedAccountCast(vote, connectedAccount)
+
+  const isAccountVoteCasted = [VOTE_YEA, VOTE_NAY].includes(
+    connectedAccountCast.vote
+  )
+
+  console.log('isAccountVoteCasted  ', isAccountVoteCasted)
+
+  const handleVoteYes = useCallback(
+    () =>
+      onVote({
+        canUserVote: voterInfo.canVote,
+        canUserVoteOnBehalfOf: voterInfo.canUserVoteOnBehalfOf,
+        supports: true,
+        principals: voterInfo.principals,
+      }),
+    [voterInfo, onVote]
+  )
+
+  const handleVoteNo = useCallback(
+    () =>
+      onVote({
+        canUserVote: voterInfo.canVote,
+        canUserVoteOnBehalfOf: voterInfo.canUserVoteOnBehalfOf,
+        supports: false,
+        principals: voterInfo.principals,
+      }),
+    [voterInfo, onVote]
+  )
 
   if (!voterInfo.account) {
     return (
@@ -78,18 +112,39 @@ function VoteActions({ vote, onVoteYes, onVoteNo, onExecute }) {
     )
   }
 
-  if (voterInfo.canVote) {
+  if (voterInfo.canVote || voterInfo.canUserVoteOnBehalfOf) {
+    console.log('isAccountVoteCasted !!!!!!!!!!!! ', isAccountVoteCasted)
     return (
       <>
-        <Buttons onVoteYes={onVoteYes} onVoteNo={onVoteNo} />
+        <Buttons onVoteYes={handleVoteYes} onVoteNo={handleVoteNo} />
         <TokenReference
           snapshotBlock={snapshotBlock}
           startDate={startDate}
           tokenSymbol={votingToken.symbol}
           accountBalance={voterInfo.accountBalance}
           accountBalanceNow={voterInfo.accountBalanceNow}
+          canUserVoteOnBehalfOf={voterInfo.canUserVoteOnBehalfOf}
+          principalsBalance={voterInfo.principalsBalance}
         />
+        {voterInfo.canVote && isAccountVoteCasted && (
+          <Info mode="warning">
+            <strong>
+              Although your delegate has voted on your behalf, you can always
+              override their vote.
+            </strong>
+          </Info>
+        )}
       </>
+    )
+  }
+  if (isAccountVoteCasted) {
+    return (
+      <div>
+        <Buttons disabled />
+        <Info mode="warning">
+          You have already voted and changing vote is not allowed.
+        </Info>
+      </div>
     )
   }
 
@@ -169,35 +224,48 @@ const TokenReference = ({
   tokenSymbol,
   accountBalance,
   accountBalanceNow,
-}) => (
-  <Info>
-    Voting with{' '}
-    <strong>
-      {accountBalance} {tokenSymbol}
-    </strong>{' '}
-    . This was your balance when the vote started (block{' '}
-    <strong>{snapshotBlock}</strong>, mined at{' '}
-    <strong>{dateFormat(startDate)}</strong>).{' '}
-    {accountBalance !== accountBalanceNow ? (
-      <span>
-        Your current balance is{' '}
+  canUserVoteOnBehalfOf,
+  principalsBalance,
+}) => {
+  return (
+    <Info>
+      <div>
+        Voting with{' '}
         <strong>
-          {accountBalanceNow} {tokenSymbol}
-        </strong>
-        )
-      </span>
-    ) : (
-      ''
-    )}
-  </Info>
-)
+          {accountBalance} {tokenSymbol}
+        </strong>{' '}
+        . This was your balance when the vote started (block{' '}
+        <strong>{snapshotBlock}</strong>, mined at{' '}
+        <strong>{dateFormat(startDate)}</strong>).{' '}
+        {accountBalance !== accountBalanceNow ? (
+          <span>
+            Your current balance is{' '}
+            <strong>
+              {accountBalanceNow} {tokenSymbol}
+            </strong>
+            )
+          </span>
+        ) : (
+          ''
+        )}
+      </div>
+      {canUserVoteOnBehalfOf && principalsBalance > 0 && (
+        <div>
+          Delegated voting power:{' '}
+          <strong>
+            {principalsBalance} {tokenSymbol}
+          </strong>
+        </div>
+      )}
+    </Info>
+  )
+}
 
 /* eslint-disable react/prop-types */
 
 VoteActions.propTypes = {
   vote: PropTypes.object.isRequired,
-  onVoteYes: PropTypes.func,
-  onVoteNo: PropTypes.func,
+  onVote: PropTypes.func,
   onExecute: PropTypes.func,
 }
 

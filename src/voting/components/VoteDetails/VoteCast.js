@@ -1,9 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { GU, IconCheck, RADIUS, textStyle, useTheme } from '@aragon/ui'
+import { useWallet } from '../../../providers/Wallet'
+import {
+  getAccountCastDelegatedStake,
+  getAccountCastStake,
+} from '../../vote-utils'
+import { formatTokenAmount } from '../../token-utils'
 
-function VoteCast({ voteSupported, balance, tokenSymbol }) {
+function VoteCast({ voteSupported, vote }) {
   const theme = useTheme()
+  const { account } = useWallet()
+  const accountStake = getAccountCastStake(vote, account)
+
+  const accountDelegatedStake = getAccountCastDelegatedStake(vote, account)
+  const totalStake = accountStake.add(accountDelegatedStake)
+  const { votingToken } = vote
 
   return (
     <div
@@ -73,7 +85,10 @@ function VoteCast({ voteSupported, balance, tokenSymbol }) {
                 font-weight: 600;
               `}
             >
-              {balance === -1 ? '…' : balance} {tokenSymbol}
+              {totalStake.eq(0)
+                ? '…'
+                : formatTokenAmount(totalStake, votingToken.decimals)}{' '}
+              {votingToken.symbol}
             </span>
             .
           </p>
@@ -85,8 +100,7 @@ function VoteCast({ voteSupported, balance, tokenSymbol }) {
 
 VoteCast.propTypes = {
   voteSupported: PropTypes.bool,
-  balance: PropTypes.string,
-  tokenSymbol: PropTypes.string,
+  vote: PropTypes.any,
 }
 
 export default VoteCast
