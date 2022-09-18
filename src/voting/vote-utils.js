@@ -28,7 +28,7 @@ export const getQuorumProgress = ({ numData: { yea, votingPower } }) =>
   yea / votingPower
 
 export function getVoteStatus(vote, pctBase) {
-  if (vote.data.open) {
+  if (!vote.data.hasEnded) {
     return VOTE_STATUS_ONGOING
   }
   if (!getVoteSuccess(vote, pctBase)) {

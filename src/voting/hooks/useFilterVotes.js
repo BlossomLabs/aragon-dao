@@ -121,7 +121,6 @@ const useFilterVotes = (votes, executionTargets) => {
   useEffect(() => {
     const filtered = votes.filter(vote => {
       const voteStatus = getVoteStatus(vote, pctBase)
-
       return (
         testStatusFilter(statusFilter, voteStatus) &&
         testTrendFilter(trendFilter, vote) &&

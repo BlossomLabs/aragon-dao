@@ -73,7 +73,6 @@ function VoteDetails({ vote }) {
   const [voteSupported, setVoteSupported] = useState(false)
   const { voteId, id, script, voterInfo, votingToken, disputableStatus } = vote
   const { votingActions } = useActions()
-  console.log('vote!!! ', vote)
 
   const { description, targetApp, loading, emptyScript } = useDescribeVote(
     script,

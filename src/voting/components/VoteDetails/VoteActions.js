@@ -28,8 +28,6 @@ function VoteActions({ vote, onVote, onExecute }) {
     connectedAccountCast.vote
   )
 
-  console.log('isAccountVoteCasted  ', isAccountVoteCasted)
-
   const handleVoteYes = useCallback(
     () =>
       onVote({
@@ -113,7 +111,6 @@ function VoteActions({ vote, onVote, onExecute }) {
   }
 
   if (voterInfo.canVote || voterInfo.canUserVoteOnBehalfOf) {
-    console.log('isAccountVoteCasted !!!!!!!!!!!! ', isAccountVoteCasted)
     return (
       <>
         <Buttons onVoteYes={handleVoteYes} onVoteNo={handleVoteNo} />

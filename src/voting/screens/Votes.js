@@ -22,7 +22,7 @@ const sortVotes = (a, b) => {
 
 const useVotes = votes => {
   const sortedVotes = votes.sort(sortVotes)
-  const openVotes = sortedVotes.filter(vote => vote.data.open)
+  const openVotes = sortedVotes.filter(vote => !vote.data.hasEnded)
   const closedVotes = sortedVotes.filter(vote => !openVotes.includes(vote))
   return { openVotes, closedVotes }
 }
