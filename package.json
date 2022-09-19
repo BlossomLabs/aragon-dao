@@ -34,7 +34,7 @@
     "rxjs": "^6.2.1",
     "styled-components": "^5.3.5",
     "use-inside": "^0.2.0",
-    "use-wallet": "^0.13.6"
+    "use-wallet": "^0.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
