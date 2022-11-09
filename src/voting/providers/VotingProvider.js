@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useConnect } from '@rperez89/connect-react'
+import { useConnect } from '@1hive/connect-react'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import { useMounted } from '../../hooks/shared/useMounted'
 import { DisputableStatusType } from '../types/disputable-statuses'

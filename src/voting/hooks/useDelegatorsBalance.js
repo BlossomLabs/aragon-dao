@@ -39,9 +39,11 @@ export default function useDelegatorsBalance(delegators) {
     if (!principalsBalancesResult.length) {
       return []
     }
-    const result = delegators.map((delegator, index) => {
-      return [delegator.address, principalsBalancesResult[index]]
-    })
+    const result = delegators
+      ? delegators.map((delegator, index) => {
+          return [delegator.address, principalsBalancesResult[index]]
+        })
+      : []
     setLoading(false)
     return result
   }, [delegators, principalsBalancesResult])

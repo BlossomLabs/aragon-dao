@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { noop } from '@1hive/1hive-ui'
+import { noop } from '@aragon/ui'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import { useWallet } from '../../providers/Wallet'
 import { getAppByName } from '../../utils/app-utils'
