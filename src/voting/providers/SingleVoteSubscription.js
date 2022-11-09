@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from 'react'
 import PropTypes from 'prop-types'
-import { useConnect } from '@rperez89/connect-react'
+import { useConnect } from '@1hive/connect-react'
 // import connectVoting from '@aragon/connect-disputable-voting'
 import { formatTokenAmount } from '@aragon/ui'
 import { useOrganizationState } from '../../providers/OrganizationProvider'

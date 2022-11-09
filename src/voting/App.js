@@ -27,7 +27,7 @@ import { VotingProvider } from './providers/VotingProvider'
 import { useWallet } from '../providers/Wallet'
 import RevokeDelegationScreens from './components/ModalFlows/RevokeDelegation/RevokeDelegationScreens'
 
-const TAB_ITEMS = ['Votes', 'Delegated']
+const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
 
 // const VALUES = Array.from(SECTIONS.values())
 
@@ -148,7 +148,7 @@ const App = React.memo(function App() {
               }
             />
             <Tabs
-              items={TAB_ITEMS}
+              items={TAB_ITEMS(account)}
               onChange={setSelectedTab}
               selected={selectedTab}
             />

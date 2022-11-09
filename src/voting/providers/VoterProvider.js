@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useConnect } from '@rperez89/connect-react'
+import { useConnect } from '@1hive/connect-react'
 import { useWallet } from '../../providers/Wallet'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 

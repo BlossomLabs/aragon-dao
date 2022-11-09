@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useApps, useConnect } from '@rperez89/connect-react'
+import { useApps, useConnect } from '@1hive/connect-react'
 import connectVoting from '@rperez89/connect-tao-voting'
 
 const OrganizationContext = React.createContext()
