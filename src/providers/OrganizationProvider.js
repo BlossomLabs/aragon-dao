@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { useApps, useConnect } from '@1hive/connect-react'
 import connectVoting from '@rperez89/connect-tao-voting'
+import connectTokenWrapper from '@rperez89/connect-token-wrapper'
 
 const OrganizationContext = React.createContext()
 
@@ -18,6 +19,11 @@ function OrganizationProvider({ children }) {
       return connectVoting(org.onApp('blossom-tao-voting'))
     }
   )
+  const [connectedTokenWrapperApp, connectedTokenWrapperAppStatus] = useConnect(
+    org => {
+      return connectTokenWrapper(org.onApp('blossom-token-wrapper'))
+    }
+  )
 
   return (
     <OrganizationContext.Provider
@@ -25,6 +31,7 @@ function OrganizationProvider({ children }) {
         organization: org,
         apps,
         connectedDisputableApp,
+        connectedTokenWrapperApp,
         permissions,
         loading,
         error,
