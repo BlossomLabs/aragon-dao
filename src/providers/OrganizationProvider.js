@@ -20,7 +20,7 @@ function OrganizationProvider({ children }) {
       return connectTokenWrapper(org.onApp('blossom-token-wrapper'))
     }
   )
-  const [connectANDelayApp, connectedANDelayAppStatus] = useConnect(org =>
+  const [connectedANDelayApp, connectedANDelayAppStatus] = useConnect(org =>
     connectANDelay(org.onApp('delay'))
   )
   const loading =
@@ -32,7 +32,7 @@ function OrganizationProvider({ children }) {
       value={{
         organization: org,
         apps,
-        connectANDelayApp,
+        connectedANDelayApp,
         connectedANDelayAppStatus,
         connectedDisputableApp,
         connectedTokenWrapperApp,

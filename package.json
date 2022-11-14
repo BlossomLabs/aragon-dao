@@ -9,7 +9,7 @@
     "@aragon/api": "^2.2.3",
     "@aragon/api-react": "^2.2.4",
     "@aragon/ui": "^1.9.2",
-    "@blossom-labs/connect-an-delay": "^0.0.1",
+    "@blossom-labs/connect-an-delay": "^0.1.1",
     "@juggle/resize-observer": "^3.2.0",
     "@nomiclabs/buidler": "^1.4.8",
     "@rperez89/connect-tao-voting": "^0.8.6",
