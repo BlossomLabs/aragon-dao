@@ -69,6 +69,29 @@ export default function useActions() {
     [account, connectedTokenWrapperApp, mounted]
   )
 
+  const unwrap = useCallback(
+    async ({ amount }, onDone = noop) => {
+      let intent = await connectedTokenWrapperApp.intent('withdraw', [amount], {
+        actAs: account,
+      })
+
+      intent = imposeGasLimit(intent, WRAP_GAS_LIMIT)
+
+      const description = radspec[tokenActions.UNWRAP]()
+
+      const transactions = attachTrxMetadata(
+        intent.transactions,
+        description,
+        ''
+      )
+
+      if (mounted()) {
+        onDone(transactions)
+      }
+    },
+    [account, connectedTokenWrapperApp, mounted]
+  )
+
   const approve = useCallback(
     (amount, tokenContract, appAddress) => {
       if (!tokenContract || !appAddress) {
@@ -131,9 +154,10 @@ export default function useActions() {
         getAllowance,
         approveTokenAmount,
         wrap,
+        unwrap,
       },
     }),
-    [getAllowance, approveTokenAmount, wrap]
+    [getAllowance, approveTokenAmount, wrap, unwrap]
   )
 }
 

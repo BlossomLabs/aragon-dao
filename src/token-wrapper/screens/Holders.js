@@ -9,7 +9,7 @@ import {
   GU,
   useTheme,
 } from '@aragon/ui'
-import { useConnectedAccount } from '@aragon/api-react'
+import { useWallet } from '../../providers/Wallet'
 import LocalIdentityBadge from '../components/LocalIdentityBadge/LocalIdentityBadge'
 import { useIdentity } from '../components/IdentityManager/IdentityManager'
 import You from '../components/You'
@@ -21,7 +21,7 @@ const Holders = React.memo(function Holders({
   onUnwrapTokens,
   wrappedToken,
 }) {
-  const connectedAccount = useConnectedAccount()
+  const { account: connectedAccount } = useWallet()
   const holderEntries = holders
     .map(holder => ({
       ...holder,
@@ -67,7 +67,7 @@ Holders.defaultProps = {
 
 function EntryActions({ address, onUnwrapTokens }) {
   const theme = useTheme()
-  const connectedAccount = useConnectedAccount()
+  const { account: connectedAccount } = useWallet()
   const [label, showLocalIdentityModal] = useIdentity(address)
 
   const isCurrentUser = addressesEqual(address, connectedAccount)

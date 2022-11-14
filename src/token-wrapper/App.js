@@ -54,7 +54,7 @@ function App() {
           showHolders ? (
             <Holders
               holders={holders}
-              onUnwrapTokens={unwrapTokensPanel.requestOpen}
+              onUnwrapTokens={handleUnwrapToken}
               wrappedToken={wrappedToken}
             />
           ) : (
