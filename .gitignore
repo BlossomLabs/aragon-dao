@@ -28,3 +28,6 @@ yarn-error.log*
 /public/aragon-ui
 /public/script.js
 /public/script.map
+
+.yalc
+yalc.lock
