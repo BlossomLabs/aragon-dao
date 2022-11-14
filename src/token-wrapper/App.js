@@ -1,38 +1,52 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { Main, Split, SyncIndicator, GU } from '@aragon/ui'
 import { IdentityProvider } from './components/IdentityManager/IdentityManager'
 import {
   TokenWrapperProvider,
   useAppState,
 } from './providers/TokenWrapperProvider'
+import MultiModal from '../components/MultiModal/MultiModal'
 import useGuiStyle from './hooks/useGuiStyle'
-import { Main, Split, SyncIndicator, GU } from '@aragon/ui'
 import { AppLogicProvider, useAppLogic } from './app-logic'
 import NoWrappedTokens from './screens/NoWrappedTokens'
 import Holders from './screens/Holders'
 import Panel from './components/ActionsPanel'
 import AppHeader from './components/AppHeader'
 import InfoBox from './components/InfoBox'
+import WrapTokenScreens from './components/ModalFlows/WrapTokenScreens/WrapTokenScreens'
 
 function App() {
+  const [modalMode, setModalMode] = useState(null)
+  const [modalVisible, setModalVisible] = useState(false)
   const { appearance } = useGuiStyle()
   const { depositedToken, holders, isSyncing, wrappedToken } = useAppState()
   const { actions, wrapTokensPanel, unwrapTokensPanel } = useAppLogic()
 
-  console.log('depositedToken ', depositedToken)
-  console.log('wrappedToken ', wrappedToken)
-  const appStateReady = depositedToken && wrappedToken
+  const appStateReady = depositedToken.id && wrappedToken.id
   const showHolders = appStateReady && holders && holders.length > 0
 
-  console.log('HOLDEEEEEERS ', holders)
+  const handleShowModal = useCallback(mode => {
+    setModalVisible(true)
+    setModalMode(mode)
+  }, [])
 
-  console.log('appStateReady ', appStateReady)
-  console.log('showHolders ', showHolders)
+  const handleWrapToken = useCallback(() => {
+    handleShowModal('wrap')
+  }, [handleShowModal])
+
+  const handleUnwrapToken = useCallback(() => {
+    handleShowModal('unwrap')
+  }, [handleShowModal])
+
+  const handleHideModal = useCallback(() => {
+    setModalVisible(false)
+  }, [])
 
   return (
     <Main theme={appearance}>
       {showHolders && <SyncIndicator visible={isSyncing} />}
       <AppHeader
-        onWrapHolder={showHolders ? wrapTokensPanel.requestOpen : null}
+        onWrapHolder={showHolders ? handleWrapToken : null}
         tokenSymbol={wrappedToken && wrappedToken.symbol}
       />
       <Split
@@ -94,6 +108,13 @@ function App() {
           />
         </React.Fragment>
       )}
+      <MultiModal
+        visible={modalVisible}
+        onClose={handleHideModal}
+        onClosed={() => setModalMode(null)}
+      >
+        <WrapTokenScreens mode={modalMode} />
+      </MultiModal>
     </Main>
   )
 }

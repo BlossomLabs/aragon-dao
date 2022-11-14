@@ -96,3 +96,7 @@ export function getDefaultProvider(chainId = getPreferredChain()) {
     ? new Providers.StaticJsonRpcProvider(defaultEthNode)
     : ethers.getDefaultProvider(type, 'x')
 }
+
+export function encodeFunctionData(contract, functionName, params) {
+  return contract.interface.encodeFunctionData(functionName, params)
+}
