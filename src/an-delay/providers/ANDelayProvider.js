@@ -16,7 +16,7 @@ const ANDelayProvider = ({ children }) => {
   )
   const loading = appDataStatus.loading
   const error = appDataStatus.error
-  const [delayedScripts, status] = useDelayedScripts()
+  const [[delayedScripts, executionTargets], status] = useDelayedScripts()
 
   useEffect(() => {
     if (!mounted() || loading || error) {
@@ -31,7 +31,7 @@ const ANDelayProvider = ({ children }) => {
       value={{
         executionDelay,
         delayedScripts,
-        executionTargets: [],
+        executionTargets,
         loading: loading || status.loading,
       }}
     >

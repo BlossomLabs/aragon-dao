@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import { Card, GU, textStyle } from '@aragon/ui'
 
 import CustomProgressBar from './CustomProgressBar'
-import DelayDescription from './DelayDescription'
 import DelayStatus from '../components/DelayStatus'
 import LocalLabelAppBadge from '../components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
+import Description from './Description'
 
 const DelayCard = React.memo(({ delay, selectDelay }) => {
   const {
@@ -20,7 +20,7 @@ const DelayCard = React.memo(({ delay, selectDelay }) => {
   } = delay
 
   return (
-    <CardItem onClick={() => selectDelay(delay.scriptId)}>
+    <CardItem onClick={() => selectDelay(delay.id)}>
       <div>
         <LocalLabelAppBadge
           appAddress={executionTargetData.address}
@@ -29,20 +29,25 @@ const DelayCard = React.memo(({ delay, selectDelay }) => {
           label={executionTargetData.name}
         />
       </div>
-      <DelayDescription
-        prefix={<span css="font-weight: bold">#{delay.scriptId}: </span>}
-        description={delay.executionDescription}
-        disabled
+      <div
         css={`
-          overflow: hidden;
-          ${textStyle('body1')};
-          line-height: ${27}px; // 27px = line-height of textstyle('body1')
+          // overflow-wrap:anywhere and hyphens:auto are not supported yet by
+          // the latest versions of Safari (as of June 2020), which
+          // is why word-break:break-word has been added here.
+          hyphens: auto;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          ${textStyle('body2')};
           height: ${27 * 3}px; // 27px * 3 = line-height * 3 lines
+          line-height: ${27}px; // 27px = line-height of textstyle('body1')
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 3;
+          overflow: hidden;
         `}
-      />
+      >
+        <Description path={delay.path} />
+      </div>
       <div>
         {status === STATUS.PENDING_EXECUTION ? (
           <DelayStatus status={delay.status} />

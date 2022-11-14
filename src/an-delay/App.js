@@ -2,7 +2,8 @@ import React, { useCallback } from 'react'
 import { Main, Tag, Header, SyncIndicator, GU } from '@aragon/ui'
 
 import { IdentityProvider } from './identity-manager'
-import { useSelectedDelay } from './hooks/app-logic'
+import { useGuiStyle } from './hooks/shared'
+import useSelectedDelay from './hooks/useSelectedDelay'
 import useFilterDelays from './hooks/useFilterDelays'
 
 import Title from './components/Title'
@@ -10,7 +11,7 @@ import NoDelays from './screens/NoDelays'
 import DelayDetail from './screens/DelayDetail'
 import Delays from './screens/Delays'
 import { ANDelayProvider, useAppState } from './providers/ANDelayProvider'
-import { useGuiStyle } from './hooks/shared'
+import { formatTime } from './lib/math-utils'
 
 const App = React.memo(() => {
   const {
@@ -18,8 +19,6 @@ const App = React.memo(() => {
     executionTargets,
     executionDelay,
     // onDelayAction,
-    // selectDelay,
-    // selectedDelay,
     loading,
   } = useAppState()
   const [selectedDelay, selectDelay] = useSelectedDelay(delayedScripts)
@@ -63,7 +62,7 @@ const App = React.memo(() => {
                 after={
                   executionDelay && (
                     <Tag mode="identifier" uppercase={false}>
-                      {executionDelay}
+                      {formatTime(executionDelay)}
                     </Tag>
                   )
                 }
@@ -102,10 +101,5 @@ export default function Delay() {
         <App />
       </ANDelayProvider>
     </IdentityProvider>
-    // <AppLogicProvider>
-    //   <IdentityProvider>
-    //     <App />
-    //   </IdentityProvider>
-    // </AppLogicProvider>
   )
 }

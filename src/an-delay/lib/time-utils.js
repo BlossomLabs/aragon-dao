@@ -8,4 +8,12 @@ export const toMilliseconds = timestamp => {
   return timestamp_ * 1000
 }
 
-export const timestampToDate = timestamp => new Date(toMilliseconds(timestamp))
+export const timestampToDate = timestamp => {
+  const ms = toMilliseconds(timestamp)
+
+  if (ms === 0) {
+    return
+  }
+
+  return new Date(ms)
+}
