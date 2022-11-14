@@ -3,6 +3,30 @@ import BN from 'bn.js'
 import { useContractReadOnly } from './useContract'
 import minimeTokenAbi from '../../abi/minimeToken.json'
 
+export function useTokenBalanceOf(tokenAddress, account, chainId) {
+  const [balance, setBalance] = useState(new BN(-1))
+  const tokenContract = useContractReadOnly(
+    tokenAddress,
+    minimeTokenAbi,
+    chainId
+  )
+
+  useEffect(() => {
+    if (!tokenContract || !account) {
+      return
+    }
+    const fetchTokenBalanceOf = async () => {
+      const result = await tokenContract.balanceOf(account)
+
+      setBalance(new BN(result.toString()))
+    }
+
+    fetchTokenBalanceOf()
+  }, [account, tokenContract])
+
+  return balance
+}
+
 export function useTokenBalances(account, token) {
   const [balances, setBalances] = useState({
     balance: new BN(-1),

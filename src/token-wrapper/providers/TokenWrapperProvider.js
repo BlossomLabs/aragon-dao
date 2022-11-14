@@ -3,6 +3,8 @@ import { useConnect } from '@1hive/connect-react'
 import BN from 'bn.js'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import { useMounted } from '../../hooks/shared/useMounted'
+import { useWallet } from '../../providers/Wallet'
+import { useTokenBalanceOf } from '../../hooks/shared/useAccountTokenBalance'
 
 const TokenWrapperContext = React.createContext()
 
@@ -36,6 +38,8 @@ const reduceToken = token => {
 }
 
 function TokenWrapperProvider({ children }) {
+  const chainId = 100 // TODO- handle chains
+  const { account } = useWallet()
   const [holders, setHolders] = useState([])
   const [wrappedToken, setWrappedToken] = useState()
   const [depositedToken, setDepositedToken] = useState()
@@ -57,7 +61,16 @@ function TokenWrapperProvider({ children }) {
     return connectedTokenWrapperApp?.token()
   }, [connectedTokenWrapperApp])
 
-  console.log('connectDepositedTokensStatus ', connectDepositedTokensStatus)
+  const wrappedTokenBalance = useTokenBalanceOf(
+    wrappedToken?.id,
+    account,
+    chainId
+  )
+  const depositedTokenBalance = useTokenBalanceOf(
+    depositedToken?.id,
+    account,
+    chainId
+  )
 
   useEffect(() => {
     const reducedVotes = reduceHolders(connectHolders)
@@ -88,15 +101,23 @@ function TokenWrapperProvider({ children }) {
   const loading =
     !connectHoldersStatus?.loading &&
     !connectWrappedTokensStatus.loading &&
-    !connectDepositedTokensStatus.loading
+    !connectDepositedTokensStatus.loading &&
+    account &&
+    !wrappedTokenBalance.eq(new BN(-1)) &&
+    account &&
+    !depositedTokenBalance.eq(new BN(-1))
 
   return (
     <TokenWrapperContext.Provider
       value={{
         isSyncing: !loading && !error,
         holders,
-        wrappedToken,
-        depositedToken,
+        wrappedToken: { ...wrappedToken, accountBalance: wrappedTokenBalance },
+        depositedToken: {
+          ...depositedToken,
+          accountBalance: depositedTokenBalance,
+        },
+        connectedTokenWrapperApp,
       }}
     >
       {children}

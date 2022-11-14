@@ -9,5 +9,9 @@ export function addressesEqual(first, second) {
   )
 }
 
+export function encodeFunctionData(contract, functionName, params) {
+  return contract.interface.encodeFunctionData(functionName, params)
+}
+
 // Re-export some web3-utils functions
 export { isAddress } from 'web3-utils'

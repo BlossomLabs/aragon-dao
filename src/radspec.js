@@ -18,4 +18,13 @@ export default {
       supports ? 'Yes' : 'No'
     } on behalf of principals on decision: #${voteId}`
   },
+  [organizationActions.WRAP]: () => {
+    return `Wrap token`
+  },
+  [organizationActions.UNWRAP]: () => {
+    return `Unwrap token`
+  },
+  [organizationActions.APPROVE_TOKEN]: ({ tokenSymbol }) => {
+    return `Approve ${tokenSymbol}`
+  },
 }

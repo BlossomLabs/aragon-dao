@@ -11,7 +11,7 @@
     ],
     "@babel/preset-react"
   ],
-  "plugins": [["styled-components", { "displayName": true }], "@babel/plugin-proposal-optional-chaining"],
+  "plugins": [["styled-components", { "displayName": true }], "@babel/plugin-proposal-optional-chaining","@babel/plugin-proposal-class-properties"],
   "env": {
     "test": {
       "presets": [

@@ -28,6 +28,7 @@
     ],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "linebreak-style": ["error", "unix"]
+    "linebreak-style": ["error", "unix"],
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }]
   }
 }
