@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   BackButton,
   Bar,
@@ -24,13 +24,16 @@ import LayoutGutter from '../../components/Layout/LayoutGutter'
 import LayoutLimiter from '../../components/Layout/LayoutLimiter'
 import { usePath } from '../hooks/shared'
 import LoadingSection from '../../voting/components/Loading/LoadingSection'
+import MultiModal from '../../components/MultiModal/MultiModal'
+import DelayActionScreens from '../components/ModalFlows/DelayActionScreens'
+import { useWallet } from '../../providers/Wallet'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
 const DelayDetailWrapper = ({ match }) => {
   const [, navigate] = usePath()
   const [delay, { loading, error }] = useDelayedScript(match.params.id)
-
+  console.log('here')
   return (
     <LayoutGutter>
       <LayoutLimiter>
@@ -51,6 +54,11 @@ const DelayDetailWrapper = ({ match }) => {
   )
 }
 const DelayDetail = React.memo(({ delay = {} }) => {
+  const { account } = useWallet()
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalData, setModalData] = useState({})
+  const [modalMode, setModalMode] = useState(null)
+  const [delayAction, setDelayAction] = useState()
   const theme = useTheme()
   const { layoutName } = useLayout()
 
@@ -134,7 +142,25 @@ const DelayDetail = React.memo(({ delay = {} }) => {
                   </div>
                 </div>
               </div>
-              <DelayActions scriptId={delay.scriptId} status={delay.status} />
+              {account && (
+                <DelayActions
+                  status={delay.status}
+                  onDelayAction={action => {
+                    setModalVisible(true)
+                    setDelayAction(action)
+                  }}
+                />
+              )}
+              <MultiModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onClosed={() => setModalMode(null)}
+              >
+                <DelayActionScreens
+                  delayedScript={delay}
+                  action={delayAction}
+                />
+              </MultiModal>
             </section>
           </Box>
         }

@@ -6,13 +6,14 @@ import ResumeIcon from '../assets/resume.svg'
 import PauseIcon from '../assets/pause.svg'
 
 import STATUS from '../delay-status-types'
+import actions from '../actions/an-delay-action.types'
 
 const getMainActionProps = (status, theme) => {
   switch (status) {
     case STATUS.ONGOING:
       return {
         mode: 'normal',
-        mainAction: 'pause',
+        mainAction: actions.PAUSE_EXECUTION,
         label: 'Pause',
         beforeIcon: PauseIcon,
         css: `color: white; background-color: ${theme.purple};`,
@@ -20,20 +21,20 @@ const getMainActionProps = (status, theme) => {
     case STATUS.PAUSED:
       return {
         mode: 'positive',
-        mainAction: 'resume',
+        mainAction: actions.RESUME_EXECUTION,
         label: 'Resume',
         beforeIcon: ResumeIcon,
       }
     default:
       return {
         mode: 'strong',
-        mainAction: 'execute',
+        mainAction: actions.EXECUTE,
         label: 'Execute',
       }
   }
 }
 
-const DelayActions = React.memo(({ scriptId, status }) => {
+const DelayActions = React.memo(({ status, onDelayAction }) => {
   const theme = useTheme()
   const props = getMainActionProps(status, theme)
 
@@ -46,10 +47,10 @@ const DelayActions = React.memo(({ scriptId, status }) => {
         margin-top: 16px;
       `}
     >
-      <DelayButton {...props} onClick={() => console.log(`do action`)} />
+      <DelayButton {...props} onClick={() => onDelayAction(props.mainAction)} />
       <DelayButton
         label="Cancel"
-        onClick={() => console.log(`cancel script`)}
+        onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
       />
     </div>
   )
