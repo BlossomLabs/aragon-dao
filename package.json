@@ -6,8 +6,10 @@
   "dependencies": {
     "@1hive/connect-react": "^0.9.13",
     "@1hive/radspec": "^2.0.0",
+    "@aragon/api": "^2.2.3",
+    "@aragon/api-react": "^2.2.4",
     "@aragon/ui": "^1.9.2",
-    "@blossom-labs/connect-an-delay": "^0.1.1",
+    "@blossom-labs/connect-an-delay": "^0.2.0",
     "@juggle/resize-observer": "^3.2.0",
     "@nomiclabs/buidler": "^1.4.8",
     "@rperez89/connect-tao-voting": "^0.8.6",
@@ -34,9 +36,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-proposal-optional-chaining": "^7.18.9",
     "@babel/preset-env": "^7.10.2",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/preset-react": "^7.10.1",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^26.1.0",
