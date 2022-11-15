@@ -7,10 +7,13 @@ import DelayStatus from '../components/DelayStatus'
 import LocalLabelAppBadge from '../components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
-import Description from './Description'
+import DescriptionWithSkeleton from './Description/DescriptionWithSkeleton'
+import { usePath } from '../hooks/shared'
 
-const DelayCard = React.memo(({ delay, selectDelay }) => {
+const DelayCard = React.memo(({ delay }) => {
+  const [, navigate] = usePath()
   const {
+    id,
     executionTargetData,
     status,
     timeSubmitted,
@@ -20,7 +23,7 @@ const DelayCard = React.memo(({ delay, selectDelay }) => {
   } = delay
 
   return (
-    <CardItem onClick={() => selectDelay(delay.id)}>
+    <CardItem onClick={() => navigate(`/delays/${id}`)}>
       <div>
         <LocalLabelAppBadge
           appAddress={executionTargetData.address}
@@ -46,7 +49,7 @@ const DelayCard = React.memo(({ delay, selectDelay }) => {
           overflow: hidden;
         `}
       >
-        <Description path={delay.path} />
+        <DescriptionWithSkeleton path={delay.path} />
       </div>
       <div>
         {status === STATUS.PENDING_EXECUTION ? (

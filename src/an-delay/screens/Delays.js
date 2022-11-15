@@ -34,7 +34,6 @@ const Delays = React.memo(
     handleDelayAppFilterChange,
     handleClearFilters,
     executionTargets,
-    selectDelay,
   }) => {
     const { layoutName } = useLayout()
     const theme = useTheme()
@@ -121,7 +120,6 @@ const Delays = React.memo(
               ongoingDelays={ongoingDelays}
               pausedDelays={pausedDelays}
               pendingDelays={pendingDelays}
-              selectDelay={selectDelay}
             />
           )}
         </React.Fragment>
@@ -151,12 +149,7 @@ const ThisApp = ({ showTag }) => (
   </div>
 )
 
-const DelayGroups = ({
-  ongoingDelays,
-  pausedDelays,
-  pendingDelays,
-  selectDelay,
-}) => {
+const DelayGroups = ({ ongoingDelays, pausedDelays, pendingDelays }) => {
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
   const rowHeight = compactMode ? null : 240
@@ -179,13 +172,7 @@ const DelayGroups = ({
             />
             <CardLayout columnWidthMin={30 * GU} rowHeight={rowHeight}>
               {delays.map(delay => {
-                return (
-                  <DelayCard
-                    key={delay.id}
-                    delay={delay}
-                    selectDelay={selectDelay}
-                  />
-                )
+                return <DelayCard key={delay.id} delay={delay} />
               })}
             </CardLayout>
           </section>

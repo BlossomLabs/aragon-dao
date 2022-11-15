@@ -1,130 +1,80 @@
-import { addressesEqual, useConnect } from '@1hive/connect-react'
+import { useConnect } from '@1hive/connect-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
-import { getStatus } from '../lib/delay-utils'
-import { timestampToDate, toMilliseconds } from '../lib/time-utils'
-import { EMPTY_ADDRESS } from '../web3-utils'
+import { decorateDelayedScript, getStatus } from '../lib/delay-utils'
 import { useNow } from './utils-hooks'
 
-const formatDelayedScript = delayedScript => {
+const useDecoratedDelayedScripts = delayedScriptOrScripts => {
+  const [
+    decoratedDelayedScriptOrScripts,
+    setDecoratedDelayedScriptOrScripts,
+  ] = useState()
+  const [isLoading, setIsLoading] = useState(true)
+  const [errorMsg, setErrorMsg] = useState()
   const {
-    id,
-    evmCallScript,
-    executionTime,
-    pausedAt,
-    timeSubmitted,
-    totalTimePaused,
-  } = delayedScript
+    organization,
+    loading: orgStateLoading,
+    error: orgStateError,
+  } = useOrganizationState()
+  const [
+    installedApps,
+    { loading: appsLoading, error: appsError },
+  ] = useConnect(org => org.apps())
+  const loading = isLoading || orgStateLoading || appsLoading
+  const error = orgStateError || appsError || errorMsg
 
-  return {
-    ...delayedScript,
-    id: parseInt(id),
-    evmCallScript,
-    executionTime: timestampToDate(executionTime),
-    pausedAt: timestampToDate(pausedAt),
-    timeSubmitted: timestampToDate(timeSubmitted),
-    totalTimePaused: toMilliseconds(totalTimePaused),
-  }
-}
-
-const buildExecutionTarget = (forwardingPathDescription, installedApps) => {
-  const executionTargetAddresses = new Set(
-    forwardingPathDescription.describedSteps.map(step => step.to)
-  )
-  let targetApp
-
-  if (executionTargetAddresses.length > 1) {
-    // If there's multiple targets, make a "multiple" version
-    targetApp = {
-      address: EMPTY_ADDRESS,
-      name: 'Multiple',
+  useEffect(() => {
+    if (!installedApps || !organization || !delayedScriptOrScripts) {
+      return
     }
-  } else {
-    // Otherwise, try to find the target from the installed apps
-    const [targetAddress] = executionTargetAddresses
 
-    const installedApp = installedApps.find(app =>
-      addressesEqual(app.address, targetAddress)
-    )
-
-    if (!installedApp) {
-      targetApp = {
-        address: targetAddress,
-        icon: null,
-        name: 'External',
+    async function decorate() {
+      setIsLoading(true)
+      if (Array.isArray(delayedScriptOrScripts)) {
+        const decoratedDelayedScripts = await Promise.all(
+          delayedScriptOrScripts.map(s =>
+            decorateDelayedScript(s, installedApps, organization)
+          )
+        )
+        setDecoratedDelayedScriptOrScripts(decoratedDelayedScripts)
+      } else {
+        const decoratedDelayedScript = await decorateDelayedScript(
+          delayedScriptOrScripts,
+          installedApps,
+          organization
+        )
+        setDecoratedDelayedScriptOrScripts(decoratedDelayedScript)
       }
-    } else {
-      const appIcons = installedApp.manifest.icons
-      const appIcon =
-        appIcons && appIcons.length
-          ? appIcons.find(icon => icon.sizes === '24x24')?.src ??
-            appIcons[0].src
-          : null
-      targetApp = {
-        address: installedApp.address,
-        icon: appIcon,
-        name: installedApp.name,
-      }
+      setIsLoading(false)
     }
-  }
 
-  let executionTargetData = {}
+    decorate().catch(err => {
+      console.error(err)
+      setErrorMsg(err.message)
+    })
+  }, [installedApps, organization, delayedScriptOrScripts])
 
-  if (targetApp) {
-    const { address, icon, name } = targetApp
-    executionTargetData = {
-      address,
-      name,
-      iconSrc: icon,
-      identifier: address,
-    }
-  }
-
-  return {
-    executionTargetData,
-    executionTargetAddresses: [...executionTargetAddresses.values()],
-  }
-}
-
-const buildDecoratedDelayedScripts = async (
-  delayedScripts,
-  installedApps,
-  org
-) => {
-  const forwardingPathDescriptions = await Promise.all(
-    delayedScripts.map(script => org.describeScript(script.evmCallScript))
-  )
-
-  return delayedScripts.map((s, i) => {
-    const forwardingPathDescription = forwardingPathDescriptions[i]
-    const {
-      executionTargetAddresses,
-      executionTargetData,
-    } = buildExecutionTarget(forwardingPathDescription, installedApps)
-    return {
-      ...formatDelayedScript(s),
-      path: forwardingPathDescription.describedSteps,
-      executionTargets: executionTargetAddresses,
-      executionTargetData,
-    }
-  })
+  return [decoratedDelayedScriptOrScripts, { loading, error }]
 }
 
 export const useDelayedScripts = () => {
-  const [decoratedDelayedScripts, setDecoratedDelayedScripts] = useState([])
-  const [loading, setLoading] = useState(false)
-  const { connectedANDelayApp, organization } = useOrganizationState()
+  const { connectedANDelayApp } = useOrganizationState()
   const [installedApps] = useConnect(org => org.apps())
-  const [rawDelayedScripts, rawDelayedScriptsStatus] = useConnect(
-    () => connectedANDelayApp.onDelayedScripts({ first: 50 }),
-    [connectedANDelayApp]
-  )
+  const [
+    rawDelayedScripts,
+    { loading: delayedScriptsLoading, error: delayedScriptsError },
+  ] = useConnect(() => connectedANDelayApp?.onDelayedScripts({ first: 50 }), [
+    connectedANDelayApp,
+  ])
+  const [
+    decoratedDelayedScripts = [],
+    { loading: decorateLoading, error: decorateError },
+  ] = useDecoratedDelayedScripts(rawDelayedScripts)
   const now = useNow()
   const delayStatus = (rawDelayedScripts || []).map(script =>
     getStatus(script, now)
   )
   const delayStatusKey = delayStatus.map(String).join('')
-
   const executionTargets = (installedApps || [])
     .filter(app =>
       decoratedDelayedScripts.some(({ executionTargets }) =>
@@ -138,24 +88,8 @@ export const useDelayedScripts = () => {
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
-  useEffect(() => {
-    if (!installedApps || !organization || !rawDelayedScripts) {
-      return
-    }
-
-    async function decorate() {
-      setLoading(true)
-      const result = await buildDecoratedDelayedScripts(
-        rawDelayedScripts,
-        installedApps,
-        organization
-      )
-      setDecoratedDelayedScripts(result)
-      setLoading(false)
-    }
-
-    decorate()
-  }, [rawDelayedScripts, installedApps, organization])
+  const loading = delayedScriptsLoading || decorateLoading
+  const error = delayedScriptsError || decorateError
 
   return [
     [
@@ -170,6 +104,42 @@ export const useDelayedScripts = () => {
       ),
       executionTargets,
     ],
-    { loading: rawDelayedScriptsStatus.loading || loading },
+    { loading, error },
   ]
+}
+
+export const useDelayedScript = scriptId => {
+  const {
+    connectedANDelayApp,
+    loading: orgStateLoading,
+    error: orgStateError,
+  } = useOrganizationState()
+  const [
+    rawDelayedScript,
+    { loading: rawDelayedScriptLoading, error: rawDelayedScriptError },
+  ] = useConnect(() => connectedANDelayApp?.onDelayedScript(scriptId), [
+    connectedANDelayApp,
+    scriptId,
+  ])
+  const [
+    decoratedDelayedScript,
+    { loading: decorateLoading, error: decorateError },
+  ] = useDecoratedDelayedScripts(rawDelayedScript)
+  const now = useNow()
+  const status = rawDelayedScript ? getStatus(rawDelayedScript, now) : undefined
+
+  const loading = orgStateLoading || rawDelayedScriptLoading || decorateLoading
+  const error = orgStateError || rawDelayedScriptError || decorateError
+
+  return useMemo(() => {
+    return [
+      decoratedDelayedScript
+        ? {
+            ...decoratedDelayedScript,
+            status,
+          }
+        : undefined,
+      { loading, error },
+    ]
+  }, [decoratedDelayedScript, status, loading, error])
 }

@@ -1,14 +1,12 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { Main, Tag, Header, SyncIndicator, GU } from '@aragon/ui'
 
 import { IdentityProvider } from './identity-manager'
 import { useGuiStyle } from './hooks/shared'
-import useSelectedDelay from './hooks/useSelectedDelay'
 import useFilterDelays from './hooks/useFilterDelays'
 
 import Title from './components/Title'
 import NoDelays from './screens/NoDelays'
-import DelayDetail from './screens/DelayDetail'
 import Delays from './screens/Delays'
 import { ANDelayProvider, useAppState } from './providers/ANDelayProvider'
 import { formatTime } from './lib/math-utils'
@@ -18,10 +16,8 @@ const App = React.memo(() => {
     delayedScripts,
     executionTargets,
     executionDelay,
-    // onDelayAction,
     loading,
   } = useAppState()
-  const [selectedDelay, selectDelay] = useSelectedDelay(delayedScripts)
 
   const {
     filteredDelays,
@@ -33,10 +29,6 @@ const App = React.memo(() => {
   } = useFilterDelays(delayedScripts, executionTargets)
 
   const { appearance } = useGuiStyle()
-
-  const handleBack = useCallback(() => {
-    selectDelay(-1)
-  }, [selectDelay])
 
   return (
     <Main theme={appearance}>
@@ -69,25 +61,17 @@ const App = React.memo(() => {
               />
             }
           />
-          {selectedDelay ? (
-            <DelayDetail
-              delay={selectedDelay}
-              onBack={handleBack}
-              onDelayAction={() => console.log('delay')}
-            />
-          ) : (
-            <Delays
-              delays={delayedScripts}
-              filteredDelays={filteredDelays}
-              delayStatusFilter={delayStatusFilter}
-              handleDelayStatusFilterChange={handleDelayStatusFilterChange}
-              delayAppFilter={delayAppFilter}
-              handleDelayAppFilterChange={handleDelayAppFilterChange}
-              handleClearFilters={handleClearFilters}
-              executionTargets={executionTargets}
-              selectDelay={selectDelay}
-            />
-          )}
+
+          <Delays
+            delays={delayedScripts}
+            filteredDelays={filteredDelays}
+            delayStatusFilter={delayStatusFilter}
+            handleDelayStatusFilterChange={handleDelayStatusFilterChange}
+            delayAppFilter={delayAppFilter}
+            handleDelayAppFilterChange={handleDelayAppFilterChange}
+            handleClearFilters={handleClearFilters}
+            executionTargets={executionTargets}
+          />
         </React.Fragment>
       )}
     </Main>

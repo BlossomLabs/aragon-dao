@@ -33,7 +33,7 @@ const getMainActionProps = (status, theme) => {
   }
 }
 
-const DelayActions = React.memo(({ scriptId, status, onDelayAction }) => {
+const DelayActions = React.memo(({ scriptId, status }) => {
   const theme = useTheme()
   const props = getMainActionProps(status, theme)
 
@@ -46,8 +46,11 @@ const DelayActions = React.memo(({ scriptId, status, onDelayAction }) => {
         margin-top: 16px;
       `}
     >
-      <DelayButton {...props} onClick={() => onDelayAction(scriptId, props.mainAction)} />
-      <DelayButton label="Cancel" onClick={() => onDelayAction(scriptId, 'cancel')} />
+      <DelayButton {...props} onClick={() => console.log(`do action`)} />
+      <DelayButton
+        label="Cancel"
+        onClick={() => console.log(`cancel script`)}
+      />
     </div>
   )
 })

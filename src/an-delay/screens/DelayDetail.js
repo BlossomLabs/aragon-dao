@@ -5,34 +5,59 @@ import {
   Box,
   Countdown,
   GU,
+  Header,
   Split,
   textStyle,
   useLayout,
   useTheme,
 } from '@aragon/ui'
 import DelayActions from '../components/DelayActions'
-import DelayDescription from '../components/DelayDescription'
 import DelayStatus from '../components/DelayStatus'
-import DetailedDescription from '../components/DetailedDescription'
 import LocalIdentityBadge from '../components/LocalIdentityBadge/LocalIdentityBadge'
 import LocalLabelAppBadge from '../components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
 import { formatTime, toHours } from '../lib/math-utils'
+import { useDelayedScript } from '../hooks/useDelayedScripts'
+import Description from '../components/Description'
+import LayoutGutter from '../../components/Layout/LayoutGutter'
+import LayoutLimiter from '../../components/Layout/LayoutLimiter'
+import { usePath } from '../hooks/shared'
+import LoadingSection from '../../voting/components/Loading/LoadingSection'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
-const DelayDetail = React.memo(({ delay, onBack, onDelayAction }) => {
+const DelayDetailWrapper = ({ match }) => {
+  const [, navigate] = usePath()
+  const [delay, { loading, error }] = useDelayedScript(match.params.id)
+
+  return (
+    <LayoutGutter>
+      <LayoutLimiter>
+        <Header primary="Delay" />
+        <Bar>
+          <BackButton onClick={() => navigate('/delays')} />
+        </Bar>
+        <LoadingSection loading={loading} title="Loading delayed script">
+          {error ? (
+            // TODO: create proper <Box /> component and move to shared root components.
+            <Box>An error happened when fetching the delayed script</Box>
+          ) : (
+            <DelayDetail delay={delay} />
+          )}
+        </LoadingSection>
+      </LayoutLimiter>
+    </LayoutGutter>
+  )
+}
+const DelayDetail = React.memo(({ delay = {} }) => {
   const theme = useTheme()
   const { layoutName } = useLayout()
 
-  const { creator, executionDescription, executionTargetData, path: executionPath } = delay
+  const { id, creator, executionTargetData, path } = delay || {}
 
   return (
     <>
-      <Bar>
-        <BackButton onClick={onBack} />
-      </Bar>
       <Split
         primary={
           <Box>
@@ -55,7 +80,7 @@ const DelayDetail = React.memo(({ delay, onBack, onDelayAction }) => {
                   ${textStyle('title2')};
                 `}
               >
-                <span css="font-weight: bold;">Delay #{delay.scriptId}</span>
+                <span css="font-weight: bold;">Delay #{id}</span>
               </h1>
               <div
                 css={`
@@ -81,15 +106,12 @@ const DelayDetail = React.memo(({ delay, onBack, onDelayAction }) => {
                       ${textStyle('body2')};
                     `}
                   >
-                    <DelayDescription
-                      description={
-                        Array.isArray(executionPath) ? (
-                          <DetailedDescription path={executionPath} />
-                        ) : (
-                          executionDescription || DEFAULT_DESCRIPTION
-                        )
-                      }
-                    />
+                    {path && Array.isArray(path) ? (
+                      <Description path={path} />
+                    ) : (
+                      // TODO: Improve default description (include execution target's data)
+                      DEFAULT_DESCRIPTION
+                    )}
                   </div>
                 </div>
                 <div>
@@ -112,11 +134,7 @@ const DelayDetail = React.memo(({ delay, onBack, onDelayAction }) => {
                   </div>
                 </div>
               </div>
-              <DelayActions
-                scriptId={delay.scriptId}
-                status={delay.status}
-                onDelayAction={onDelayAction}
-              />
+              <DelayActions scriptId={delay.scriptId} status={delay.status} />
             </section>
           </Box>
         }
@@ -165,4 +183,4 @@ function Status({ delay }) {
   )
 }
 
-export default DelayDetail
+export default DelayDetailWrapper
