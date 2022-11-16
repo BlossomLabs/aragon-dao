@@ -6,6 +6,7 @@ import { OrganizationProvider } from './providers/OrganizationProvider'
 import useGuiStyle from './hooks/shared/useGuiStyle'
 import MainView from './components/MainView'
 import Router from './routes/Router'
+import MenuPanel from './components/MenuPanel/MenuPanel'
 
 import { WalletProvider } from './providers/Wallet'
 
@@ -23,6 +24,9 @@ function App() {
               theme={appearance}
             >
               <MainView>
+                <div css="position: relative; z-index: 0">
+                  <MenuPanel />
+                </div>
                 <Router />
               </MainView>
             </Main>

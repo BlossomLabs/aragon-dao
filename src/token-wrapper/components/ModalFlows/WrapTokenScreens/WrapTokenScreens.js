@@ -59,8 +59,8 @@ function WrapTokenScreens({ mode }) {
 
   const title =
     mode === 'wrap'
-      ? `Wrap ${depositedToken.symbol} to receive ${depositedToken.symbol}`
-      : `Unwrap ${wrappedToken.symbol} to receive ${wrappedToken.symbol}`
+      ? `Wrap ${depositedToken.symbol} to receive ${wrappedToken.symbol}`
+      : `Unwrap ${wrappedToken.symbol} to receive ${depositedToken.symbol}`
 
   const screens = useMemo(() => {
     return [
