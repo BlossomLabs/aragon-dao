@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNetwork } from '@aragon/api-react'
+import useNetwork from '../../../hooks/shared/useNetwork'
 import { IdentityBadge } from '@aragon/ui'
 import { useIdentity } from '../IdentityManager/IdentityManager'
 import LocalLabelPopoverTitle from './LocalLabelPopoverTitle'
