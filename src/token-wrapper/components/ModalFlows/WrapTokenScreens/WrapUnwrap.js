@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import BN from 'BN.js'
+import BN from 'bn.js'
 import {
   Button,
   ButtonBase,

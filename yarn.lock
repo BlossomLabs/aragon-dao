@@ -69,20 +69,6 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aragon/api-react@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@aragon/api-react/-/api-react-2.2.4.tgz#caf439bfdfbb1e99a85d07571dcb763c06aa9515"
-  integrity sha512-zr/QEYJHbx05ZSuirPllDh3rfFEukZRxa8NmGgFr1FIuBP6dPtm5viLjfnoASKKqfaP722bzfguL+SkTeYxOvw==
-
-"@aragon/api@^2.2.3":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@aragon/api/-/api-2.2.3.tgz#c7ad89c173f7551417c7468618bffd6dcdcf49c5"
-  integrity sha512-PItJ0p0EdFtsZgTxhQIIiK1SWxkQb/AoHBS5xOwXk3bHypOy6+3ZjF2UzQ4QxJp94dGrr7Z1RmIZ+OhYzblwlQ==
-  dependencies:
-    "@aragon/rpc-messenger" "^2.0.0"
-    "@babel/runtime" "^7.1.2"
-    rxjs "^6.5.2"
-
 "@aragon/provided-connector@^6.0.7":
   version "6.0.8"
   resolved "https://registry.yarnpkg.com/@aragon/provided-connector/-/provided-connector-6.0.8.tgz#5d22ccb2a0ff599fbe6c23fdf96cb06d59ff2716"
@@ -91,15 +77,6 @@
     "@web3-react/abstract-connector" "^6.0.7"
     "@web3-react/types" "^6.0.7"
     tiny-warning "^1.0.3"
-
-"@aragon/rpc-messenger@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@aragon/rpc-messenger/-/rpc-messenger-2.0.0.tgz#84d621fca88a723dc01db4f67b3936b6387a2c33"
-  integrity sha512-voJVVgI97MIeUQUTjHOH9GLzMjCvJlp6L2MEsj3nGKgj01VkFVZR7AlooDqqNytAnVnLvJmERtuZ2oXE33UtCg==
-  dependencies:
-    "@babel/runtime" "^7.1.2"
-    rxjs "^6.5.2"
-    uuid "^3.2.1"
 
 "@aragon/ui@^1.9.2":
   version "1.9.3"
@@ -1837,10 +1814,10 @@
     "@1hive/connect-thegraph" "^0.9.13"
     graphql-tag "^2.10.3"
 
-"@rperez89/connect-token-wrapper@^0.8.6":
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-token-wrapper/-/connect-token-wrapper-0.8.6.tgz#1c75c13e6d9314247be3dbfcc579d3cf5bfff979"
-  integrity sha512-Hg1bEP8lXsfgqWWj3T2bPlllo983EWoMH7q0x/vdWALceon9fo5bjKk0McRRoRB08/Hh6v/R7e6h9WF/STMbGg==
+"@rperez89/connect-token-wrapper@^0.8.7":
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-token-wrapper/-/connect-token-wrapper-0.8.7.tgz#bfb0c6fc66a7d3b4fe4d209167ef059a592b3c57"
+  integrity sha512-BklZdmxzb7uxY1rCLO1a6wRtlFag/IJ3LoT1+9QWwTVnRT+FDKK+f5IoHv7qkqAgUNG8UogA0DQEv8fu6OiaNQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
@@ -11813,7 +11790,7 @@ rustbn.js@~0.2.0:
   resolved "https://registry.yarnpkg.com/rustbn.js/-/rustbn.js-0.2.0.tgz#8082cb886e707155fd1cb6f23bd591ab8d55d0ca"
   integrity sha512-4VlvkRUuCJvr2J6Y0ImW7NvTCriMi7ErOAqWk1y69vAdoNIzCF3yPmgeNzx+RQTLEDFq5sHfscn1MwHxP9hNfA==
 
-rxjs@^6.2.1, rxjs@^6.4.0, rxjs@^6.5.2, rxjs@^6.6.3:
+rxjs@^6.2.1, rxjs@^6.4.0, rxjs@^6.6.3:
   version "6.6.7"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.7.tgz#90ac018acabf491bf65044235d5863c4dab804c9"
   integrity sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==
@@ -13361,7 +13338,7 @@ uuid@7.0.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.2.tgz#7ff5c203467e91f5e0d85cfcbaaf7d2ebbca9be6"
   integrity sha512-vy9V/+pKG+5ZTYKf+VcphF5Oc6EFiu3W8Nv3P3zIh0EqVI80ZxOzuPfe9EHjkFNvf8+xuTHVeei4Drydlx4zjw==
 
-uuid@^3.2.1, uuid@^3.3.2:
+uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
