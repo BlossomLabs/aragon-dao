@@ -10,7 +10,7 @@ function Router() {
   return (
     <Switch>
       {/* <Route exact path="/" component={VotingRouter} /> */}
-      <Route path="/delays" component={ANDelayRouter} />
+      <Route path="/delay" component={ANDelayRouter} />
       <Route path="/votes" component={VotingRouter} />
       <Route path="/wrapper" component={TokenWrapperRouter} />
     </Switch>

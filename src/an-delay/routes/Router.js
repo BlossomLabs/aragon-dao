@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header, Main, Tag } from '@aragon/ui'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import {
   ANDelaySettingsProvider,
   useANDelaySettings,
@@ -14,8 +14,9 @@ import { formatTime } from '../lib/math-utils'
 
 const ANDelayRouter = () => (
   <Switch>
-    <Route exact path="*/delays/:id" component={DelayDetail} />
-    <Route exact path="*/" component={Delays} />
+    <Redirect exact path="/delay" to={'/delay/scripts'} />
+    <Route exact path="*/delay/scripts/:id" component={DelayDetail} />
+    <Route exact path="*/delay/scripts" component={Delays} />
   </Switch>
 )
 

@@ -47,7 +47,7 @@ const DelayDetailWrapper = ({ match }) => {
     <LayoutGutter>
       <LayoutLimiter>
         <Bar>
-          <BackButton onClick={() => navigate('/delays')} />
+          <BackButton onClick={() => navigate('/delay/scripts')} />
         </Bar>
         <LoadingSection loading={loading} title="Loading delayed script">
           {error ? (
