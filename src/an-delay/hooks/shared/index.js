@@ -1,5 +1,5 @@
 import useApi from './useApi'
-import useAppState from '../../providers/ANDelayProvider'
+import useAppState from '../../providers/ANDelaySettingsProvider'
 import useConnectedAccount from './useConnectedAccount'
 import useCurrentApp from './useCurrentApp'
 import useGuiStyle from './useGuiStyle'

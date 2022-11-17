@@ -2,11 +2,10 @@ import { useConnect } from '@1hive/connect-react'
 import React, { useContext, useEffect, useState } from 'react'
 import { useMounted } from '../../hooks/shared/useMounted'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
-import { useDelayedScripts } from '../hooks/useDelayedScripts'
 
 const ANDelayContext = React.createContext()
 
-const ANDelayProvider = ({ children }) => {
+const ANDelaySettingsProvider = ({ children }) => {
   const [executionDelay, setExecutionDelay] = useState()
   const mounted = useMounted()
   const { connectedANDelayApp } = useOrganizationState()
@@ -16,7 +15,6 @@ const ANDelayProvider = ({ children }) => {
   )
   const loading = appDataStatus.loading
   const error = appDataStatus.error
-  const [[delayedScripts, executionTargets], status] = useDelayedScripts()
 
   useEffect(() => {
     if (!mounted() || loading || error) {
@@ -30,9 +28,8 @@ const ANDelayProvider = ({ children }) => {
     <ANDelayContext.Provider
       value={{
         executionDelay,
-        delayedScripts,
-        executionTargets,
-        loading: loading || status.loading,
+        loading,
+        error,
       }}
     >
       {children}
@@ -40,8 +37,8 @@ const ANDelayProvider = ({ children }) => {
   )
 }
 
-const useAppState = () => {
+const useANDelaySettings = () => {
   return useContext(ANDelayContext)
 }
 
-export { ANDelayProvider, useAppState }
+export { ANDelaySettingsProvider, useANDelaySettings }

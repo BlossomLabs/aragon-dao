@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Bar,
   CardLayout,
@@ -13,8 +13,12 @@ import {
 import STATUS from '../delay-status-types'
 import DelayCard from '../components/DelayCard'
 import EmptyFilteredDelays from '../components/EmptyFilteredDelays'
+import { useDelayedScripts } from '../hooks/useDelayedScripts'
+import useFilterDelays from '../hooks/useFilterDelays'
+import NoDelays from './NoDelays'
+import { useOrganizationState } from '../../providers/OrganizationProvider'
 
-const useDelays = delays => {
+const classifyDelays = delays => {
   const ongoingDelays = delays.filter(delay => delay.status === STATUS.ONGOING)
   const pausedDelays = delays.filter(delay => delay.status === STATUS.PAUSED)
   const pendingDelays = delays.filter(
@@ -24,109 +28,164 @@ const useDelays = delays => {
   return { ongoingDelays, pausedDelays, pendingDelays }
 }
 
-const Delays = React.memo(
-  ({
-    delays,
+const DelaysWrapper = () => {
+  const [isWaiting, setIsWaiting] = useState(false)
+  const { apps = [] } = useOrganizationState()
+  // TODO: handle error case
+  const [delays, { loading: delaysLoading }] = useDelayedScripts()
+  const executionTargetApps = useMemo(
+    () =>
+      apps
+        .filter(app =>
+          (delays || []).some(delay =>
+            delay.executionTargets.includes(app.address.toLowerCase())
+          )
+        )
+        .map(({ address, name }) => ({
+          appAddress: address,
+          name,
+          // TODO: find proper identifier
+          identifier: address,
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [apps, delays]
+  )
+
+  useEffect(() => {
+    /**
+     * Get a smoother transition from the empty state card
+     * to a fast-loaded delays list by setting a minimum wait
+     * time
+     */
+    const timer = setTimeout(() => setIsWaiting(true), 250)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
+
+  return (
+    <div>
+      {!isWaiting || delaysLoading || !delays.length ? (
+        <div
+          css={`
+            height: calc(100vh - ${8 * GU}px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          `}
+        >
+          <NoDelays isSyncing={delaysLoading || !isWaiting} />
+        </div>
+      ) : (
+        <Delays delays={delays} executionTargetApps={executionTargetApps} />
+      )}
+    </div>
+  )
+}
+
+const Delays = React.memo(({ delays, executionTargetApps }) => {
+  const {
     filteredDelays,
     delayStatusFilter,
     handleDelayStatusFilterChange,
     delayAppFilter,
     handleDelayAppFilterChange,
     handleClearFilters,
-    executionTargets,
-  }) => {
-    const { layoutName } = useLayout()
-    const theme = useTheme()
-    const { ongoingDelays, pausedDelays, pendingDelays } = useDelays(
-      filteredDelays
-    )
+  } = useFilterDelays(delays, executionTargetApps)
 
-    const multipleOfTarget = executionTargets.reduce((map, { name }) => {
-      map.set(name, map.has(name))
-      return map
-    }, new Map())
+  const { layoutName } = useLayout()
+  const theme = useTheme()
 
-    return (
-      <React.Fragment>
-        {layoutName !== 'small' && (
-          <Bar>
-            <div
-              css={`
-                height: ${8 * GU}px;
-                display: grid;
-                grid-template-columns: auto auto auto 1fr;
-                grid-gap: ${1 * GU}px;
-                align-items: center;
-                padding-left: ${3 * GU}px;
-              `}
-            >
-              <DropDown
-                header="Status"
-                placeholder="Status"
-                selected={delayStatusFilter}
-                onChange={handleDelayStatusFilterChange}
-                items={[
-                  <div>
-                    All
-                    <span
-                      css={`
-                        margin-left: ${1.5 * GU}px;
-                        display: inline-flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: ${theme.info};
-                        ${textStyle('label3')};
-                      `}
-                    >
-                      <Tag limitDigits={4} label={delays.length} size="small" />
-                    </span>
-                  </div>,
-                  'Ongoing',
-                  'Paused',
-                  'Pending',
-                ]}
-                width="128px"
-              />
+  const { ongoingDelays, pausedDelays, pendingDelays } = classifyDelays(
+    filteredDelays
+  )
 
-              <DropDown
-                header="App"
-                placeholder="App"
-                selected={delayAppFilter}
-                onChange={handleDelayAppFilterChange}
-                items={[
-                  'All',
-                  <ThisApp showTag={multipleOfTarget.get('Delay')} />,
-                  ...executionTargets.map(
-                    ({ name, identifier }) =>
-                      `${name}${
-                        multipleOfTarget.get(name) && identifier
-                          ? ` (${identifier})`
-                          : ''
-                      }`
-                  ),
-                  'External',
-                ]}
-                width="128px"
-              />
-            </div>
-          </Bar>
-        )}
+  const multipleOfTarget = executionTargetApps.reduce((map, { name }) => {
+    map.set(name, map.has(name))
+    return map
+  }, new Map())
 
-        <React.Fragment>
-          {!filteredDelays.length ? (
-            <EmptyFilteredDelays onClear={handleClearFilters} />
-          ) : (
-            <DelayGroups
-              ongoingDelays={ongoingDelays}
-              pausedDelays={pausedDelays}
-              pendingDelays={pendingDelays}
+  return (
+    <React.Fragment>
+      {layoutName !== 'small' && (
+        <Bar>
+          <div
+            css={`
+              height: ${8 * GU}px;
+              display: grid;
+              grid-template-columns: auto auto auto 1fr;
+              grid-gap: ${1 * GU}px;
+              align-items: center;
+              padding-left: ${3 * GU}px;
+            `}
+          >
+            <DropDown
+              header="Status"
+              placeholder="Status"
+              selected={delayStatusFilter}
+              onChange={handleDelayStatusFilterChange}
+              items={[
+                <div>
+                  All
+                  <span
+                    css={`
+                      margin-left: ${1.5 * GU}px;
+                      display: inline-flex;
+                      align-items: center;
+                      justify-content: center;
+                      color: ${theme.info};
+                      ${textStyle('label3')};
+                    `}
+                  >
+                    <Tag limitDigits={4} label={delays.length} size="small" />
+                  </span>
+                </div>,
+                'Ongoing',
+                'Paused',
+                'Pending',
+              ]}
+              width="128px"
             />
-          )}
-        </React.Fragment>
+
+            <DropDown
+              header="App"
+              placeholder="App"
+              selected={delayAppFilter}
+              onChange={handleDelayAppFilterChange}
+              items={[
+                'All',
+                <ThisApp showTag={multipleOfTarget.get('Delay')} />,
+                ...executionTargetApps.map(
+                  ({ name, identifier }) =>
+                    `${name}${
+                      multipleOfTarget.get(name) && identifier
+                        ? ` (${identifier})`
+                        : ''
+                    }`
+                ),
+                'External',
+              ]}
+              width="128px"
+            />
+          </div>
+        </Bar>
+      )}
+
+      <React.Fragment>
+        {!filteredDelays.length ? (
+          <EmptyFilteredDelays onClear={handleClearFilters} />
+        ) : (
+          <DelayGroups
+            ongoingDelays={ongoingDelays}
+            pausedDelays={pausedDelays}
+            pendingDelays={pendingDelays}
+          />
+        )}
       </React.Fragment>
-    )
-  }
-)
+    </React.Fragment>
+  )
+})
 
 const ThisApp = ({ showTag }) => (
   <div
@@ -216,4 +275,4 @@ const GroupName = ({ title, count, compactMode }) => {
   )
 }
 
-export default Delays
+export default DelaysWrapper

@@ -25,7 +25,6 @@ const ActionScreen = React.memo(({ getTransactions }) => {
   const { next } = useMultiModal()
 
   useEffect(() => {
-    console.log('execution transaction')
     getTransactions(transactionsExists => {
       if (transactionsExists) {
         next()
@@ -67,15 +66,11 @@ function DelayActionScreens({ action, delayedScript: { id } }) {
   const { modalTitle, fnMethod } = getActionData(action)
   const fullModalTitle = `Delayed Script ${modalTitle}`
 
-  console.log(modalTitle)
-  console.log(fnMethod)
-  console.log(anDelayActions[fnMethod])
   const temporatyTrx = useRef([])
 
   const performAction = useCallback(
     async scriptId => {
       await anDelayActions[fnMethod](scriptId, intent => {
-        console.log('completed')
         temporatyTrx.current = temporatyTrx.current.concat(intent)
       })
     },
@@ -84,7 +79,6 @@ function DelayActionScreens({ action, delayedScript: { id } }) {
 
   const getTransactions = useCallback(
     async onComplete => {
-      console.log('perform action')
       await performAction(id)
 
       setTransactions(temporatyTrx.current)

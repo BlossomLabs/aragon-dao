@@ -1,11 +1,16 @@
-import { addressesEqual } from '@1hive/connect-react'
+import { decodeForwardingPath } from '@1hive/connect-react'
 import STATUS from '../delay-status-types'
-import { EMPTY_ADDRESS } from '../web3-utils'
+import { addressesEqual, EMPTY_ADDRESS } from '../web3-utils'
 import { timestampToDate, toMilliseconds } from './time-utils'
 
-const buildExecutionTarget = (forwardingPathSteps, installedApps) => {
+export const buildExecutionTarget = (evmCallScript, installedApps) => {
+  if (!evmCallScript || !evmCallScript.length) {
+    return {}
+  }
+
+  const forwardingPathSteps = decodeForwardingPath(evmCallScript)
   const executionTargetAddresses = new Set(
-    forwardingPathSteps.map(step => step.to)
+    forwardingPathSteps.map(step => step.to.toLowerCase())
   )
   let targetApp
 
@@ -65,8 +70,22 @@ const buildExecutionTarget = (forwardingPathSteps, installedApps) => {
 
   return {
     executionTargetData,
-    executionTargetAddresses: [...executionTargetAddresses.values()],
+    executionTargets: [...executionTargetAddresses.values()],
   }
+
+  // return installedApps
+  //   .filter(app =>
+  //     scriptExecutionTarget.some(executionTargets =>
+  //       executionTargets.includes(app.address)
+  //     )
+  //   )
+  //   .map(({ address, name }) => ({
+  //     appAddress: address,
+  //     // TODO: replace for proper identifier
+  //     identifier: address,
+  //     name,
+  //   }))
+  //   // .sort((a, b) => a.name.localeCompare(b.name))
 }
 
 export function getStatus({ executionTime, pausedAt }, now) {

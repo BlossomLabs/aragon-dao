@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   BackButton,
   Bar,
   Box,
   Countdown,
   GU,
-  Header,
   Split,
   textStyle,
   useLayout,
@@ -18,11 +17,12 @@ import LocalLabelAppBadge from '../components/LocalIdentityBadge/LocalLabelAppBa
 
 import STATUS from '../delay-status-types'
 import { formatTime, toHours } from '../lib/math-utils'
+import { usePath } from '../hooks/shared'
 import { useDelayedScript } from '../hooks/useDelayedScripts'
+import useDescribeScript from '../hooks/useDescribeScript'
 import Description from '../components/Description'
 import LayoutGutter from '../../components/Layout/LayoutGutter'
 import LayoutLimiter from '../../components/Layout/LayoutLimiter'
-import { usePath } from '../hooks/shared'
 import LoadingSection from '../../voting/components/Loading/LoadingSection'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelayActionScreens from '../components/ModalFlows/DelayActionScreens'
@@ -32,12 +32,20 @@ const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
 const DelayDetailWrapper = ({ match }) => {
   const [, navigate] = usePath()
-  const [delay, { loading, error }] = useDelayedScript(match.params.id)
-  console.log('here')
+  const [
+    delay = {},
+    { loading: scriptLoading, error: scriptError },
+  ] = useDelayedScript(match.params.id)
+  const [
+    describedSteps,
+    { loading: describeLoading, error: describeError },
+  ] = useDescribeScript(delay.evmCallScript, delay.id)
+  const loading = scriptLoading || describeLoading
+  const error = scriptError || describeError
+
   return (
     <LayoutGutter>
       <LayoutLimiter>
-        <Header primary="Delay" />
         <Bar>
           <BackButton onClick={() => navigate('/delays')} />
         </Bar>
@@ -46,23 +54,21 @@ const DelayDetailWrapper = ({ match }) => {
             // TODO: create proper <Box /> component and move to shared root components.
             <Box>An error happened when fetching the delayed script</Box>
           ) : (
-            <DelayDetail delay={delay} />
+            <DelayDetail delay={delay} path={describedSteps} />
           )}
         </LoadingSection>
       </LayoutLimiter>
     </LayoutGutter>
   )
 }
-const DelayDetail = React.memo(({ delay = {} }) => {
+const DelayDetail = React.memo(({ delay, path }) => {
+  const { id, creator, executionTargetData } = delay
   const { account } = useWallet()
   const [modalVisible, setModalVisible] = useState(false)
-  const [modalData, setModalData] = useState({})
-  const [modalMode, setModalMode] = useState(null)
+  const [, setModalMode] = useState(null)
   const [delayAction, setDelayAction] = useState()
   const theme = useTheme()
   const { layoutName } = useLayout()
-
-  const { id, creator, executionTargetData, path } = delay || {}
 
   return (
     <>
@@ -114,7 +120,7 @@ const DelayDetail = React.memo(({ delay = {} }) => {
                       ${textStyle('body2')};
                     `}
                   >
-                    {path && Array.isArray(path) ? (
+                    {path ? (
                       <Description path={path} />
                     ) : (
                       // TODO: Improve default description (include execution target's data)

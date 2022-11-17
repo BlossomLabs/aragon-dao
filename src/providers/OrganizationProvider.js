@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useApps, useConnect } from '@1hive/connect-react'
+import { useConnect } from '@1hive/connect-react'
 import connectVoting from '@rperez89/connect-tao-voting'
 import connectTokenWrapper from '@rperez89/connect-token-wrapper'
 import { connectANDelay } from '@blossom-labs/connect-an-delay'
@@ -8,7 +8,7 @@ const OrganizationContext = React.createContext()
 
 function OrganizationProvider({ children }) {
   const [org, orgStatus] = useConnect()
-  const [apps, appsStatus] = useApps()
+  const [apps, appsStatus] = useConnect(org => org.apps())
   const [permissions, permissionsStatus] = useConnect(org => org.permissions())
   const [connectedDisputableApp, connectedDisputableAppStatus] = useConnect(
     org => {
@@ -32,6 +32,7 @@ function OrganizationProvider({ children }) {
       value={{
         organization: org,
         apps,
+        connection: org?.connection,
         connectedANDelayApp,
         connectedANDelayAppStatus,
         connectedDisputableApp,

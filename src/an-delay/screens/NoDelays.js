@@ -16,10 +16,10 @@ const NoDelays = React.memo(({ isSyncing }) => {
             `}
           >
             <LoadingRing />
-            <span>Syncing…</span>
+            <span>Loading…</span>
           </div>
         ) : (
-          'No delayed actions!'
+          'No delayed scripts!'
         )
       }
     />

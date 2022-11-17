@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ProgressBar, GU, useTheme } from '@aragon/ui'
-import { useNow } from '../hooks/utils-hooks'
+import { useNow } from '../hooks/useNow'
 import { round } from '../lib/math-utils'
 
 function CustomProgressBar({ start, endDate, pausedAt }) {
