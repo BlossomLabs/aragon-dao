@@ -4,7 +4,7 @@ import ModalFlowBase from '../../../components/MultiModal/ModalFlowBase'
 import actions from '../../actions/an-delay-action.types'
 import useActions from '../../hooks/useActions'
 import { useMultiModal } from '../../../components/MultiModal/MultiModalProvider'
-import { IconWarning, Info } from '@aragon/ui'
+import { GU, IconWarning, Info } from '@aragon/ui'
 
 const getActionData = action => {
   switch (action) {
@@ -33,7 +33,11 @@ const ActionScreen = React.memo(({ getTransactions }) => {
   }, [getTransactions, next])
 
   return (
-    <div>
+    <div
+      css={`
+        margin-bottom: ${2 * GU}px;
+      `}
+    >
       <Info
         mode="warning"
         title={

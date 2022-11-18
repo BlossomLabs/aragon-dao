@@ -43,7 +43,7 @@ export const useDelayedScript = scriptId => {
     error: orgStateError,
   } = useOrganizationState()
   const [
-    rawDelayedScript = {},
+    rawDelayedScript,
     { loading: rawDelayedScriptLoading, error: rawDelayedScriptError },
   ] = useConnect(() => connectedANDelayApp?.onDelayedScript(scriptId), [
     connectedANDelayApp,
@@ -52,15 +52,18 @@ export const useDelayedScript = scriptId => {
   const now = useNow()
   const loading = orgStateLoading || rawDelayedScriptLoading
   const error = orgStateError || rawDelayedScriptError
-  const status = getStatus(rawDelayedScript, now)
+  const status = rawDelayedScript ? getStatus(rawDelayedScript, now) : null
 
   return [
     useMemo(
-      () => ({
-        ...formatDelayedScript(rawDelayedScript),
-        ...buildExecutionTarget(rawDelayedScript.evmCallScript, apps),
-        status,
-      }),
+      () =>
+        rawDelayedScript
+          ? {
+              ...formatDelayedScript(rawDelayedScript),
+              ...buildExecutionTarget(rawDelayedScript.evmCallScript, apps),
+              status,
+            }
+          : undefined,
       [apps, rawDelayedScript, status]
     ),
     { loading, error },

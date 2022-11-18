@@ -22,50 +22,55 @@ import { useDelayedScript } from '../hooks/useDelayedScripts'
 import useDescribeScript from '../hooks/useDescribeScript'
 import Description from '../components/Description'
 import LayoutLimiter from '../../components/Layout/LayoutLimiter'
-import LoadingSection from '../../voting/components/Loading/LoadingSection'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelayActionScreens from '../components/ModalFlows/DelayActionScreens'
 import { useWallet } from '../../providers/Wallet'
+import LoadingSection from '../components/LoadingSection'
+import { ErrorNotFound } from '@1hive/connect-react'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
 const DelayDetailWrapper = ({ match }) => {
   const [, navigate] = usePath()
   const [
-    delay = {},
+    delay,
     { loading: scriptLoading, error: scriptError },
   ] = useDelayedScript(match.params.id)
   const [
     describedSteps,
     { loading: describeLoading, error: describeError },
-  ] = useDescribeScript(delay.evmCallScript, delay.id)
+  ] = useDescribeScript(delay?.evmCallScript, delay?.id)
   const loading = scriptLoading || describeLoading
   const error = scriptError || describeError
+  const description =
+    error instanceof ErrorNotFound
+      ? 'Delayed script not found'
+      : 'Loading delayed script'
 
   return (
     <LayoutLimiter>
       <Bar>
         <BackButton onClick={() => navigate('/delay/scripts')} />
       </Bar>
-      <LoadingSection loading={loading} title="Loading delayed script">
-        {error ? (
-          // TODO: create proper <Box /> component and move to shared root components.
-          <Box>An error happened when fetching the delayed script</Box>
-        ) : (
-          <DelayDetail delay={delay} path={describedSteps} />
-        )}
+      <LoadingSection
+        show={loading || !!error}
+        title={description}
+        showSpinner={loading}
+      >
+        {delay && <DelayDetail delay={delay} path={describedSteps} />}
       </LoadingSection>
     </LayoutLimiter>
   )
 }
 const DelayDetail = React.memo(({ delay, path }) => {
-  const { id, creator, executionTargetData } = delay
   const { account } = useWallet()
   const [modalVisible, setModalVisible] = useState(false)
   const [, setModalMode] = useState(null)
   const [delayAction, setDelayAction] = useState()
   const theme = useTheme()
   const { layoutName } = useLayout()
+
+  const { id, creator, executionTargetData } = delay
 
   return (
     <>

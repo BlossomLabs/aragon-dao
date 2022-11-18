@@ -12,7 +12,7 @@ const useDecribeScript = (evmCallScript, scriptId) => {
   const mounted = useMounted()
   const [describedSteps, setDescribedSteps] = useState([])
   const [error, setError] = useState()
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const { apps, connection } = useOrganizationState()
 
   useEffect(() => {
@@ -21,9 +21,10 @@ const useDecribeScript = (evmCallScript, scriptId) => {
     }
 
     if (isEmptyScript()) {
-      setLoading(false)
       return
     }
+
+    setLoading(true)
 
     if (cachedDescriptions.has(scriptId)) {
       setDescribedSteps(cachedDescriptions.get(scriptId))
