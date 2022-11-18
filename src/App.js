@@ -50,7 +50,16 @@ function App() {
                       >
                         <MenuPanel />
 
-                        <Router />
+                        <div
+                          css={`
+                            position: relative;
+                            z-index: 1;
+                            flex-grow: 1;
+                            overflow: hidden;
+                          `}
+                        >
+                          <Router />
+                        </div>
                       </div>
                     </div>
                   </div>

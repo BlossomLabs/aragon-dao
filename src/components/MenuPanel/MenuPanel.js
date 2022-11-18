@@ -24,8 +24,8 @@ import { useOrganizationState } from '../../providers/OrganizationProvider'
 import MenuPanelAppGroup from './MenuPanelAppGroup'
 // import MenuPanelAppsLoader from './MenuPanelAppsLoader'
 // import OrganizationSwitcher from './OrganizationSwitcher/OrganizationSwitcher'
-// import AppIcon from '../AppIcon/AppIcon'
-
+import AppIcon from '../AppIcon/AppIcon'
+import { getAppPresentation } from '../../utils/app-utils'
 import { APPS_MENU_PANEL } from '../../constants'
 
 export const MENU_PANEL_SHADOW_WIDTH = 3
@@ -78,11 +78,18 @@ function MenuPanel({
   // const activeInstanceId = (mode.name === 'org' && mode.instanceId) || null
 
   // const showConsole = consoleVisible || activeInstanceId === 'console'
+
   const menuApps = useMemo(() => {
     if (!apps) {
       return []
     }
-    return apps.filter(app => APPS_MENU_PANEL.includes(app.name))
+    return apps
+      .filter(app => APPS_MENU_PANEL.includes(app.name))
+      .map(app => ({
+        ...app,
+        icon: <AppIcon app={app} src={getAppPresentation(app).iconSrc} />,
+        name: getAppPresentation(app).humanName,
+      }))
   }, [apps])
   // const systemApps = [
   //   APP_PERMISSIONS,
