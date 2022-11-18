@@ -45,7 +45,7 @@ const DelaysWrapper = () => {
           appAddress: address,
           name,
           // TODO: find proper identifier
-          identifier: address,
+          // identifier:
         }))
         .sort((a, b) => a.name.localeCompare(b.name)),
     [apps, delays]

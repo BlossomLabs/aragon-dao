@@ -75,7 +75,8 @@ const DelayDetail = React.memo(({ delay, path }) => {
             <LocalLabelAppBadge
               appAddress={executionTargetData.address}
               iconSrc={executionTargetData.iconSrc}
-              identifier={executionTargetData.identifier}
+              // TODO: find proper identifier
+              // identifier={executionTargetData.identifier}
               label={executionTargetData.name}
             />
             <section
