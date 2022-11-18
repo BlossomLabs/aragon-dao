@@ -24,7 +24,6 @@ const DelayCard = React.memo(({ delay }) => {
     pausedAt,
   } = delay
   const [describedSteps, { loading }] = useDecribeScript(evmCallScript, id)
-
   return (
     <CardItem onClick={() => navigate(`/delay/scripts/${id}`)}>
       <div>
@@ -59,7 +58,7 @@ const DelayCard = React.memo(({ delay }) => {
           <DelayStatus status={delay.status} />
         ) : (
           <CustomProgressBar
-            start={timeSubmitted + totalTimePaused}
+            start={new Date(timeSubmitted.getTime() + totalTimePaused)}
             endDate={executionTime}
             pausedAt={pausedAt}
           />

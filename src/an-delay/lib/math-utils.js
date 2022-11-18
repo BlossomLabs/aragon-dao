@@ -3,10 +3,6 @@ export function round(num, places = 2) {
   return Number.isNaN(rounded) ? Number(num.toFixed(places)) : rounded
 }
 
-export function toHours(ms) {
-  return ms / 3600000
-}
-
 /**
  * Format time to HH:MM:SS
  *
@@ -21,7 +17,9 @@ export function formatTime(time) {
 
   const days = Math.floor(time / dayInSeconds)
   const hours = Math.floor((time % dayInSeconds) / hourInSeconds)
-  const minutes = Math.floor(((time % dayInSeconds) % hourInSeconds) / minuteInSeconds)
+  const minutes = Math.floor(
+    ((time % dayInSeconds) % hourInSeconds) / minuteInSeconds
+  )
   const seconds = ((time % dayInSeconds) % hourInSeconds) % minuteInSeconds
 
   return [days, hours, minutes, seconds]

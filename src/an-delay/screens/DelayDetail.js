@@ -3,10 +3,10 @@ import {
   BackButton,
   Bar,
   Box,
-  Countdown,
   GU,
   Split,
   textStyle,
+  Timer,
   useLayout,
   useTheme,
 } from '@aragon/ui'
@@ -16,7 +16,7 @@ import LocalIdentityBadge from '../components/LocalIdentityBadge/LocalIdentityBa
 import LocalLabelAppBadge from '../components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
-import { formatTime, toHours } from '../lib/math-utils'
+import { formatTime } from '../lib/math-utils'
 import { usePath } from '../hooks/shared'
 import { useDelayedScript } from '../hooks/useDelayedScripts'
 import useDescribeScript from '../hooks/useDescribeScript'
@@ -192,12 +192,7 @@ function Status({ delay }) {
           margin-top: 4px;
         `}
       >
-        {status === STATUS.ONGOING && (
-          <Countdown
-            removeDaysAndHours={toHours(executionTime - new Date()) < 1}
-            end={executionTime}
-          />
-        )}
+        {status === STATUS.ONGOING && <Timer end={executionTime} />}
 
         {status === STATUS.PAUSED && (
           <span

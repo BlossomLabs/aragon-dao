@@ -1,7 +1,7 @@
 import { decodeForwardingPath } from '@1hive/connect-react'
 import STATUS from '../delay-status-types'
 import { addressesEqual, EMPTY_ADDRESS } from '../web3-utils'
-import { timestampToDate, toMilliseconds } from './time-utils'
+import { dateToEpoch, timestampToDate, toMilliseconds } from './time-utils'
 
 export const buildExecutionTarget = (evmCallScript, installedApps) => {
   if (!evmCallScript || !evmCallScript.length) {
@@ -72,26 +72,12 @@ export const buildExecutionTarget = (evmCallScript, installedApps) => {
     executionTargetData,
     executionTargets: [...executionTargetAddresses.values()],
   }
-
-  // return installedApps
-  //   .filter(app =>
-  //     scriptExecutionTarget.some(executionTargets =>
-  //       executionTargets.includes(app.address)
-  //     )
-  //   )
-  //   .map(({ address, name }) => ({
-  //     appAddress: address,
-  //     // TODO: replace for proper identifier
-  //     identifier: address,
-  //     name,
-  //   }))
-  //   // .sort((a, b) => a.name.localeCompare(b.name))
 }
 
 export function getStatus({ executionTime, pausedAt }, now) {
   if (pausedAt && parseInt(pausedAt)) return STATUS.PAUSED
 
-  if (executionTime <= now) return STATUS.PENDING_EXECUTION
+  if (executionTime <= dateToEpoch(now)) return STATUS.PENDING_EXECUTION
 
   return STATUS.ONGOING
 }
@@ -114,27 +100,5 @@ export const formatDelayedScript = delayedScript => {
     pausedAt: timestampToDate(pausedAt),
     timeSubmitted: timestampToDate(timeSubmitted),
     totalTimePaused: toMilliseconds(totalTimePaused),
-  }
-}
-
-export const decorateDelayedScript = async (
-  delayedScript,
-  installedApps,
-  org
-) => {
-  const forwardingPathSteps = (
-    await org.describeScript(delayedScript.evmCallScript)
-  ).describedSteps
-
-  const {
-    executionTargetAddresses,
-    executionTargetData,
-  } = buildExecutionTarget(forwardingPathSteps, installedApps)
-
-  return {
-    ...formatDelayedScript(delayedScript),
-    path: forwardingPathSteps,
-    executionTargets: executionTargetAddresses,
-    executionTargetData,
   }
 }

@@ -17,3 +17,5 @@ export const timestampToDate = timestamp => {
 
   return new Date(ms)
 }
+
+export const dateToEpoch = date => Math.round(date.getTime() / 1000)

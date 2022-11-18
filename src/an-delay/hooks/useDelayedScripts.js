@@ -1,17 +1,21 @@
 import { useConnect } from '@1hive/connect-react'
 import { useMemo } from 'react'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
-import { buildExecutionTarget, getStatus } from '../lib/delay-utils'
+import {
+  buildExecutionTarget,
+  formatDelayedScript,
+  getStatus,
+} from '../lib/delay-utils'
 import { useNow } from './useNow'
 
 export const useDelayedScripts = () => {
   const { apps, connectedANDelayApp } = useOrganizationState()
-  const [delayedScripts = [], { loading, error }] = useConnect(
+  const [rawDelayedScripts = [], { loading, error }] = useConnect(
     () => connectedANDelayApp?.onDelayedScripts({ first: 50 }),
     [connectedANDelayApp]
   )
   const now = useNow()
-  const delayStatus = (delayedScripts || []).map(script =>
+  const delayStatus = (rawDelayedScripts || []).map(script =>
     getStatus(script, now)
   )
   const delayStatusKey = delayStatus.map(String).join('')
@@ -19,13 +23,13 @@ export const useDelayedScripts = () => {
   return [
     useMemo(
       () =>
-        delayedScripts.map((script, index) => ({
-          ...script,
+        rawDelayedScripts.map((script, index) => ({
+          ...formatDelayedScript(script),
           ...buildExecutionTarget(script.evmCallScript, apps),
           status: delayStatus[index],
         })),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [apps, delayedScripts, delayStatusKey]
+      [apps, rawDelayedScripts, delayStatusKey]
     ),
     { loading, error },
   ]
@@ -39,7 +43,7 @@ export const useDelayedScript = scriptId => {
     error: orgStateError,
   } = useOrganizationState()
   const [
-    delayedScript = {},
+    rawDelayedScript = {},
     { loading: rawDelayedScriptLoading, error: rawDelayedScriptError },
   ] = useConnect(() => connectedANDelayApp?.onDelayedScript(scriptId), [
     connectedANDelayApp,
@@ -48,16 +52,16 @@ export const useDelayedScript = scriptId => {
   const now = useNow()
   const loading = orgStateLoading || rawDelayedScriptLoading
   const error = orgStateError || rawDelayedScriptError
-  const status = getStatus(delayedScript, now)
+  const status = getStatus(rawDelayedScript, now)
 
   return [
     useMemo(
       () => ({
-        ...delayedScript,
-        ...buildExecutionTarget(delayedScript.evmCallScript, apps),
+        ...formatDelayedScript(rawDelayedScript),
+        ...buildExecutionTarget(rawDelayedScript.evmCallScript, apps),
         status,
       }),
-      [apps, delayedScript, status]
+      [apps, rawDelayedScript, status]
     ),
     { loading, error },
   ]
