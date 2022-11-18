@@ -21,7 +21,6 @@ import { usePath } from '../hooks/shared'
 import { useDelayedScript } from '../hooks/useDelayedScripts'
 import useDescribeScript from '../hooks/useDescribeScript'
 import Description from '../components/Description'
-import LayoutGutter from '../../components/Layout/LayoutGutter'
 import LayoutLimiter from '../../components/Layout/LayoutLimiter'
 import LoadingSection from '../../voting/components/Loading/LoadingSection'
 import MultiModal from '../../components/MultiModal/MultiModal'
@@ -44,21 +43,19 @@ const DelayDetailWrapper = ({ match }) => {
   const error = scriptError || describeError
 
   return (
-    <LayoutGutter>
-      <LayoutLimiter>
-        <Bar>
-          <BackButton onClick={() => navigate('/delay/scripts')} />
-        </Bar>
-        <LoadingSection loading={loading} title="Loading delayed script">
-          {error ? (
-            // TODO: create proper <Box /> component and move to shared root components.
-            <Box>An error happened when fetching the delayed script</Box>
-          ) : (
-            <DelayDetail delay={delay} path={describedSteps} />
-          )}
-        </LoadingSection>
-      </LayoutLimiter>
-    </LayoutGutter>
+    <LayoutLimiter>
+      <Bar>
+        <BackButton onClick={() => navigate('/delay/scripts')} />
+      </Bar>
+      <LoadingSection loading={loading} title="Loading delayed script">
+        {error ? (
+          // TODO: create proper <Box /> component and move to shared root components.
+          <Box>An error happened when fetching the delayed script</Box>
+        ) : (
+          <DelayDetail delay={delay} path={describedSteps} />
+        )}
+      </LoadingSection>
+    </LayoutLimiter>
   )
 }
 const DelayDetail = React.memo(({ delay, path }) => {
