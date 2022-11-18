@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Spring, animated } from 'react-spring'
+import { Spring, animated } from 'react-spring/renderprops'
 import {
   Details,
   GU,
@@ -9,7 +9,8 @@ import {
   unselectable,
   useTheme,
 } from '@aragon/ui'
-// import { lerp } from '../../util/math'
+import { lerp } from '../../utils/math-utils'
+import { useOrganizationState } from '../../providers/OrganizationProvider'
 // import {
 //   AppInstanceGroupType,
 //   AppsStatusType,
@@ -20,10 +21,12 @@ import {
 // import { useRouting } from '../../routing'
 // import { staticApps } from '../../static-apps'
 // import { DAO_STATUS_LOADING } from '../../symbols'
-// import MenuPanelAppGroup from './MenuPanelAppGroup'
+import MenuPanelAppGroup from './MenuPanelAppGroup'
 // import MenuPanelAppsLoader from './MenuPanelAppsLoader'
 // import OrganizationSwitcher from './OrganizationSwitcher/OrganizationSwitcher'
 // import AppIcon from '../AppIcon/AppIcon'
+
+import { APPS_MENU_PANEL } from '../../constants'
 
 export const MENU_PANEL_SHADOW_WIDTH = 3
 export const MENU_PANEL_WIDTH = 28 * GU
@@ -54,11 +57,12 @@ function MenuPanel({
   onOpenApp,
   showOrgSwitcher,
 }) {
-  const { mode } = useRouting()
-  const { consoleVisible } = useConsole()
-  const [systemAppsOpened, setSystemAppsOpened] = useState(
-    systemAppsOpenedState.isOpen()
-  )
+  const { apps } = useOrganizationState()
+  // const { mode } = useRouting()
+  // const { consoleVisible } = useConsole()
+  // const [systemAppsOpened, setSystemAppsOpened] = useState(
+  //   systemAppsOpenedState.isOpen()
+  // )
 
   // const appGroups = useMemo(
   //   () =>
@@ -74,7 +78,12 @@ function MenuPanel({
   // const activeInstanceId = (mode.name === 'org' && mode.instanceId) || null
 
   // const showConsole = consoleVisible || activeInstanceId === 'console'
-  // const menuApps = [APP_HOME, appGroups]
+  const menuApps = useMemo(() => {
+    if (!apps) {
+      return []
+    }
+    return apps.filter(app => APPS_MENU_PANEL.includes(app.name))
+  }, [apps])
   // const systemApps = [
   //   APP_PERMISSIONS,
   //   APP_APPS_CENTER,
@@ -95,30 +104,18 @@ function MenuPanel({
   //   })
   // }, [])
 
-  // const renderAppGroup = useCallback(
-  //   app => {
-  //     const { appId, name, icon, instances } = app
-  //     const isActive =
-  //       instances.findIndex(
-  //         ({ instanceId }) => instanceId === activeInstanceId
-  //       ) !== -1
+  const renderAppGroup = useCallback(
+    app => {
+      const { appId, name, icon } = app
 
-  //     return (
-  //       <div key={appId}>
-  //         <MenuPanelAppGroup
-  //           name={name}
-  //           icon={icon}
-  //           instances={instances}
-  //           active={isActive}
-  //           expand={isActive}
-  //           activeInstanceId={activeInstanceId}
-  //           onActivate={onOpenApp}
-  //         />
-  //       </div>
-  //     )
-  //   },
-  //   [activeInstanceId, onOpenApp]
-  // )
+      return (
+        <div key={appId}>
+          <MenuPanelAppGroup name={name} icon={icon} onActivate={onOpenApp} />
+        </div>
+      )
+    },
+    [onOpenApp]
+  )
 
   // const renderLoadedAppGroup = useCallback(
   //   appGroups => {
@@ -179,7 +176,7 @@ function MenuPanel({
               margin-top: ${0.5 * GU}px;
             `}
           >
-            heyyyy
+            {menuApps.map(app => renderAppGroup(app))}
           </div>
         </nav>
       </div>

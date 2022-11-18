@@ -25,6 +25,8 @@ function OrganizationProvider({ children }) {
     }
   )
 
+  console.log('APPSSSSS ', apps)
+
   return (
     <OrganizationContext.Provider
       value={{
