@@ -57,7 +57,7 @@ const DelaysWrapper = () => {
      * to a fast-loaded delays list by setting a minimum wait
      * time
      */
-    const timer = setTimeout(() => setIsWaiting(true), 250)
+    const timer = setTimeout(() => setIsWaiting(true), 100)
 
     return () => {
       clearTimeout(timer)
