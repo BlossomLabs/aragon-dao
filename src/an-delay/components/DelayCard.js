@@ -51,7 +51,11 @@ const DelayCard = React.memo(({ delay }) => {
           overflow: hidden;
         `}
       >
-        <DescriptionWithSkeleton path={describedSteps} loading={loading} />
+        <DescriptionWithSkeleton
+          path={describedSteps}
+          itemNumber={id}
+          loading={loading}
+        />
       </div>
       <div>
         {status === STATUS.PENDING_EXECUTION ? (
