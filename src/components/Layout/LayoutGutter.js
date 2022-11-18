@@ -7,7 +7,7 @@ function LayoutGutter({ children, collapseWhenSmall, ...props }) {
 
   const smallPaddingAmount = collapseWhenSmall ? 0 : 2 * GU
   const paddingAmount =
-    layoutName === 'small' ? `${smallPaddingAmount}px` : '5%'
+    layoutName === 'small' ? `${smallPaddingAmount}px` : '1%'
 
   return (
     <div

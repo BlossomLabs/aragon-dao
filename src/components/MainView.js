@@ -13,7 +13,6 @@ const MainView = React.memo(function MainView({ children }) {
 
   return (
     <div
-      id="TEST"
       css={`
         display: flex;
         position: relative;

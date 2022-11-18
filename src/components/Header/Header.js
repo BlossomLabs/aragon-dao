@@ -32,62 +32,60 @@ function Header({ ...props }) {
       {...props}
     >
       <LayoutGutter collapseWhenSmall={false}>
-        <LayoutLimiter>
+        <div
+          css={`
+            height: ${8 * GU}px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          `}
+        >
           <div
             css={`
-              height: ${8 * GU}px;
-              width: 100%;
               display: flex;
               align-items: center;
-              justify-content: space-between;
             `}
           >
-            <div
+            <Link onClick={handleLogoClick}>
+              <HeaderLogo />
+            </Link>
+            <nav
               css={`
-                display: flex;
-                align-items: center;
+                display: inline-grid;
+                grid-auto-flow: column;
+                grid-gap: ${compactMode ? 2 * GU : 4 * GU}px;
+                margin-left: ${compactMode ? 2 * GU : 5 * GU}px;
               `}
             >
-              <Link onClick={handleLogoClick}>
-                <HeaderLogo />
-              </Link>
-              <nav
-                css={`
-                  display: inline-grid;
-                  grid-auto-flow: column;
-                  grid-gap: ${compactMode ? 2 * GU : 4 * GU}px;
-                  margin-left: ${compactMode ? 2 * GU : 5 * GU}px;
-                `}
-              >
-                <NavItem>
-                  <Link
-                    href="https://app.uniswap.org/#/swap?outputCurrency=0x960b236A07cf122663c4303350609A66A7B288C0"
-                    css={`
-                      display: flex;
-                      align-items: center;
-                      text-decoration: none;
-                      color: ${theme.contentSecondary};
-                      padding: ${0.5 * GU}px 0;
-                      ${unselectable};
-                    `}
-                  >
-                    Get ANT
-                    {!compactMode && (
-                      <IconExternal
-                        size="small"
-                        css={`
-                          margin-left: ${0.5 * GU}px;
-                        `}
-                      />
-                    )}
-                  </Link>
-                </NavItem>
-              </nav>
-            </div>
-
-            <AccountModule />
+              <NavItem>
+                <Link
+                  href="https://app.uniswap.org/#/swap?outputCurrency=0x960b236A07cf122663c4303350609A66A7B288C0"
+                  css={`
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                    color: ${theme.contentSecondary};
+                    padding: ${0.5 * GU}px 0;
+                    ${unselectable};
+                  `}
+                >
+                  Get ANT
+                  {!compactMode && (
+                    <IconExternal
+                      size="small"
+                      css={`
+                        margin-left: ${0.5 * GU}px;
+                      `}
+                    />
+                  )}
+                </Link>
+              </NavItem>
+            </nav>
           </div>
-        </LayoutLimiter>
+
+          <AccountModule />
+        </div>
       </LayoutGutter>
     </header>
   )
