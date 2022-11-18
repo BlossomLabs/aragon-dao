@@ -16,7 +16,7 @@ const useDecribeScript = (evmCallScript, scriptId) => {
   const { apps, connection } = useOrganizationState()
 
   useEffect(() => {
-    if (!apps || !connection || !evmCallScript || !scriptId) {
+    if (!mounted() || !apps || !connection || !evmCallScript || !scriptId) {
       return
     }
 
@@ -26,10 +26,8 @@ const useDecribeScript = (evmCallScript, scriptId) => {
     }
 
     if (cachedDescriptions.has(scriptId)) {
-      if (mounted()) {
-        setDescribedSteps(cachedDescriptions.get(scriptId))
-        setLoading(false)
-      }
+      setDescribedSteps(cachedDescriptions.get(scriptId))
+      setLoading(false)
     }
 
     async function describe() {
@@ -38,9 +36,9 @@ const useDecribeScript = (evmCallScript, scriptId) => {
         apps,
         connection.ethersProvider
       )
-      setLoading(false)
 
       if (mounted()) {
+        setLoading(false)
         setDescribedSteps(steps)
 
         cachedDescriptions.set(scriptId, steps)
@@ -48,8 +46,10 @@ const useDecribeScript = (evmCallScript, scriptId) => {
     }
 
     describe().catch(err => {
-      setError(err)
-      setLoading(false)
+      if (mounted()) {
+        setError(err)
+        setLoading(false)
+      }
     })
   }, [apps, connection, evmCallScript, mounted, scriptId])
 
