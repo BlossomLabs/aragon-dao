@@ -12,19 +12,7 @@ import {
 import { useHistory } from 'react-router'
 import { lerp } from '../../utils/math-utils'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
-// import {
-//   AppInstanceGroupType,
-//   AppsStatusType,
-//   DaoAddressType,
-//   DaoStatusType,
-// } from '../../prop-types'
-// import { useConsole } from '../../apps/Console/useConsole'
-// import { useRouting } from '../../routing'
-// import { staticApps } from '../../static-apps'
-// import { DAO_STATUS_LOADING } from '../../symbols'
 import MenuPanelAppGroup from './MenuPanelAppGroup'
-// import MenuPanelAppsLoader from './MenuPanelAppsLoader'
-// import OrganizationSwitcher from './OrganizationSwitcher/OrganizationSwitcher'
 import AppIcon from '../AppIcon/AppIcon'
 import { getAppPresentation } from '../../utils/app-utils'
 import { APPS_MENU_PANEL, APPS_ROUTING } from '../../constants'
@@ -33,22 +21,6 @@ export const MENU_PANEL_SHADOW_WIDTH = 3
 export const MENU_PANEL_WIDTH = 28 * GU
 
 const { div: AnimDiv } = animated
-
-// const APP_APPS_CENTER = staticApps.get('apps').app
-// const APP_CONSOLE = staticApps.get('console').app
-// const APP_HOME = staticApps.get('home').app
-// const APP_ORGANIZATION = staticApps.get('organization').app
-// const APP_PERMISSIONS = staticApps.get('permissions').app
-
-const systemAppsOpenedState = {
-  key: 'SYSTEM_APPS_OPENED_STATE',
-  isOpen: function() {
-    return localStorage.getItem(this.key) === '1'
-  },
-  set: function(opened) {
-    localStorage.setItem(this.key, opened ? '1' : '0')
-  },
-}
 
 function MenuPanel({
   appInstanceGroups,
@@ -63,7 +35,7 @@ function MenuPanel({
 
   const onOpenApp = useCallback(
     app => {
-      history.push(app)
+      history.push(`/${app}`)
     },
     [history]
   )
