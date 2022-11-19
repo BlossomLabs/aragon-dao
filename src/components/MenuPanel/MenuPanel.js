@@ -9,6 +9,7 @@ import {
   unselectable,
   useTheme,
 } from '@aragon/ui'
+import { useHistory } from 'react-router'
 import { lerp } from '../../utils/math-utils'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 // import {
@@ -26,7 +27,7 @@ import MenuPanelAppGroup from './MenuPanelAppGroup'
 // import OrganizationSwitcher from './OrganizationSwitcher/OrganizationSwitcher'
 import AppIcon from '../AppIcon/AppIcon'
 import { getAppPresentation } from '../../utils/app-utils'
-import { APPS_MENU_PANEL } from '../../constants'
+import { APPS_MENU_PANEL, APPS_ROUTING } from '../../constants'
 
 export const MENU_PANEL_SHADOW_WIDTH = 3
 export const MENU_PANEL_WIDTH = 28 * GU
@@ -54,109 +55,51 @@ function MenuPanel({
   appsStatus,
   daoAddress,
   daoStatus,
-  onOpenApp,
+  // onOpenApp,
   showOrgSwitcher,
 }) {
   const { apps } = useOrganizationState()
-  // const { mode } = useRouting()
-  // const { consoleVisible } = useConsole()
-  // const [systemAppsOpened, setSystemAppsOpened] = useState(
-  //   systemAppsOpenedState.isOpen()
-  // )
+  const history = useHistory()
 
-  // const appGroups = useMemo(
-  //   () =>
-  //     appInstanceGroups
-  //       .filter(appGroup => appGroup.hasWebApp)
-  //       .map(appGroup => ({
-  //         ...appGroup,
-  //         icon: <AppIcon app={appGroup.app} />,
-  //       })),
-  //   [appInstanceGroups]
-  // )
-
-  // const activeInstanceId = (mode.name === 'org' && mode.instanceId) || null
-
-  // const showConsole = consoleVisible || activeInstanceId === 'console'
+  const onOpenApp = useCallback(
+    app => {
+      history.push(app)
+    },
+    [history]
+  )
 
   const menuApps = useMemo(() => {
     if (!apps) {
       return []
     }
-    return apps
+
+    const returned = apps
       .filter(app => APPS_MENU_PANEL.includes(app.name))
       .map(app => ({
         ...app,
         icon: <AppIcon app={app} src={getAppPresentation(app).iconSrc} />,
         name: getAppPresentation(app).humanName,
+        appName: getAppPresentation(app).appName,
       }))
+    return returned
   }, [apps])
-  // const systemApps = [
-  //   APP_PERMISSIONS,
-  //   APP_APPS_CENTER,
-  //   APP_ORGANIZATION,
-  //   ...(showConsole ? [APP_CONSOLE] : []),
-  // ]
-
-  // const isSystemAppActive = useMemo(
-  //   () => systemApps.some(systemApp => systemApp.appId === activeInstanceId),
-  //   [activeInstanceId, systemApps]
-  // )
-
-  // const handleToggleSystemApps = useCallback(() => {
-  //   setSystemAppsOpened(opened => {
-  //     const openedState = !opened
-  //     systemAppsOpenedState.set(openedState)
-  //     return openedState
-  //   })
-  // }, [])
 
   const renderAppGroup = useCallback(
     app => {
-      const { appId, name, icon } = app
+      const { appId, name, icon, appName } = app
 
       return (
         <div key={appId}>
-          <MenuPanelAppGroup name={name} icon={icon} onActivate={onOpenApp} />
+          <MenuPanelAppGroup
+            name={name}
+            icon={icon}
+            onActivate={() => onOpenApp(APPS_ROUTING.get(appName))}
+          />
         </div>
       )
     },
     [onOpenApp]
   )
-
-  // const renderLoadedAppGroup = useCallback(
-  //   appGroups => {
-  //     // Used by the menu transition
-  //     const expandedInstancesCount = appGroups.reduce(
-  //       (height, { instances }) =>
-  //         instances.length > 1 &&
-  //         instances.findIndex(
-  //           ({ instanceId }) => instanceId === activeInstanceId
-  //         ) > -1
-  //           ? height + instances.length
-  //           : height,
-  //       0
-  //     )
-
-  //     // Wrap the DAO apps in the loader
-  //     return (
-  //       <MenuPanelAppsLoader
-  //         key="menu-apps"
-  //         appsStatus={appsStatus}
-  //         expandedInstancesCount={expandedInstancesCount}
-  //       >
-  //         {appGroups.map(app => renderAppGroup(app))}
-  //       </MenuPanelAppsLoader>
-  //     )
-  //   },
-  //   [appsStatus, activeInstanceId, renderAppGroup]
-  // )
-
-  // useEffect(() => {
-  //   // Automatically toggle the system apps menu if a system app is activated/deactivated
-  //   // If the user has manually opened the system apps menu, keep it open
-  //   setSystemAppsOpened(isSystemAppActive || systemAppsOpenedState.isOpen())
-  // }, [isSystemAppActive])
 
   return (
     <Main>

@@ -19,12 +19,9 @@ const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
 }) {
   const theme = useTheme()
 
-  // const handleAppClick = useCallback(() => {
-  //   const instance = instances[0]
-  //   if (instance) {
-  //     onActivate(instance.instanceId)
-  //   }
-  // }, [instances, onActivate])
+  const handleAppClick = useCallback(() => {
+    onActivate()
+  }, [onActivate])
 
   // const handleInstanceClick = useCallback(
   //   instanceId => onActivate(instanceId),
@@ -75,7 +72,7 @@ const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
             icon={icon}
             // instanceId={instances[0].instanceId}
             name={name}
-            // onClick={handleAppClick}
+            onClick={handleAppClick}
             openProgress={openProgress}
             // singleInstance={singleInstance}
           />

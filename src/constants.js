@@ -7,3 +7,9 @@ export const APPS_MENU_PANEL = [
   'blossom-tao-voting',
   'delay',
 ]
+
+export const APPS_ROUTING = new Map([
+  ['blossom-token-wrapper', 'wrapper'],
+  ['blossom-tao-voting', 'votes'],
+  ['delay', 'delay'],
+])

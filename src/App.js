@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { HashRouter } from 'react-router-dom'
 import { GU, Main, ScrollView, Root } from '@aragon/ui'
 import { ConnectProvider as Connect } from './providers/Connect'
@@ -10,8 +10,6 @@ import MenuPanel from './components/MenuPanel/MenuPanel'
 import Header from './components/Header/Header'
 
 import { WalletProvider } from './providers/Wallet'
-
-const RootProvider = Root.Provider
 
 function App() {
   const { appearance } = useGuiStyle()
