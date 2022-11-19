@@ -9,7 +9,7 @@ import TokenWrapperRouter from '../token-wrapper/routes/Router'
 function Router() {
   return (
     <Switch>
-      {/* <Route exact path="/" component={VotingRouter} /> */}
+      <Route exact path="/" component={VotingRouter} />
       <Route path="/delay" component={ANDelayRouter} />
       <Route path="/votes" component={VotingRouter} />
       <Route path="/wrapper" component={TokenWrapperRouter} />
