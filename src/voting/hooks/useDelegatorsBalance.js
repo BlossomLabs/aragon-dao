@@ -20,6 +20,7 @@ export default function useDelegatorsBalance(delegators) {
 
   const delegatorsBalancePromise = useMemo(() => {
     if (!delegators?.length) {
+      setLoading(false)
       return emptyPromise([])
     }
     return Promise.all(
