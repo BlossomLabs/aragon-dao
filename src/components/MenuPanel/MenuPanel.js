@@ -1,15 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Spring, animated } from 'react-spring/renderprops'
-import {
-  Details,
-  GU,
-  springs,
-  textStyle,
-  unselectable,
-  useTheme,
-} from '@aragon/ui'
-import { useHistory, useRouteMatch } from 'react-router'
+import { GU, springs, textStyle, unselectable, useTheme } from '@aragon/ui'
+import { useHistory } from 'react-router'
 import { lerp } from '../../utils/math-utils'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import MenuPanelAppGroup from './MenuPanelAppGroup'
