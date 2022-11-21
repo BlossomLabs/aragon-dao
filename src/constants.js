@@ -13,3 +13,9 @@ export const APPS_ROUTING = new Map([
   ['blossom-tao-voting', 'voting'],
   ['delay', 'delay'],
 ])
+
+export const APPS_ROUTING_TO_NAME = new Map([
+  ['wrapper', 'blossom-token-wrapper'],
+  ['voting', 'blossom-tao-voting'],
+  ['delay', 'delay'],
+])

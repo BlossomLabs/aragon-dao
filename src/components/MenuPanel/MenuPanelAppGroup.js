@@ -15,6 +15,7 @@ const { div: AnimDiv } = animated
 const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
   name,
   icon,
+  active,
   onActivate,
 }) {
   const theme = useTheme()
@@ -29,7 +30,11 @@ const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
   // )
 
   return (
-    <Spring config={springs.smooth} to={{ openProgress: Number(true) }} native>
+    <Spring
+      config={springs.smooth}
+      to={{ openProgress: Number(active) }}
+      native
+    >
       {({ openProgress }) => (
         <div
           css={`
@@ -38,6 +43,12 @@ const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
 
             transition: background 150ms ease-in-out;
 
+            ${active
+              ? `
+                transition: none;
+                background: ${theme.surfacePressed};
+              `
+              : ''}
             &:active {
               background: ${theme.surfacePressed};
             }
@@ -68,7 +79,7 @@ const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
           />
 
           <MenuPanelItem
-            // active={active}
+            active={active}
             icon={icon}
             // instanceId={instances[0].instanceId}
             name={name}
@@ -76,33 +87,6 @@ const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
             openProgress={openProgress}
             // singleInstance={singleInstance}
           />
-
-          {/* {instances.length > 1 && (
-            <animated.ul
-              className="instances"
-              style={{
-                height: openProgress.interpolate(
-                  v =>
-                    `${(instances.length * MENU_PANEL_APP_INSTANCE_HEIGHT + 0) *
-                      v}px`
-                ),
-              }}
-            >
-              {instances.map(({ instanceId, identifier }) => {
-                const label = identifier || instanceId
-                return label ? (
-                  <li key={instanceId}>
-                    <MenuPanelAppInstance
-                      id={instanceId}
-                      name={label}
-                      active={instanceId === activeInstanceId}
-                      onClick={handleInstanceClick}
-                    />
-                  </li>
-                ) : null
-              })}
-            </animated.ul>
-          )} */}
         </div>
       )}
     </Spring>

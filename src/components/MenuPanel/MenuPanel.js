@@ -9,13 +9,17 @@ import {
   unselectable,
   useTheme,
 } from '@aragon/ui'
-import { useHistory } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 import { lerp } from '../../utils/math-utils'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import MenuPanelAppGroup from './MenuPanelAppGroup'
 import AppIcon from '../AppIcon/AppIcon'
 import { getAppPresentation } from '../../utils/app-utils'
-import { APPS_MENU_PANEL, APPS_ROUTING } from '../../constants'
+import {
+  APPS_MENU_PANEL,
+  APPS_ROUTING,
+  APPS_ROUTING_TO_NAME,
+} from '../../constants'
 
 export const MENU_PANEL_SHADOW_WIDTH = 3
 export const MENU_PANEL_WIDTH = 28 * GU
@@ -32,9 +36,19 @@ function MenuPanel({
 }) {
   const { apps } = useOrganizationState()
   const history = useHistory()
+  const [activeApp, setActiveApp] = useState()
+
+  useEffect(() => {
+    const parts = history.location.pathname.split('/')
+    const appLoaded = parts.length >= 1 ? parts[1] : null
+    setActiveApp(appLoaded)
+  }, [history])
 
   const onOpenApp = useCallback(
-    app => {
+    (app, index) => {
+      // const parts = history.location.pathname.split('/')
+      // const appLoaded = parts.length >= 1 ? parts[1] : null
+      setActiveApp(app)
       history.push(`/${app}`)
     },
     [history]
@@ -57,20 +71,23 @@ function MenuPanel({
   }, [apps])
 
   const renderAppGroup = useCallback(
-    app => {
+    (app, index) => {
       const { appId, name, icon, appName } = app
 
+      const isActive = appName === APPS_ROUTING_TO_NAME.get(activeApp)
+      console.log('IS active!!! ', isActive)
       return (
         <div key={appId}>
           <MenuPanelAppGroup
             name={name}
             icon={icon}
-            onActivate={() => onOpenApp(APPS_ROUTING.get(appName))}
+            onActivate={() => onOpenApp(APPS_ROUTING.get(appName), index)}
+            active={isActive}
           />
         </div>
       )
     },
-    [onOpenApp]
+    [activeApp, onOpenApp]
   )
 
   return (
@@ -98,7 +115,7 @@ function MenuPanel({
               margin-top: ${0.5 * GU}px;
             `}
           >
-            {menuApps.map(app => renderAppGroup(app))}
+            {menuApps.map((app, index) => renderAppGroup(app, index))}
           </div>
         </nav>
       </div>
