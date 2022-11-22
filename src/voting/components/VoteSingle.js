@@ -23,7 +23,7 @@ function VoteSingleContent() {
   const [vote, loading] = useSingleVote()
 
   const handleBack = useCallback(() => {
-    history.push(`/votes`)
+    history.push(`/voting/votes`)
   }, [history])
 
   return (

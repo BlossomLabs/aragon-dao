@@ -146,13 +146,13 @@ function VoteDetails({ vote }) {
               {accountHasVoted && (
                 <VoteCast voteSupported={voterInfo.supports} vote={vote} />
               )}
-              {!vote.hasEnded && (
+              {
                 <VoteActions
                   vote={vote}
                   onVote={handleVote}
                   onExecute={handleExecute}
                 />
-              )}
+              }
             </div>
           </LayoutBox>
         }

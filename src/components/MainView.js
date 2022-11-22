@@ -12,55 +12,8 @@ const MainView = React.memo(function MainView({ children }) {
   const { loading: appsLoading } = useOrganizationState()
 
   return (
-    <div
-      id="TEST"
-      css={`
-        display: flex;
-        position: relative;
-        height: 100vh;
-      `}
-    >
-      {!appsLoading && (
-        <div
-          css={`
-            display: flex;
-            flex-direction: column;
-
-            flex: 1;
-            z-index: 1;
-          `}
-        >
-          <Header
-            css={`
-              position: relative;
-              z-index: 1;
-              flex-shrink: 0;
-            `}
-          />
-
-          <ScrollView
-            css={`
-              display: flex;
-              flex-direction: column;
-              flex-grow: 1;
-              flex-shrink: 1;
-              height: 0;
-
-              /* Always show scroll area to prevent visual jump when pages move between overflow */
-              overflow-y: scroll;
-            `}
-          >
-            <main
-              css={`
-                flex: 1;
-                padding-bottom: ${12 * GU}px;
-              `}
-            >
-              {children}
-            </main>
-          </ScrollView>
-        </div>
-      )}
+    <div>
+      {!appsLoading && <>{children}</>}
 
       <Transition
         items={appsLoading}

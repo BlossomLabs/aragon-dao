@@ -188,7 +188,7 @@ const VoteGroups = React.memo(({ openVotes, closedVotes }) => {
   ]
   const handleVoteClick = useCallback(
     voteId => {
-      history.push(`/votes/${voteId}`)
+      history.push(`/voting/votes/${voteId}`)
     },
     [history]
   )

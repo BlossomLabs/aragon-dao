@@ -7,7 +7,7 @@
     "@1hive/connect-react": "^0.9.13",
     "@1hive/radspec": "^2.0.0",
     "@aragon/ui": "^1.9.2",
-    "@blossom-labs/connect-an-delay": "^0.2.0",
+    "@blossom-labs/connect-an-delay": "^0.2.1",
     "@juggle/resize-observer": "^3.2.0",
     "@nomiclabs/buidler": "^1.4.8",
     "@rperez89/connect-tao-voting": "^0.8.6",

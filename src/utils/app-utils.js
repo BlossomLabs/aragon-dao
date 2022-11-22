@@ -16,6 +16,7 @@ export function getAppPresentation(app) {
       humanName,
       iconSrc: iconPath ? getIpfsUrlFromUri(contentUri) + iconPath : '',
       name,
+      appName: app.name,
       // shortenedName: SHORTENED_APPS_NAMES.get(name) || name,
     }
   }
