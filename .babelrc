@@ -11,7 +11,18 @@
     ],
     "@babel/preset-react"
   ],
-  "plugins": [["styled-components", { "displayName": true }],"@babel/plugin-proposal-class-properties"],
+  "plugins": [
+    ["styled-components", { "displayName": true }],
+    "@babel/plugin-proposal-class-properties",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "^@/(.+)": "./src/\\1"
+        }
+      }
+    ]
+  ],
   "env": {
     "test": {
       "presets": [
