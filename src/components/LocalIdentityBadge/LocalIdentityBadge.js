@@ -1,6 +1,6 @@
 import React from 'react'
 import { IdentityBadge } from '@aragon/ui'
-import { useIdentity } from '../../identity-manager'
+import { useIdentity } from '../../providers/Identity'
 import LocalLabelPopoverTitle from './LocalLabelPopoverTitle'
 import LocalLabelPopoverActionLabel from './LocalLabelPopoverActionLabel'
 import { useNetwork } from '../../hooks/shared'

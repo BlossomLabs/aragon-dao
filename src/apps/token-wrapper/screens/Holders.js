@@ -10,11 +10,11 @@ import {
   useTheme,
 } from '@aragon/ui'
 import { useWallet } from '@/providers/Wallet'
-import LocalIdentityBadge from '../components/LocalIdentityBadge/LocalIdentityBadge'
-import { useIdentity } from '../components/IdentityManager/IdentityManager'
+import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
+import { useIdentity } from '@/providers/Identity'
 import You from '../components/You'
+import { addressesEqual } from '@/utils/web3-utils'
 import { formatBalance } from '../utils'
-import { addressesEqual } from '../web3-utils'
 
 const Holders = React.memo(function Holders({
   holders,

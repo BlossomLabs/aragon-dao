@@ -7,9 +7,9 @@ import {
   VOTE_CHALLENGED,
 } from '../../types/disputable-statuses'
 import { useDescribeVote } from '../../hooks/useDescribeVote'
-import Description from '../Description'
+import Description from '@/components/Description'
 import DisputableStatusLabel from '../DisputableStatusLabel'
-import LoadingSkeleton from '../Loading/LoadingSkeleton'
+import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import VoteOption from '../VoteOption'
 import TargetAppBadge from '../TargetAppBadge'
 

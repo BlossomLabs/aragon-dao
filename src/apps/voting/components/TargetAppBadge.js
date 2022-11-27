@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { AppBadge, GU } from '@aragon/ui'
 import { useOrganizationState } from '../../../providers/OrganizationProvider'
 import { getAppPresentation, getAppByName } from '../../../utils/app-utils'
-import LoadingSkeleton from './Loading/LoadingSkeleton'
+import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 
 function TargetAppBadge({ useDefaultBadge, targetApp, loading }) {
   return (

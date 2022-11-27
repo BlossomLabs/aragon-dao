@@ -4,7 +4,7 @@ import { BackButton, Bar, Header } from '@aragon/ui'
 import { SingleVoteSubscriptionProvider } from '../providers/SingleVoteSubscription'
 import LayoutGutter from '../../../components/Layout/LayoutGutter'
 import LayoutLimiter from '../../../components/Layout/LayoutLimiter'
-import LoadingSection from './Loading/LoadingSection'
+import LoadingSection from '@/components/Loading/LoadingSection'
 import VoteDetails from './VoteDetails/VoteDetails'
 import { useSingleVote } from '../hooks/useSingleVote'
 
@@ -33,7 +33,7 @@ function VoteSingleContent() {
         <Bar>
           <BackButton onClick={handleBack} />
         </Bar>
-        <LoadingSection loading={loading} title="Loading vote">
+        <LoadingSection show={loading} title="Loading vote">
           <VoteDetails vote={vote} />
         </LoadingSection>
       </LayoutLimiter>

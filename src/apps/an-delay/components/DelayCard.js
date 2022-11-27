@@ -4,11 +4,11 @@ import { Card, GU, textStyle } from '@aragon/ui'
 
 import CustomProgressBar from './CustomProgressBar'
 import DelayStatus from '../components/DelayStatus'
-import LocalLabelAppBadge from '../components/LocalIdentityBadge/LocalLabelAppBadge'
+import LocalLabelAppBadge from '@/components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
-import DescriptionWithSkeleton from './Description/DescriptionWithSkeleton'
-import { usePath } from '../hooks/shared'
+import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
+import { usePath } from '@/hooks/shared'
 import useDecribeScript from '../hooks/useDescribeScript'
 
 const DelayCard = React.memo(({ delay }) => {

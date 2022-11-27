@@ -1,6 +1,6 @@
 import { decodeForwardingPath } from '@1hive/connect-react'
 import STATUS from '../delay-status-types'
-import { addressesEqual, EMPTY_ADDRESS } from '../web3-utils'
+import { addressesEqual, EMPTY_ADDRESS } from '@/utils/web3-utils'
 import { dateToEpoch, timestampToDate, toMilliseconds } from './time-utils'
 
 export const buildExecutionTarget = (evmCallScript, installedApps) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import LoadingSkeleton from '../Loading/LoadingSkeleton'
+import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import Description from './index'
 
 export const DescriptionWithSkeleton = ({ path, itemNumber, loading }) => {

@@ -8,8 +8,7 @@ import {
 import Delays from '../screens/Delays'
 import DelayDetail from '../screens/DelayDetail'
 import Title from '../components/Title'
-import { IdentityProvider } from '../identity-manager'
-import { useGuiStyle } from '../hooks/shared'
+import { useGuiStyle } from '@/hooks/shared'
 import { formatTime } from '../lib/math-utils'
 
 const ANDelayRouter = () => (
@@ -46,9 +45,7 @@ const App = () => {
   )
 }
 export default () => (
-  <IdentityProvider>
-    <ANDelaySettingsProvider>
-      <App />
-    </ANDelaySettingsProvider>
-  </IdentityProvider>
+  <ANDelaySettingsProvider>
+    <App />
+  </ANDelaySettingsProvider>
 )

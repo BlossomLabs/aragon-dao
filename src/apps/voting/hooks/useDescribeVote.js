@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { getAppPresentationByAddress } from '../../../utils/app-utils'
-import { addressesEqual } from '../web3-utils'
+import { addressesEqual } from '@/utils/web3-utils'
 import { useMounted } from '../../../hooks/shared/useMounted'
 import { useOrganizationState } from '../../../providers/OrganizationProvider'
 

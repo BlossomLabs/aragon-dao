@@ -3,11 +3,9 @@ import PropTypes from 'prop-types'
 import {
   GU,
   IconCheck,
-  IconLock,
   IdentityBadge,
   Link,
   Tag,
-  TokenAmount,
   textStyle,
   useLayout,
   useTheme,
@@ -16,7 +14,6 @@ import DisputableActionStatus from './DisputableActionStatus'
 import DisputableStatusLabel from '../DisputableStatusLabel'
 import {
   VOTE_CANCELLED,
-  VOTE_SCHEDULED,
   VOTE_SETTLED,
   VOTE_DISPUTED,
   VOTE_CHALLENGED,
@@ -30,14 +27,14 @@ import SummaryBar from './SummaryBar'
 import SummaryRow from './SummaryRow'
 import StatusInfo from './StatusInfo'
 import FeedbackModule from './FeedbackModule'
-import Description from '../Description'
+import Description from '@/components/Description'
 import VoteActions from './VoteActions'
 import VoteCast from './VoteCast'
 import TargetAppBadge from '../TargetAppBadge'
-import { addressesEqual } from '../../web3-utils'
+import { addressesEqual } from '@/utils/web3-utils'
 import { getIpfsUrlFromUri } from '../../../../utils/ipfs-utils'
 import { useDescribeVote } from '../../hooks/useDescribeVote'
-import LoadingSkeleton from '../Loading/LoadingSkeleton'
+import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { useWallet } from '../../../../providers/Wallet'
 import MultiModal from '../../../../components/MultiModal/MultiModal'
 import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
@@ -69,9 +66,8 @@ function getPresentation(disputableStatus) {
 function VoteDetails({ vote }) {
   const [modalVisible, setModalVisible] = useState(false)
   const [modalData, setModalData] = useState({})
-  const [modalMode, setModalMode] = useState(null)
-  const [voteSupported, setVoteSupported] = useState(false)
-  const { voteId, id, script, voterInfo, votingToken, disputableStatus } = vote
+  const [, setModalMode] = useState(null)
+  const { voteId, id, script, voterInfo, disputableStatus } = vote
   const { votingActions } = useActions()
 
   const { description, targetApp, loading, emptyScript } = useDescribeVote(
@@ -94,7 +90,6 @@ function VoteDetails({ vote }) {
   }, [votingActions, voteId, script])
 
   const accountHasVoted = voterInfo && voterInfo.hasVoted
-  const showVoteActions = !accountHasVoted
 
   return (
     <>

@@ -21,7 +21,6 @@ import NoVotes from './screens/NoVotes'
 import Votes from './screens/Votes'
 import DelegatedBy from './components/DelegatedBy'
 import { useAppLogic } from './app-logic'
-import { IdentityProvider } from './identity-manager'
 import { SettingsProvider } from './vote-settings-manager'
 import { VotingProvider } from './providers/VotingProvider'
 import { useWallet } from '../../providers/Wallet'
@@ -195,13 +194,11 @@ const App = React.memo(function App() {
 })
 
 export default () => (
-  <IdentityProvider>
-    <VoterProvider>
-      <VotingProvider>
-        <SettingsProvider>
-          <App />
-        </SettingsProvider>
-      </VotingProvider>
-    </VoterProvider>
-  </IdentityProvider>
+  <VoterProvider>
+    <VotingProvider>
+      <SettingsProvider>
+        <App />
+      </SettingsProvider>
+    </VotingProvider>
+  </VoterProvider>
 )

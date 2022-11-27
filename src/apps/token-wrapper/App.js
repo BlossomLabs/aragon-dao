@@ -1,12 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import { Main, Split, SyncIndicator } from '@aragon/ui'
-import { IdentityProvider } from './components/IdentityManager/IdentityManager'
 import {
   TokenWrapperProvider,
   useAppState,
 } from './providers/TokenWrapperProvider'
 import MultiModal from '@/components/MultiModal/MultiModal'
-import useGuiStyle from './hooks/useGuiStyle'
+import { useGuiStyle } from '@/hooks/shared'
 import NoWrappedTokens from './screens/NoWrappedTokens'
 import Holders from './screens/Holders'
 import AppHeader from './components/AppHeader'
@@ -84,9 +83,7 @@ function App() {
 export default function TokenWrapper() {
   return (
     <TokenWrapperProvider>
-      <IdentityProvider>
-        <App />
-      </IdentityProvider>
+      <App />
     </TokenWrapperProvider>
   )
 }

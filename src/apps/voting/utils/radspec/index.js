@@ -1,4 +1,4 @@
-import { addressesEqual } from '../../web3-utils'
+import { addressesEqual } from '@/utils/web3-utils'
 import radspec from '@1hive/radspec'
 import { findAppMethodFromData } from '../apps'
 

@@ -1,6 +1,6 @@
 import React from 'react'
-import useNetwork from '@/hooks/shared/useNetwork'
 import { Box, GU, TokenBadge, useTheme, textStyle } from '@aragon/ui'
+import { useNetwork } from '@/hooks/shared'
 import wrap from '../assets/wrap.svg'
 import { fromDecimals } from '../utils'
 

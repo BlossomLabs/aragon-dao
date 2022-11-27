@@ -4,7 +4,7 @@ import { Transition, animated } from 'react-spring/renderprops'
 import styled from 'styled-components'
 import { Box, textStyle, LoadingRing, GU } from '@aragon/ui'
 import loadingGraphic from '../../assets/loading.svg'
-import { springs } from '../../../../style/springs'
+import { springs } from '@/style/springs'
 
 const AnimatedDiv = styled(animated.div)`
   top: 0;
@@ -12,7 +12,12 @@ const AnimatedDiv = styled(animated.div)`
   width: 100%;
 `
 
-function LoadingSection({ children, loading, title }) {
+function LoadingSection({
+  children,
+  show,
+  title = 'Loading',
+  showSpinner = true,
+}) {
   return (
     <div
       css={`
@@ -20,7 +25,7 @@ function LoadingSection({ children, loading, title }) {
       `}
     >
       <Transition
-        items={loading}
+        items={show}
         config={springs.gentle}
         from={{ opacity: 0, transform: `translate3d(0, ${0.5 * GU}px, 0)` }}
         enter={{ opacity: 1, transform: `translate3d(0, 0, 0)` }}
@@ -30,8 +35,8 @@ function LoadingSection({ children, loading, title }) {
           transform: `translate3d(0, -${0.5 * GU}px, 0)`,
         }}
       >
-        {loading =>
-          loading
+        {show =>
+          show
             ? props => (
                 <AnimatedDiv style={props}>
                   <Box>
@@ -80,20 +85,23 @@ function LoadingSection({ children, loading, title }) {
                           margin-top: ${4 * GU}px;
                         `}
                       >
-                        <div
-                          css={`
-                            margin-right: 16px;
-                          `}
-                        >
-                          <LoadingRing mode="half-circle" />
-                        </div>
+                        {showSpinner && (
+                          <div
+                            css={`
+                              margin-right: 16px;
+                            `}
+                          >
+                            <LoadingRing mode="half-circle" />
+                          </div>
+                        )}
                         <h2
                           css={`
                             ${textStyle('title3')}
                             line-height: 1.2;
                           `}
                         >
-                          {title}…
+                          {title}
+                          {showSpinner && '…'}
                         </h2>
                       </span>
                     </div>
@@ -109,12 +117,9 @@ function LoadingSection({ children, loading, title }) {
 
 LoadingSection.propTypes = {
   children: PropTypes.node,
-  loading: PropTypes.bool,
+  show: PropTypes.bool,
+  showSpinner: PropTypes.bool,
   title: PropTypes.string,
-}
-
-LoadingSection.defaultProps = {
-  title: 'Loading',
 }
 
 export default LoadingSection

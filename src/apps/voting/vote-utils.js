@@ -1,6 +1,6 @@
 import { isBefore } from 'date-fns'
 import BN from 'bn.js'
-import { addressesEqual } from './web3-utils'
+import { addressesEqual } from '@/utils/web3-utils'
 import {
   VOTE_ABSENT,
   VOTE_YEA,

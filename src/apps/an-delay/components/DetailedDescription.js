@@ -1,6 +1,6 @@
 import React from 'react'
 import { GU, useTheme } from '@aragon/ui'
-import LocalIdentityBadge from './LocalIdentityBadge/LocalIdentityBadge'
+import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 
 function DetailedDescription({ path }) {
   return (

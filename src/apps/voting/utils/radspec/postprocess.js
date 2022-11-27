@@ -1,4 +1,4 @@
-import { addressesEqual } from '../../web3-utils'
+import { addressesEqual } from '@/utils/web3-utils'
 import { utils } from 'ethers'
 
 const CORE_NAMESPACE = utils.solidityKeccak256(['string'], ['core'])

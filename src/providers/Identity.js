@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react'
 import { Subject } from 'rxjs'
-import { useApi } from './hooks/shared'
+import { useApi } from '../hooks/shared'
 
 const updates$ = new Subject()
 
