@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { BackButton, Bar, Header } from '@aragon/ui'
-import { SingleVoteSubscriptionProvider } from '../providers/SingleVoteSubscription'
-import LayoutGutter from '../../../components/Layout/LayoutGutter'
-import LayoutLimiter from '../../../components/Layout/LayoutLimiter'
+import LayoutGutter from '@/components/Layout/LayoutGutter'
+import LayoutLimiter from '@/components/Layout/LayoutLimiter'
 import LoadingSection from '@/components/Loading/LoadingSection'
+import { SingleVoteSubscriptionProvider } from '../providers/SingleVoteSubscription'
 import VoteDetails from './VoteDetails/VoteDetails'
 import { useSingleVote } from '../hooks/useSingleVote'
 

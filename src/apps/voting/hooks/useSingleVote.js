@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useSingleVoteSubscription } from '../providers/SingleVoteSubscription'
-import { durationToHours, toMs } from '../utils/date-utils'
+import { toMs } from '../utils/date-utils'
 import { DisputableStatusType } from '../types/disputable-statuses'
 import {
   getDelegatedVotingEndDate,

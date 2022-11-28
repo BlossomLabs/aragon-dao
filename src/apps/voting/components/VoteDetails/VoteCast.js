@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { GU, IconCheck, RADIUS, textStyle, useTheme } from '@aragon/ui'
-import { useWallet } from '../../../../providers/Wallet'
+import { useWallet } from '@/providers/Wallet'
 import {
   getAccountCastDelegatedStake,
   getAccountCastStake,

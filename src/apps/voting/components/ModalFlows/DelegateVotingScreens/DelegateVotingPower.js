@@ -9,9 +9,9 @@ import {
   textStyle,
 } from '@aragon/ui'
 import { useAppState } from '../../../providers/VotingProvider'
-import { useTokenBalances } from '../../../../../hooks/shared/useAccountTokenBalance'
-import { useMultiModal } from '../../../../../components/MultiModal/MultiModalProvider'
-import { useWallet } from '../../../../../providers/Wallet'
+import { useTokenBalances } from '@/hooks/shared/useAccountTokenBalance'
+import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
+import { useWallet } from '@/providers/Wallet'
 import { formatTokenAmount } from '../../../token-utils'
 
 function DelegateVotingPower({ onCreateTransaction }) {

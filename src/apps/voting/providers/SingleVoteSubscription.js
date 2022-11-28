@@ -8,17 +8,17 @@ import React, {
 import PropTypes from 'prop-types'
 import { useConnect } from '@1hive/connect-react'
 import { formatTokenAmount } from '@aragon/ui'
-import { useOrganizationState } from '../../../providers/OrganizationProvider'
+import { useOrganizationState } from '@/providers/OrganizationProvider'
+import { useWallet } from '@/providers/Wallet'
+import { useMounted } from '@/hooks/shared/useMounted'
+import { useContractReadOnly } from '@/hooks/shared/useContract'
+import minimeTokenAbi from '@/abi/minimeToken.json'
 import { useAppState } from '../providers/VotingProvider'
-import { useWallet } from '../../../providers/Wallet'
-import { useMounted } from '../../../hooks/shared/useMounted'
-import { useContractReadOnly } from '../../../hooks/shared/useContract'
 import { useVoterState } from './VoterProvider'
 import usePromise from '../hooks/usePromise'
 import { getUserBalanceAt } from '../token-utils'
 import { getCanUserVoteOnBehalfOf, getCanUserVote } from '../vote-utils'
 import votingAbi from '../abi/voting.json'
-import minimeTokenAbi from '../../../abi/minimeToken.json'
 
 const emptyPromise = defaultValue =>
   new Promise(resolve => resolve(defaultValue))

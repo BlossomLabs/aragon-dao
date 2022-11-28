@@ -1,30 +1,11 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import {
-  Box,
-  GU,
-  Info,
-  Link,
-  LoadingRing,
-  textStyle,
-  Timer,
-  useTheme,
-} from '@aragon/ui'
-import {
-  VOTE_SCHEDULED,
-  VOTE_CHALLENGED,
-  VOTE_DISPUTED,
-} from '../../types/disputable-statuses'
-import DisputableActions from './DisputableActions'
-import DisputablePeriod from './DisputablePeriod'
-import { durationToHours, dateFormat } from '../../utils/date-utils'
-// import { networkEnvironment } from '../../../current-environment'
+import { Box, GU, LoadingRing, textStyle, Timer, useTheme } from '@aragon/ui'
+import { dateFormat } from '../../utils/date-utils'
 
 const DATE_FORMAT = 'YYYY/MM/DD , HH:mm'
 
 function DisputableActionStatus({ vote }) {
-  const theme = useTheme()
-
   const voteEndPeriodNode = usePeriod(vote, vote.endDate)
   const delegatedVotingEndPeriodNode = usePeriod(
     vote,

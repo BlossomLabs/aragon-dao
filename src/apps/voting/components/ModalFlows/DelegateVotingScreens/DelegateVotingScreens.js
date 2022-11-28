@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import DelegateInitialScreen from './DelegateInitialScren'
-import ModalFlowBase from '../../../../../components/MultiModal/ModalFlowBase'
+import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import BecomeADelegate from './BecomeADelegate'
 import DelegateVotingPower from './DelegateVotingPower'
 import useActions from '../../../hooks/useActions'

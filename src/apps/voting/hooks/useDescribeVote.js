@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from 'react'
-import { getAppPresentationByAddress } from '../../../utils/app-utils'
+import { getAppPresentationByAddress } from '@/utils/app-utils'
 import { addressesEqual } from '@/utils/web3-utils'
-import { useMounted } from '../../../hooks/shared/useMounted'
-import { useOrganizationState } from '../../../providers/OrganizationProvider'
+import { useMounted } from '@/hooks/shared/useMounted'
+import { useOrganizationState } from '@/providers/OrganizationProvider'
 
 const cachedDescriptions = new Map([])
 

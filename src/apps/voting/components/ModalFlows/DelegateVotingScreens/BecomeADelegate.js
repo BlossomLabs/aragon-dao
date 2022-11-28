@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Button, GU, textStyle, useLayout, Info } from '@aragon/ui'
-import { useMultiModal } from '../../../../../components/MultiModal/MultiModalProvider'
+import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 
 function BecomeADelegate() {
   const { layoutName } = useLayout()

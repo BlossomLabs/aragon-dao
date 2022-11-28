@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import RevokeDelegation from './RevokeDelegation'
-import ModalFlowBase from '../../../../../components/MultiModal/ModalFlowBase'
+import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import useActions from '../../../hooks/useActions'
 
 function RevokeDelegationScreens() {

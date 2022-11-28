@@ -11,7 +11,7 @@ const DelegatedBy = React.memo(function DelegatedBy() {
     numData: { tokenDecimals },
   } = useAppState()
 
-  const { voter, voterStatus } = useVoterState()
+  const { voter } = useVoterState()
 
   const [delegatorsBalances, loading] = useDelegatorsBalance(
     voter?.representativeFor

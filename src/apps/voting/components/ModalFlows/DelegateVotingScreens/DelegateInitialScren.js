@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Card, textStyle, GU, useLayout } from '@aragon/ui'
-import { useMultiModal } from '../../../../../components/MultiModal/MultiModalProvider'
+import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import becomeDelegate from '../../../assets/becomeDelegate.svg'
 import voteDelegate from '../../../assets/voteDelegate.svg'
 

@@ -12,7 +12,7 @@ import {
   textStyle,
   useTheme,
 } from '@aragon/ui'
-import { useWallet } from '../../../../providers/Wallet'
+import { useWallet } from '@/providers/Wallet'
 import { dateFormat } from '../../utils/date-utils'
 import { getConnectedAccountCast } from '../../vote-utils'
 import { VOTE_YEA, VOTE_NAY } from '../../vote-types'

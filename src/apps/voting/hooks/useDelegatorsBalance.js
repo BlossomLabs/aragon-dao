@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import BN from 'bn.js'
+import minimeTokenAbi from '@/abi/minimeToken.json'
+import { useContractReadOnly } from '@/hooks/shared/useContract'
 import { useAppState } from '../providers/VotingProvider'
-import { useContractReadOnly } from '../../hooks/shared/useContract'
 import usePromise from './usePromise'
-import minimeTokenAbi from '../../abi/minimeToken.json'
 
 const emptyPromise = defaultValue =>
   new Promise(resolve => resolve(defaultValue))
