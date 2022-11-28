@@ -36,7 +36,7 @@ import FeedbackModule from './FeedbackModule'
 import VoteActions from './VoteActions'
 import VoteCast from './VoteCast'
 import TargetAppBadge from '../TargetAppBadge'
-import { useDescribeVote } from '../../hooks/useDescribeVote'
+import useDescribeScript from '@/hooks/shared/useDescribeScript'
 import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
 import useActions from '../../hooks/useActions'
 
@@ -70,7 +70,7 @@ function VoteDetails({ vote }) {
   const { voteId, id, script, voterInfo, disputableStatus } = vote
   const { votingActions } = useActions()
 
-  const { description, targetApp, loading, emptyScript } = useDescribeVote(
+  const { describedSteps, targetApp, loading, emptyScript } = useDescribeScript(
     script,
     id
   )
@@ -131,7 +131,7 @@ function VoteDetails({ vote }) {
                 vote={vote}
                 disputableStatus={disputableStatus}
                 emptyScript={emptyScript}
-                description={description}
+                description={describedSteps}
                 descriptionLoading={loading}
               />
               <SummaryInfo

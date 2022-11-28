@@ -9,7 +9,7 @@ import LocalLabelAppBadge from '@/components/LocalIdentityBadge/LocalLabelAppBad
 import STATUS from '../delay-status-types'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
 import { usePath } from '@/hooks/shared'
-import useDecribeScript from '../hooks/useDescribeScript'
+import useDecribeScript from '@/hooks/shared/useDescribeScript'
 
 const DelayCard = React.memo(({ delay }) => {
   const [, navigate] = usePath()
@@ -23,7 +23,8 @@ const DelayCard = React.memo(({ delay }) => {
     executionTime,
     pausedAt,
   } = delay
-  const [describedSteps, { loading }] = useDecribeScript(evmCallScript, id)
+  const { describedSteps, loading } = useDecribeScript(evmCallScript, id)
+
   return (
     <CardItem onClick={() => navigate(`/delay/scripts/${id}`)}>
       <div>

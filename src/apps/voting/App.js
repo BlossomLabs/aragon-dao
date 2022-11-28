@@ -13,7 +13,7 @@ import {
 import { VoterProvider, useVoterState } from './providers/VoterProvider'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelegateVotingScreens from './components/ModalFlows/DelegateVotingScreens/DelegateVotingScreens'
-import { useGuiStyle } from './hooks/shared'
+import { useGuiStyle } from '@/hooks/shared'
 import NewVotePanel from './components/NewVotePanel'
 import useFilterVotes from './hooks/useFilterVotes'
 import useScrollTop from './hooks/useScrollTop'

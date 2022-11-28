@@ -6,7 +6,7 @@ import {
   VOTE_DISPUTED,
   VOTE_CHALLENGED,
 } from '../../types/disputable-statuses'
-import { useDescribeVote } from '../../hooks/useDescribeVote'
+import useDescribeScript from '@/hooks/shared/useDescribeScript'
 import Description from '@/components/Description'
 import DisputableStatusLabel from '../DisputableStatusLabel'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
@@ -46,7 +46,7 @@ function VoteCard({ vote, onVoteClick }) {
   const { voteId, id, data, numData } = vote
   const { yea, nay, votingPower } = numData
   const { context, script, status } = data
-  const { description, targetApp, emptyScript, loading } = useDescribeVote(
+  const { describedSteps, targetApp, emptyScript, loading } = useDescribeScript(
     script,
     id
   )
@@ -112,7 +112,7 @@ function VoteCard({ vote, onVoteClick }) {
             </p>
           ) : (
             <DescriptionWithSkeleton
-              description={description}
+              description={describedSteps}
               loading={loading}
               voteNumber={voteId}
             />

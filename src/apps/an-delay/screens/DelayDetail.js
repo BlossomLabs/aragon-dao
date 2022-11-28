@@ -20,7 +20,7 @@ import STATUS from '../delay-status-types'
 import { formatTime } from '../lib/math-utils'
 import { usePath } from '@/hooks/shared'
 import { useDelayedScript } from '../hooks/useDelayedScripts'
-import useDescribeScript from '../hooks/useDescribeScript'
+import useDescribeScript from '@/hooks/shared/useDescribeScript'
 import Description from '@/components/Description'
 import LayoutLimiter from '@/components/Layout/LayoutLimiter'
 import MultiModal from '@/components/MultiModal/MultiModal'
@@ -36,10 +36,11 @@ const DelayDetailWrapper = ({ match }) => {
     delay,
     { loading: scriptLoading, error: scriptError },
   ] = useDelayedScript(match.params.id)
-  const [
+  const {
     describedSteps,
-    { loading: describeLoading, error: describeError },
-  ] = useDescribeScript(delay?.evmCallScript, delay?.id)
+    loading: describeLoading,
+    error: describeError,
+  } = useDescribeScript(delay?.evmCallScript, delay?.id)
   const loading = scriptLoading || describeLoading
   const error = scriptError || describeError
   const description =
