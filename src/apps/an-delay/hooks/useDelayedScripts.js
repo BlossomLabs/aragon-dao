@@ -6,7 +6,7 @@ import {
   formatDelayedScript,
   getStatus,
 } from '../lib/delay-utils'
-import { useNow } from './useNow'
+import useNow from '@/hooks/shared/useNow'
 
 export const useDelayedScripts = () => {
   const { apps, connectedANDelayApp } = useOrganizationState()

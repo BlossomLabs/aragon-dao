@@ -5,7 +5,7 @@ import { EMPTY_ADDRESS, shortenAddress } from '@/utils/web3-utils'
 import { useAppState } from '../providers/VotingProvider'
 import { isVoteOpen } from '../vote-utils'
 import { VOTE_ABSENT } from '../vote-types'
-import useNow from './useNow'
+import useNow from '@/hooks/shared/useNow'
 
 // Decorate the votes array with more information relevant to the frontend
 function useDecoratedVotes() {
