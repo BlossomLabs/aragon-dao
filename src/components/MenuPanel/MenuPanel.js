@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Spring, animated } from 'react-spring/renderprops'
 import { GU, springs, textStyle, unselectable, useTheme } from '@aragon/ui'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { lerp } from '../../utils/math-utils'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import MenuPanelAppGroup from './MenuPanelAppGroup'
@@ -29,18 +29,18 @@ function MenuPanel({
 }) {
   const { apps } = useOrganizationState()
   const history = useHistory()
+  const location = useLocation()
   const [activeApp, setActiveApp] = useState()
 
   useEffect(() => {
-    const parts = history.location.pathname.split('/')
+    const parts = location.pathname.split('/')
     const appLoaded = parts.length >= 1 ? parts[1] : null
+
     setActiveApp(appLoaded)
-  }, [history])
+  }, [location])
 
   const onOpenApp = useCallback(
-    (app, index) => {
-      // const parts = history.location.pathname.split('/')
-      // const appLoaded = parts.length >= 1 ? parts[1] : null
+    app => {
       setActiveApp(app)
       history.push(`/${app}`)
     },
@@ -68,7 +68,7 @@ function MenuPanel({
       const { appId, name, icon, appName } = app
 
       const isActive = appName === APPS_ROUTING_TO_NAME.get(activeApp)
-      console.log('IS active!!! ', isActive)
+
       return (
         <div key={appId}>
           <MenuPanelAppGroup
