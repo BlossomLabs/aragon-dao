@@ -1,9 +1,9 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import ANDelayRouter from '../an-delay/routes/Router'
-import VotingRouter from '../voting/routes/Router'
-import TokenWrapperRouter from '../token-wrapper/routes/Router'
+import ANDelayRouter from '../apps/an-delay/routes/Router'
+import VotingRouter from '../apps/voting/routes/Router'
+import TokenWrapperRouter from '../apps/token-wrapper/routes/Router'
 import HomeScreen from '../components/HomeScreen'
 
 function Router() {

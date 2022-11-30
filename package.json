@@ -1,5 +1,5 @@
 {
-  "name": "aragon-voting",
+  "name": "lazuline",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
@@ -39,6 +39,7 @@
     "@babel/preset-react": "^7.10.1",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^26.1.0",
+    "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-styled-components": "^1.10.7",
     "eslint": "5.5.0",
     "eslint-config-prettier": "^3.0.1",

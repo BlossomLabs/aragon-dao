@@ -2,8 +2,7 @@ import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { GU, Link, textStyle, useTheme } from '@aragon/ui'
 import { ChainUnsupportedError } from 'use-wallet'
-import { getNetworkName } from '../../utils/web3-utils'
-// import { networkEnvironment } from '../../current-environment'
+import { getNetworkName } from '@/utils/web3-utils'
 import connectionError from './assets/connection-error.png'
 
 function ScreenError({ error, onBack }) {

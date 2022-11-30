@@ -11,7 +11,7 @@ import {
   useLayout,
 } from '@aragon/ui'
 import { useWallet } from 'use-wallet'
-import { shortenAddress } from '../../utils/web3-utils'
+import { shortenAddress } from '@/utils/web3-utils'
 
 function AccountButton({ onClick }) {
   const theme = useTheme()
