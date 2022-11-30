@@ -52,7 +52,7 @@ const HomeScreen = () => {
             ${textStyle('title3')};
           `}
         >
-          Select an app
+          {menuApps.length ? 'Select an app' : 'No apps found'}
         </div>
         <div
           css={`
