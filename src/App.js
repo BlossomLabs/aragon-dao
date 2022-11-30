@@ -27,13 +27,12 @@ function App() {
                 theme={appearance}
               >
                 <MainView>
-                  <div id="HELLO" css="position: relative; z-index: 0">
+                  <div css="position: relative; z-index: 0">
                     <div
                       css={`
                         display: flex;
                         flex-direction: column;
                         position: relative;
-                        z-index: 0;
                         height: 100vh;
                         min-width: ${45 * GU}px;
                       `}
