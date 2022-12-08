@@ -1,15 +1,15 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { ButtonBase, GU, Link, RADIUS, useTheme, textStyle } from '@aragon/ui'
-import { getProviderFromUseWalletId } from '../../ethereum-providers'
-import { getUseWalletProviders } from '@/utils/web3-utils'
-
-const PROVIDERS_INFO = getUseWalletProviders().map(provider => [
-  provider.id,
-  getProviderFromUseWalletId(provider.id),
-])
+import { getProviderFromUseWalletId } from 'use-wallet'
+import { connectors } from '../../ethereum-providers'
 
 function ScreenProviders({ onActivate }) {
+  const providersInfo = connectors.map(provider => [
+    provider.id,
+    getProviderFromUseWalletId(provider.id),
+  ])
+
   return (
     <div
       css={`
@@ -28,7 +28,7 @@ function ScreenProviders({ onActivate }) {
           grid-template-columns: repeat(2, 1fr);
         `}
       >
-        {PROVIDERS_INFO.map(([id, provider]) => (
+        {providersInfo.map(([id, provider]) => (
           <ProviderButton
             key={id}
             id={id}

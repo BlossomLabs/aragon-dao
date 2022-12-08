@@ -79,21 +79,6 @@ export function shortenAddress(address, charsLength = 4) {
   )
 }
 
-export function getUseWalletProviders() {
-  const providers = [{ id: 'injected' }, { id: 'frame' }]
-
-  return providers
-}
-
-export function getUseWalletConnectors() {
-  return getUseWalletProviders().reduce((connectors, provider) => {
-    if (provider.useWalletConf) {
-      connectors[provider.id] = provider.useWalletConf
-    }
-    return connectors
-  }, {})
-}
-
 export function getDefaultProvider(chainId = getPreferredChain()) {
   const { defaultEthNode, type } = getNetwork(chainId)
 

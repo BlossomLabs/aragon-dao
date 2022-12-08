@@ -2,10 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { keyframes } from 'styled-components'
 import { GU, useTheme, textStyle, Link } from '@aragon/ui'
-import {
-  getProviderFromUseWalletId,
-  getProviderString,
-} from '../../ethereum-providers'
+import { getProviderFromUseWalletId } from 'use-wallet'
 
 import loadingRing from './assets/loading-ring.svg'
 
@@ -92,8 +89,8 @@ function ScreenConnecting({ onCancel, providerId }) {
             color: ${theme.surfaceContentSecondary};
           `}
         >
-          Log into {getProviderString('your Ethereum wallet', provider.id)}. You
-          may be temporarily redirected to a new screen.
+          Log into {provider?.id || 'Unknown'}. You may be temporarily
+          redirected to a new screen.
         </p>
       </div>
       <div

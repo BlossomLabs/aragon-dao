@@ -1,7 +1,8 @@
 import React, { useContext, useMemo } from 'react'
 import { providers as EthersProviders } from 'ethers'
 import { UseWalletProvider, useWallet } from 'use-wallet'
-import { getUseWalletConnectors, getDefaultProvider } from '@/utils/web3-utils'
+import { getDefaultProvider } from '@/utils/web3-utils'
+import { useWalletConnectors } from '../ethereum-providers'
 
 /* eslint-disable react/prop-types */
 const WalletAugmentedContext = React.createContext()
@@ -36,7 +37,7 @@ function WalletProvider({ children }) {
   return (
     <UseWalletProvider
       chainId={100} // TODO: handle multiple chains
-      connectors={getUseWalletConnectors()}
+      connectors={useWalletConnectors}
     >
       <WalletAugmented>{children}</WalletAugmented>
     </UseWalletProvider>

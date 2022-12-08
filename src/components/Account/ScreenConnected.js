@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@aragon/ui'
 // import { networkEnvironment } from '../../current-environment'
-import { getProviderFromUseWalletId } from '../../ethereum-providers'
+import { getProviderFromUseWalletId } from 'use-wallet'
 import { useCopyToClipboard } from '../../hooks/shared/useCopyToClipboard'
 
 /* eslint-disable react/prop-types */
