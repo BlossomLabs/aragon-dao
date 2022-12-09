@@ -4,8 +4,50 @@ import { useMounted } from '@/hooks/shared/useMounted'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { addressesEqual } from '@/utils/web3-utils'
 import { getAppPresentationByAddress } from '@/utils/app-utils'
+import { toUtf8String } from 'ethers/lib/utils'
 
 const cachedDescriptions = new Map([])
+
+const formatNewVoteStep = step => {
+  const formattedAnnotatedDescription = step.annotatedDescription?.length
+    ? step.annotatedDescription.map(item =>
+        item.type === 'bytes32'
+          ? { ...item, value: toUtf8String(item.value) }
+          : item
+      )
+    : undefined
+  const formattedDescription = step.description
+    // Split to easily access utf-8-codified string segment
+    .split(' ')
+    .map(segment =>
+      segment.startsWith('0x') ? toUtf8String(segment) : segment
+    )
+    .join(' ')
+
+  return {
+    ...step,
+    annotatedDescription: formattedAnnotatedDescription,
+    description: formattedDescription,
+  }
+}
+
+const isNewVoteStep = step => {
+  const sigHash = step.data.substring(0, 10)
+
+  return sigHash === '0x0a0932da' // sig hash for "newVote(bytes,bytes)""
+}
+
+// TODO: temporary solution for steps of new votes with context until
+// the contract's  newVote function's radspec is fixed
+const patchSteps = steps => {
+  return steps.map(step => {
+    if (isNewVoteStep(step)) {
+      return formatNewVoteStep(step)
+    }
+
+    return step
+  })
+}
 
 const isEmptyScript = evmCallScript =>
   evmCallScript === '0x00000001' || evmCallScript === '0x00'
@@ -47,10 +89,12 @@ const useDecribeScript = (evmCallScript, scriptId) => {
     }
 
     async function describe() {
-      const steps = await describePath(
-        decodeForwardingPath(evmCallScript),
-        apps,
-        connection.ethersProvider
+      const steps = patchSteps(
+        await describePath(
+          decodeForwardingPath(evmCallScript),
+          apps,
+          connection.ethersProvider
+        )
       )
 
       if (mounted()) {
