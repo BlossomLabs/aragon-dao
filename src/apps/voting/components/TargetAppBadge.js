@@ -20,7 +20,7 @@ function TargetAppBadge({ useDefaultBadge, targetApp, loading }) {
 /* eslint-disable react/prop-types */
 function DefaultAppBadge() {
   const { apps } = useOrganizationState()
-  const disputableVotingApp = getAppByName(apps, 'disputable-voting')
+  const disputableVotingApp = getAppByName(apps, 'blossom-tao-voting')
 
   const { humanName, iconSrc } = getAppPresentation(disputableVotingApp)
 

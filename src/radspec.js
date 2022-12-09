@@ -28,6 +28,9 @@ export default {
       supports ? 'Yes' : 'No'
     } on behalf of principals on decision: #${voteId}`
   },
+  [organizationActions.NEW_VOTE]: () => {
+    return `New signaling vote`
+  },
   [organizationActions.WRAP]: () => {
     return `Wrap token`
   },
