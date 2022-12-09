@@ -1,10 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import { noop } from '@aragon/ui'
+import { utils } from 'ethers'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { useWallet } from '@/providers/Wallet'
 import { getAppByName } from '@/utils/app-utils'
 import radspec from '@/radspec'
 import votingActions from '../actions/voting-action-types'
+
+import { EMPTY_CALLSCRIPT } from '../evmscript-utils'
 
 const GAS_LIMIT = 550000
 
@@ -65,6 +68,32 @@ export default function useActions() {
     [account, votingApp]
   )
 
+  const newVote = useCallback(
+    async (question, onDone = noop) => {
+      let intent = await votingApp.intent(
+        'newVote',
+        [utils.toUtf8Bytes(EMPTY_CALLSCRIPT), utils.toUtf8Bytes(question)],
+        {
+          actAs: account,
+        }
+      )
+
+      intent = imposeGasLimit(intent, GAS_LIMIT)
+
+      const description = radspec[votingActions.NEW_VOTE]()
+      // const type = actions.VOTE_ON_DECISION
+
+      const transactions = attachTrxMetadata(
+        intent.transactions,
+        description,
+        ''
+      )
+
+      onDone(transactions)
+    },
+    [account, votingApp]
+  )
+
   const voteOnBehalfOf = useCallback(
     async (voteId, supports, voters, onDone = noop) => {
       let intent = await votingApp.intent(
@@ -111,9 +140,10 @@ export default function useActions() {
         executeVote,
         vote,
         voteOnBehalfOf,
+        newVote,
       },
     }),
-    [delegateVoting, executeVote, vote, voteOnBehalfOf]
+    [delegateVoting, executeVote, newVote, vote, voteOnBehalfOf]
   )
 }
 

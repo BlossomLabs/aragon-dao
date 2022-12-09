@@ -25,6 +25,7 @@ import { SettingsProvider } from './vote-settings-manager'
 import { VotingProvider } from './providers/VotingProvider'
 import { useWallet } from '../../providers/Wallet'
 import RevokeDelegationScreens from './components/ModalFlows/RevokeDelegation/RevokeDelegationScreens'
+import CreateVoteScreens from './components/ModalFlows/NewVote/CreateVoteScreens'
 
 const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
 
@@ -64,6 +65,10 @@ const App = React.memo(function App() {
 
   const handleDelegate = useCallback(() => {
     handleShowModal('delegate')
+  }, [handleShowModal])
+
+  const handleNewVote = useCallback(() => {
+    handleShowModal('newVote')
   }, [handleShowModal])
 
   const handleHideModal = useCallback(() => {
@@ -137,7 +142,7 @@ const App = React.memo(function App() {
                     )}
                     <Button
                       mode="strong"
-                      onClick={newVotePanel.requestOpen}
+                      onClick={handleNewVote}
                       label="New vote"
                       icon={<IconPlus />}
                       display={compactMode ? 'icon' : 'label'}
@@ -176,10 +181,6 @@ const App = React.memo(function App() {
             )}
           </React.Fragment>
         )}
-        <NewVotePanel
-          onCreateVote={actions.createVote}
-          panelState={newVotePanel}
-        />
       </React.Fragment>
       <MultiModal
         visible={modalVisible}
@@ -188,6 +189,7 @@ const App = React.memo(function App() {
       >
         {modalMode === 'delegate' && <DelegateVotingScreens />}
         {modalMode === 'revoke' && <RevokeDelegationScreens />}
+        {modalMode === 'newVote' && <CreateVoteScreens />}
       </MultiModal>
     </Main>
   )
