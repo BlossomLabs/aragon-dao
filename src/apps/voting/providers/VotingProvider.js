@@ -73,9 +73,9 @@ function VotingProvider({ children }) {
       value={{
         isSyncing: false,
         ready: true,
-        tokenAddress: '0xcbaef99fbd8b360258e20db4c5ff175cd9dcc218', // ?
+        tokenAddress: '0x67E48c61836af5578dC3baCb95B69F225d121637', // TODO- Super ugly get it from the voting settings
         tokenDecimals: new BN(18),
-        tokenSymbol: 'wANT', // ?
+        tokenSymbol: 'wANT', // TODO- Super ugly get it from the voting settings
         pctBase: pctBase,
         voteTime: 432000 * 1000,
         connectedAccountVotes: [],
