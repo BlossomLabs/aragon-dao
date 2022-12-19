@@ -26,7 +26,7 @@ const DelayCard = React.memo(({ delay }) => {
   const { describedSteps, loading } = useDecribeScript(evmCallScript, id)
 
   return (
-    <CardItem onClick={() => navigate(`/delay/scripts/${id}`)}>
+    <CardItem onClick={() => navigate(`scripts/${id}`)}>
       <div>
         <LocalLabelAppBadge
           appAddress={executionTargetData.address}

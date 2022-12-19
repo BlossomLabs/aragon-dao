@@ -43,7 +43,7 @@ function checkAppFilter(filter, script, { apps, thisAppAddress }) {
 }
 
 const useFilterDelays = (delayedScripts, executionTargets) => {
-  const { connectedANDelayApp, loading } = useOrganizationState()
+  const { currentConnectedApp, loading } = useOrganizationState()
 
   const [filteredDelays, setFilteredScripts] = useState(delayedScripts)
   const [statusFilter, setStatusFilter] = useState(NULL_FILTER_STATE)
@@ -65,7 +65,7 @@ const useFilterDelays = (delayedScripts, executionTargets) => {
         checkStatusFilter(statusFilter, script.status) &&
         checkAppFilter(appFilter, script, {
           apps: executionTargets,
-          thisAppAddress: connectedANDelayApp.address,
+          thisAppAddress: currentConnectedApp.address,
         })
       )
     })
@@ -73,7 +73,7 @@ const useFilterDelays = (delayedScripts, executionTargets) => {
   }, [
     statusFilter,
     appFilter,
-    connectedANDelayApp,
+    currentConnectedApp,
     loading,
     setFilteredScripts,
     delayedScripts,

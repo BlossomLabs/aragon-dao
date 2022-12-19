@@ -9,10 +9,10 @@ import {
 import useNow from '@/hooks/shared/useNow'
 
 export const useDelayedScripts = () => {
-  const { apps, connectedANDelayApp } = useOrganizationState()
+  const { apps, currentConnectedApp } = useOrganizationState()
   const [rawDelayedScripts = [], { loading, error }] = useConnect(
-    () => connectedANDelayApp?.onDelayedScripts({ first: 50 }),
-    [connectedANDelayApp]
+    () => currentConnectedApp?.onDelayedScripts({ first: 50 }),
+    [currentConnectedApp]
   )
   const now = useNow()
   const delayStatus = (rawDelayedScripts || []).map(script =>
@@ -38,15 +38,15 @@ export const useDelayedScripts = () => {
 export const useDelayedScript = scriptId => {
   const {
     apps,
-    connectedANDelayApp,
+    currentConnectedApp,
     loading: orgStateLoading,
     error: orgStateError,
   } = useOrganizationState()
   const [
     rawDelayedScript,
     { loading: rawDelayedScriptLoading, error: rawDelayedScriptError },
-  ] = useConnect(() => connectedANDelayApp?.onDelayedScript(scriptId), [
-    connectedANDelayApp,
+  ] = useConnect(() => currentConnectedApp?.onDelayedScript(scriptId), [
+    currentConnectedApp,
     scriptId,
   ])
   const now = useNow()

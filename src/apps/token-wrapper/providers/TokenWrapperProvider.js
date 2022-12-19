@@ -44,22 +44,22 @@ function TokenWrapperProvider({ children }) {
   const [wrappedToken, setWrappedToken] = useState()
   const [depositedToken, setDepositedToken] = useState()
   const mounted = useMounted()
-  const { connectedTokenWrapperApp } = useOrganizationState()
+  const { currentConnectedApp } = useOrganizationState()
 
   const [connectHolders, connectHoldersStatus] = useConnect(() => {
-    return connectedTokenWrapperApp?.onTokenHolders()
-  }, [connectedTokenWrapperApp])
+    return currentConnectedApp?.onTokenHolders()
+  }, [currentConnectedApp])
 
   const [connectWrappedToken, connectWrappedTokensStatus] = useConnect(() => {
-    return connectedTokenWrapperApp?.wrappedToken()
-  }, [connectedTokenWrapperApp])
+    return currentConnectedApp?.wrappedToken()
+  }, [currentConnectedApp])
 
   const [
     connectDepositedToken,
     connectDepositedTokensStatus,
   ] = useConnect(() => {
-    return connectedTokenWrapperApp?.token()
-  }, [connectedTokenWrapperApp])
+    return currentConnectedApp?.token()
+  }, [currentConnectedApp])
 
   const wrappedTokenBalance = useTokenBalanceOf(
     wrappedToken?.id,
@@ -117,7 +117,6 @@ function TokenWrapperProvider({ children }) {
           ...depositedToken,
           accountBalance: depositedTokenBalance,
         },
-        connectedTokenWrapperApp,
       }}
     >
       {children}

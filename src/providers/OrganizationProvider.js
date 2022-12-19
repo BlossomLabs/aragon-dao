@@ -13,8 +13,6 @@ const connectToApps = (apps, appNames, connectAppFns) => () => {
     return
   }
 
-  console.log(`Creating connectors for apps`)
-
   let connectFns = []
 
   appNames.forEach((appName, i) => {
@@ -30,21 +28,6 @@ function OrganizationProvider({ children }) {
   const [org, orgStatus] = useConnect()
   const [apps, appsStatus] = useConnect(org => org.apps())
   const [permissions, permissionsStatus] = useConnect(org => org.permissions())
-  console.log(apps)
-  const [connectedDisputableApp, connectedDisputableAppStatus] = useConnect(
-    org => {
-      return connectVoting(org.onApp('blossom-tao-voting'))
-    }
-  )
-  const [connectedTokenWrapperApp, connectedTokenWrapperAppStatus] = useConnect(
-    org => {
-      return connectTokenWrapper(org.onApp('blossom-token-wrapper'))
-    }
-  )
-  const [connectedANDelayApp, connectedANDelayAppStatus] = useConnect(org =>
-    connectANDelay(org.onApp('delay'))
-  )
-
   const [connectedApps, connectedAppsStatus] = useConnect(
     connectToApps(
       apps,
@@ -81,12 +64,6 @@ function OrganizationProvider({ children }) {
         organization: org,
         apps,
         connection: org?.connection,
-        connectedANDelayApp,
-        connectedANDelayAppStatus,
-        connectedDisputableApp,
-        connectedDisputableAppStatus,
-        connectedTokenWrapperApp,
-        connectedTokenWrapperAppStatus,
         connectedApps,
         currentConnectedApp,
         permissions,

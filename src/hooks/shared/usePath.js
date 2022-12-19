@@ -13,18 +13,5 @@ export default function usePath() {
     [history]
   )
 
-  const navigateToAppHome = useCallback(() => {
-    if (path.length < 3) {
-      return
-    }
-
-    navigate(
-      `/${path
-        .split('/')
-        .slice(1, 3)
-        .join('/')}`
-    )
-  }, [path, navigate])
-
-  return [path, navigate, navigateToAppHome]
+  return [path, navigate]
 }

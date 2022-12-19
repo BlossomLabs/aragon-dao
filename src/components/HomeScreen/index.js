@@ -1,9 +1,9 @@
 import { GU, textStyle } from '@aragon/ui'
 import React, { useCallback, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
-import { APPS_MENU_PANEL, APPS_ROUTING } from '../../constants'
+import { APPS_MENU_PANEL } from '../../constants'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
-import { getAppPresentation } from '../../utils/app-utils'
+import { buildAppRoute, getAppPresentation } from '../../utils/app-utils'
 import AppIcon from '../AppIcon/AppIcon'
 import AppCard from './AppCard'
 
@@ -29,8 +29,8 @@ const HomeScreen = () => {
   }, [apps])
 
   const onOpenApp = useCallback(
-    app => {
-      history.push(`/${app}`)
+    (name, address) => {
+      history.push(buildAppRoute(name, address))
     },
     [history]
   )
@@ -65,7 +65,7 @@ const HomeScreen = () => {
               key={address}
               name={humanName}
               icon={icon}
-              onClick={() => onOpenApp(APPS_ROUTING.get(appName))}
+              onClick={() => onOpenApp(appName, address)}
             />
           ))}
         </div>

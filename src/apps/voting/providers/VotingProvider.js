@@ -55,11 +55,11 @@ const reduceVotes = (votes = []) => {
 function VotingProvider({ children }) {
   const [votes, setVotes] = useState([])
   const mounted = useMounted()
-  const { connectedDisputableApp } = useOrganizationState()
+  const { currentConnectedApp } = useOrganizationState()
 
   const [connectVotes] = useConnect(() => {
-    return connectedDisputableApp?.onVotes()
-  }, [connectedDisputableApp])
+    return currentConnectedApp?.onVotes()
+  }, [currentConnectedApp])
 
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)

@@ -10,11 +10,10 @@ import {
   Tabs,
   useLayout,
 } from '@aragon/ui'
-import { VoterProvider, useVoterState } from './providers/VoterProvider'
+import { useVoterState } from './providers/VoterProvider'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelegateVotingScreens from './components/ModalFlows/DelegateVotingScreens/DelegateVotingScreens'
 import { useGuiStyle } from '@/hooks/shared'
-import NewVotePanel from './components/NewVotePanel'
 import useFilterVotes from './hooks/useFilterVotes'
 import useScrollTop from './hooks/useScrollTop'
 import NoVotes from './screens/NoVotes'
@@ -22,7 +21,6 @@ import Votes from './screens/Votes'
 import DelegatedBy from './components/DelegatedBy'
 import { useAppLogic } from './app-logic'
 import { SettingsProvider } from './vote-settings-manager'
-import { VotingProvider } from './providers/VotingProvider'
 import { useWallet } from '../../providers/Wallet'
 import RevokeDelegationScreens from './components/ModalFlows/RevokeDelegation/RevokeDelegationScreens'
 import CreateVoteScreens from './components/ModalFlows/NewVote/CreateVoteScreens'
@@ -38,7 +36,6 @@ const App = React.memo(function App() {
   const [modalMode, setModalMode] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
   const {
-    actions,
     executionTargets,
     isSyncing,
     newVotePanel,
@@ -196,11 +193,7 @@ const App = React.memo(function App() {
 })
 
 export default () => (
-  <VoterProvider>
-    <VotingProvider>
-      <SettingsProvider>
-        <App />
-      </SettingsProvider>
-    </VotingProvider>
-  </VoterProvider>
+  <SettingsProvider>
+    <App />
+  </SettingsProvider>
 )

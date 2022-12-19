@@ -27,13 +27,13 @@ const SingleVoteSubscriptionContext = React.createContext()
 
 function SingleVoteSubscriptionProvider({ voteId, children }) {
   const { account } = useWallet()
-  const { connectedDisputableApp } = useOrganizationState()
+  const { currentConnectedApp } = useOrganizationState()
 
   const [vote, voteStatus] = useConnect(() => {
-    return connectedDisputableApp?.onVote(
-      `${connectedDisputableApp.address}-vote-${voteId}`
+    return currentConnectedApp?.onVote(
+      `${currentConnectedApp.address}-vote-${voteId}`
     )
-  }, [connectedDisputableApp, voteId])
+  }, [currentConnectedApp, voteId])
 
   const voteUpdateValue = JSON.stringify(vote)
 
@@ -207,12 +207,12 @@ function useExtendVote(vote, voteId) {
 function useCanUserVoteOnBehalfOf(vote) {
   const chainId = 100 // TODO- handle chains
   const { account: connectedAccount } = useWallet()
-  const { connectedDisputableApp } = useOrganizationState()
+  const { currentConnectedApp } = useOrganizationState()
 
   const principals = useUserPrincipals(vote)
 
   const votingContract = useContractReadOnly(
-    connectedDisputableApp?.address,
+    currentConnectedApp?.address,
     votingAbi,
     chainId
   )
@@ -304,10 +304,10 @@ function useUserPrincipals(vote) {
 export function useCanUserVote(vote) {
   const chainId = 100 // TODO- handle chains
   const { account: connectedAccount } = useWallet()
-  const { connectedDisputableApp } = useOrganizationState()
+  const { currentConnectedApp } = useOrganizationState()
 
   const votingContract = useContractReadOnly(
-    connectedDisputableApp?.address,
+    currentConnectedApp?.address,
     votingAbi,
     chainId
   )

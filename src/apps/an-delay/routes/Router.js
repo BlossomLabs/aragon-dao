@@ -13,9 +13,17 @@ import { formatTime } from '../lib/math-utils'
 
 const ANDelayRouter = () => (
   <Switch>
-    <Redirect exact path="/delay" to={'/delay/scripts'} />
-    <Route exact path="*/delay/scripts/:id" component={DelayDetail} />
-    <Route exact path="*/delay/scripts" component={Delays} />
+    <Redirect
+      exact
+      path="/delay/:appAddress"
+      to={'/delay/:appAddress/scripts'}
+    />
+    <Route
+      exact
+      path="*/delay/:appAddress/scripts/:id"
+      component={DelayDetail}
+    />
+    <Route exact path="*/delay/:appAddress/scripts" component={Delays} />
   </Switch>
 )
 

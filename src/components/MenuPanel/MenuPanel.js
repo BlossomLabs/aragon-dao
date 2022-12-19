@@ -7,12 +7,8 @@ import { lerp } from '../../utils/math-utils'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import MenuPanelAppGroup from './MenuPanelAppGroup'
 import AppIcon from '../AppIcon/AppIcon'
-import { getAppPresentation } from '../../utils/app-utils'
-import {
-  APPS_MENU_PANEL,
-  APPS_ROUTING,
-  APPS_ROUTING_TO_NAME,
-} from '../../constants'
+import { buildAppRoute, getAppPresentation } from '../../utils/app-utils'
+import { APPS_MENU_PANEL, APPS_ROUTING_TO_NAME } from '../../constants'
 
 export const MENU_PANEL_SHADOW_WIDTH = 3
 export const MENU_PANEL_WIDTH = 28 * GU
@@ -40,9 +36,9 @@ function MenuPanel({
   }, [location])
 
   const onOpenApp = useCallback(
-    app => {
-      setActiveApp(app)
-      history.push(`/${app}`)
+    (name, address) => {
+      setActiveApp(name)
+      history.push(buildAppRoute(name, address))
     },
     [history]
   )
@@ -59,13 +55,14 @@ function MenuPanel({
         icon: <AppIcon app={app} src={getAppPresentation(app).iconSrc} />,
         name: getAppPresentation(app).humanName,
         appName: getAppPresentation(app).appName,
+        appAddress: app.address,
       }))
     return returned
   }, [apps])
 
   const renderAppGroup = useCallback(
     (app, index) => {
-      const { appId, name, icon, appName } = app
+      const { appId, name, icon, appName, appAddress } = app
 
       const isActive = appName === APPS_ROUTING_TO_NAME.get(activeApp)
 
@@ -74,7 +71,7 @@ function MenuPanel({
           <MenuPanelAppGroup
             name={name}
             icon={icon}
-            onActivate={() => onOpenApp(APPS_ROUTING.get(appName), index)}
+            onActivate={() => onOpenApp(appName, appAddress, index)}
             active={isActive}
           />
         </div>

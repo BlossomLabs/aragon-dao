@@ -6,15 +6,15 @@ import { useOrganizationState } from '@/providers/OrganizationProvider'
 const VoterContext = React.createContext()
 
 function VoterProvider({ children }) {
-  const { connectedDisputableApp } = useOrganizationState()
+  const { currentConnectedApp } = useOrganizationState()
   const { account } = useWallet()
 
   const [voter, voterStatus] = useConnect(() => {
     if (!account) {
       return
     }
-    return connectedDisputableApp?.voter(account)
-  }, [connectedDisputableApp, account])
+    return currentConnectedApp?.voter(account)
+  }, [currentConnectedApp, account])
 
   return (
     <VoterContext.Provider

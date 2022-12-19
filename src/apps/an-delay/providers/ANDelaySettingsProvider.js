@@ -8,10 +8,10 @@ const ANDelayContext = React.createContext()
 const ANDelaySettingsProvider = ({ children }) => {
   const [executionDelay, setExecutionDelay] = useState()
   const mounted = useMounted()
-  const { connectedANDelayApp } = useOrganizationState()
+  const { currentConnectedApp } = useOrganizationState()
   const [appData, appDataStatus] = useConnect(
-    () => connectedANDelayApp.appData(),
-    [connectedANDelayApp]
+    () => currentConnectedApp.appData(),
+    [currentConnectedApp]
   )
   const loading = appDataStatus.loading
   const error = appDataStatus.error
