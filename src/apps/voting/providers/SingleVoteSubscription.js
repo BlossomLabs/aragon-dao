@@ -8,8 +8,8 @@ import React, {
 import PropTypes from 'prop-types'
 import { useConnect } from '@1hive/connect-react'
 import { formatTokenAmount } from '@aragon/ui'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { useWallet } from '@/providers/Wallet'
+import { useCurrentConnectedApp } from '@/hooks/shared/useCurrentConnectedApp'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { useContractReadOnly } from '@/hooks/shared/useContract'
 import minimeTokenAbi from '@/abi/minimeToken.json'
@@ -27,13 +27,11 @@ const SingleVoteSubscriptionContext = React.createContext()
 
 function SingleVoteSubscriptionProvider({ voteId, children }) {
   const { account } = useWallet()
-  const { currentConnectedApp } = useOrganizationState()
+  const connectedApp = useCurrentConnectedApp()
 
   const [vote, voteStatus] = useConnect(() => {
-    return currentConnectedApp?.onVote(
-      `${currentConnectedApp.address}-vote-${voteId}`
-    )
-  }, [currentConnectedApp, voteId])
+    return connectedApp?.onVote(`${connectedApp.address}-vote-${voteId}`)
+  }, [connectedApp, voteId])
 
   const voteUpdateValue = JSON.stringify(vote)
 
@@ -205,14 +203,14 @@ function useExtendVote(vote, voteId) {
 }
 
 function useCanUserVoteOnBehalfOf(vote) {
-  const chainId = 100 // TODO- handle chains
+  const connectedApp = useCurrentConnectedApp()
   const { account: connectedAccount } = useWallet()
-  const { currentConnectedApp } = useOrganizationState()
+  const chainId = 100 // TODO- handle chains
 
   const principals = useUserPrincipals(vote)
 
   const votingContract = useContractReadOnly(
-    currentConnectedApp?.address,
+    connectedApp?.address,
     votingAbi,
     chainId
   )
@@ -302,12 +300,12 @@ function useUserPrincipals(vote) {
 }
 
 export function useCanUserVote(vote) {
-  const chainId = 100 // TODO- handle chains
+  const connectedApp = useCurrentConnectedApp()
   const { account: connectedAccount } = useWallet()
-  const { currentConnectedApp } = useOrganizationState()
+  const chainId = 100 // TODO- handle chains
 
   const votingContract = useContractReadOnly(
-    currentConnectedApp?.address,
+    connectedApp?.address,
     votingAbi,
     chainId
   )

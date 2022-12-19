@@ -32,3 +32,6 @@ export function getAppByName(apps, appName) {
 export function buildAppRoute(appName, appAddress) {
   return `/${APPS_ROUTING.get(appName)}/${appAddress}`
 }
+
+export const buildAppInstanceRoute = appName =>
+  `/${APPS_ROUTING.get(appName)}/:appAddress`

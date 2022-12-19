@@ -10,7 +10,7 @@ import tokenActions from '../actions/token-action-types'
 
 import tokenAllowanceAbi from '../abi/token-allowance.json'
 import tokenSymbolAbi from '../abi/token-symbol.json'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
+import { useCurrentConnectedApp } from '@/hooks/shared/useCurrentConnectedApp'
 
 const tokenAbi = [].concat(tokenAllowanceAbi, tokenSymbolAbi)
 
@@ -19,8 +19,7 @@ const WRAP_GAS_LIMIT = 1000000
 
 export default function useActions() {
   const { account } = useWallet()
-  const { currentConnectedApp } = useOrganizationState()
-  console.log(currentConnectedApp)
+  const connectedApp = useCurrentConnectedApp()
   const mounted = useMounted()
 
   const getAllowance = useCallback(
@@ -30,7 +29,7 @@ export default function useActions() {
         tokenAbi,
         getDefaultProvider(100) // TODO- handle chains
       )
-      if (!currentConnectedApp || !tokenContract) {
+      if (!connectedApp || !tokenContract) {
         return
       }
       if (!tokenContract) {
@@ -39,17 +38,17 @@ export default function useActions() {
 
       const allowance = await tokenContract.allowance(
         account,
-        currentConnectedApp.address
+        connectedApp.address
       )
 
       return new BN(allowance.toString())
     },
-    [account, currentConnectedApp]
+    [account, connectedApp]
   )
 
   const wrap = useCallback(
     async ({ amount }, onDone = noop) => {
-      let intent = await currentConnectedApp.intent('deposit', [amount], {
+      let intent = await connectedApp.intent('deposit', [amount], {
         actAs: account,
       })
 
@@ -67,12 +66,12 @@ export default function useActions() {
         onDone(transactions)
       }
     },
-    [account, currentConnectedApp, mounted]
+    [account, connectedApp, mounted]
   )
 
   const unwrap = useCallback(
     async ({ amount }, onDone = noop) => {
-      let intent = await currentConnectedApp.intent('withdraw', [amount], {
+      let intent = await connectedApp.intent('withdraw', [amount], {
         actAs: account,
       })
 
@@ -90,7 +89,7 @@ export default function useActions() {
         onDone(transactions)
       }
     },
-    [account, currentConnectedApp, mounted]
+    [account, connectedApp, mounted]
   )
 
   const approve = useCallback(
@@ -123,17 +122,13 @@ export default function useActions() {
         tokenAbi,
         getDefaultProvider(100) // TODO- Handle chains
       )
-      if (!tokenContract || !currentConnectedApp) {
+      if (!tokenContract || !connectedApp) {
         return
       }
 
       const tokenSymbol = await tokenContract.symbol()
 
-      const trxs = approve(
-        depositAmount,
-        tokenContract,
-        currentConnectedApp.address
-      )
+      const trxs = approve(depositAmount, tokenContract, connectedApp.address)
 
       const description = radspec[tokenActions.APPROVE_TOKEN]({
         tokenSymbol,
@@ -146,7 +141,7 @@ export default function useActions() {
         onDone(transactions)
       }
     },
-    [approve, currentConnectedApp, mounted]
+    [approve, connectedApp, mounted]
   )
 
   return useMemo(

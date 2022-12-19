@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useConnect } from '@1hive/connect-react'
 import BN from 'bn.js'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { useWallet } from '@/providers/Wallet'
 import { useTokenBalanceOf } from '@/hooks/shared/useAccountTokenBalance'
+import { useCurrentConnectedApp } from '@/hooks/shared/useCurrentConnectedApp'
 
 const TokenWrapperContext = React.createContext()
 
@@ -44,22 +44,22 @@ function TokenWrapperProvider({ children }) {
   const [wrappedToken, setWrappedToken] = useState()
   const [depositedToken, setDepositedToken] = useState()
   const mounted = useMounted()
-  const { currentConnectedApp } = useOrganizationState()
+  const connectedApp = useCurrentConnectedApp()
 
   const [connectHolders, connectHoldersStatus] = useConnect(() => {
-    return currentConnectedApp?.onTokenHolders()
-  }, [currentConnectedApp])
+    return connectedApp?.onTokenHolders()
+  }, [connectedApp])
 
   const [connectWrappedToken, connectWrappedTokensStatus] = useConnect(() => {
-    return currentConnectedApp?.wrappedToken()
-  }, [currentConnectedApp])
+    return connectedApp?.wrappedToken()
+  }, [connectedApp])
 
   const [
     connectDepositedToken,
     connectDepositedTokensStatus,
   ] = useConnect(() => {
-    return currentConnectedApp?.token()
-  }, [currentConnectedApp])
+    return connectedApp?.token()
+  }, [connectedApp])
 
   const wrappedTokenBalance = useTokenBalanceOf(
     wrappedToken?.id,

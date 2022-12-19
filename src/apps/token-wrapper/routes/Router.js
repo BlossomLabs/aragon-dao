@@ -1,13 +1,14 @@
+import { AppRouting } from '@/components/AppRouting'
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
 
 import TokenWrapperApp from '../App'
 
 function TokenWrapperRouter() {
   return (
-    <Switch>
-      <Route path="*/" component={TokenWrapperApp} />
-    </Switch>
+    <AppRouting
+      appName="blossom-token-wrapper"
+      appRoutes={[['', TokenWrapperApp]]}
+    />
   )
 }
 
