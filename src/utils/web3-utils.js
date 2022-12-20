@@ -116,3 +116,5 @@ export function transformAddresses(str, callback) {
       callback(part, ETH_ADDRESS_TEST_REGEX.test(part), index)
     )
 }
+
+export { getAddress as toChecksumAddress } from 'ethers/lib/utils'

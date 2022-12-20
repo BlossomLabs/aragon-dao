@@ -19,14 +19,7 @@ export const MENU_PANEL_WIDTH = 28 * GU
 
 const { div: AnimDiv } = animated
 
-function MenuPanel({
-  appInstanceGroups,
-  appsStatus,
-  daoAddress,
-  daoStatus,
-  // onOpenApp,
-  showOrgSwitcher,
-}) {
+function MenuPanel({ showOrgSwitcher }) {
   const { apps } = useOrganizationState()
   const history = useHistory()
   const location = useLocation()

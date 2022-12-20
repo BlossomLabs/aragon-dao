@@ -3,6 +3,7 @@ import { useConnect } from '@1hive/connect-react'
 import connectVoting from '@rperez89/connect-tao-voting'
 import connectTokenWrapper from '@rperez89/connect-token-wrapper'
 import { connectANDelay } from '@blossom-labs/connect-an-delay'
+import connectFinance from '@rperez89/connect-finance'
 
 const OrganizationContext = React.createContext()
 
@@ -23,10 +24,23 @@ function OrganizationProvider({ children }) {
   const [connectedANDelayApp, connectedANDelayAppStatus] = useConnect(org =>
     connectANDelay(org.onApp('delay'))
   )
-  const loading =
-    orgStatus.loading || appsStatus.loading || permissionsStatus.loading
-  const error = orgStatus.error || appsStatus.error || permissionsStatus.error
 
+  const [connectedFinanceApp, connectedFinanceAppStatus] = useConnect(org =>
+    connectFinance(org.onApp('finance'))
+  )
+
+  const loading =
+    orgStatus.loading ||
+    appsStatus.loading ||
+    permissionsStatus.loading ||
+    connectedFinanceAppStatus.loading
+  const error =
+    orgStatus.error ||
+    appsStatus.error ||
+    permissionsStatus.error ||
+    connectedFinanceAppStatus.error
+
+  console.log('apps ', apps)
   return (
     <OrganizationContext.Provider
       value={{
@@ -39,6 +53,8 @@ function OrganizationProvider({ children }) {
         connectedDisputableAppStatus,
         connectedTokenWrapperApp,
         connectedTokenWrapperAppStatus,
+        connectedFinanceApp,
+        connectedFinanceAppStatus,
         permissions,
         loading,
         error,
