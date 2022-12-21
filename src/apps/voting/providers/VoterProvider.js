@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { useConnect } from '@1hive/connect-react'
-import { useCurrentConnectedApp } from '@/hooks/shared/useCurrentConnectedApp'
 import { useWallet } from '@/providers/Wallet'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const VoterContext = React.createContext()
 
 function VoterProvider({ children }) {
-  const connectedApp = useCurrentConnectedApp()
+  const { connectedApp } = useConnectedApp()
   const { account } = useWallet()
 
   const [voter, voterStatus] = useConnect(() => {

@@ -4,7 +4,7 @@ import BN from 'bn.js'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { useWallet } from '@/providers/Wallet'
 import { useTokenBalanceOf } from '@/hooks/shared/useAccountTokenBalance'
-import { useCurrentConnectedApp } from '@/hooks/shared/useCurrentConnectedApp'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const TokenWrapperContext = React.createContext()
 
@@ -44,7 +44,7 @@ function TokenWrapperProvider({ children }) {
   const [wrappedToken, setWrappedToken] = useState()
   const [depositedToken, setDepositedToken] = useState()
   const mounted = useMounted()
-  const connectedApp = useCurrentConnectedApp()
+  const { connectedApp } = useConnectedApp()
 
   const [connectHolders, connectHoldersStatus] = useConnect(() => {
     return connectedApp?.onTokenHolders()

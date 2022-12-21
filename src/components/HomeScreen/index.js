@@ -18,24 +18,24 @@ const HomeScreen = () => {
     let menuApps = {}
     apps
       .filter(app => APPS_MENU_PANEL.includes(app.name))
-      .sort((app1, app2) => {
-        return app1.name.localeCompare(app2.name)
-      })
       .forEach(app => {
         if (!menuApps[app.codeAddress]) {
           menuApps[app.codeAddress] = app
         }
       })
 
-    return Object.keys(menuApps).map(codeAddress => {
-      const app = menuApps[codeAddress]
-      const appPresentation = getAppPresentation(app)
-      return {
-        ...app,
-        ...appPresentation,
-        icon: <AppIcon app={app} src={appPresentation.iconSrc} size={70} />,
-      }
-    })
+    return Object.keys(menuApps)
+
+      .map(codeAddress => {
+        const app = menuApps[codeAddress]
+        const appPresentation = getAppPresentation(app)
+        return {
+          ...app,
+          ...appPresentation,
+          icon: <AppIcon app={app} src={appPresentation.iconSrc} size={70} />,
+        }
+      })
+      .sort((app1, app2) => app1.humanName.localeCompare(app2.humanName))
   }, [apps])
 
   const onOpenApp = useCallback(

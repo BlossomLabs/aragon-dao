@@ -68,13 +68,15 @@ function MenuPanel({
       appInstances[app.codeAddress].push(app.address)
     })
 
-    return appsSet.map(app => ({
-      appId: app.appId,
-      icon: <AppIcon app={app} src={getAppPresentation(app).iconSrc} />,
-      name: getAppPresentation(app).humanName,
-      appName: getAppPresentation(app).appName,
-      instances: appInstances[app.codeAddress],
-    }))
+    return appsSet
+      .map(app => ({
+        appId: app.appId,
+        icon: <AppIcon app={app} src={getAppPresentation(app).iconSrc} />,
+        name: getAppPresentation(app).humanName,
+        appName: getAppPresentation(app).appName,
+        instances: appInstances[app.codeAddress],
+      }))
+      .sort((app1, app2) => app1.name.localeCompare(app2.name))
   }, [apps])
 
   const renderAppGroup = useCallback(

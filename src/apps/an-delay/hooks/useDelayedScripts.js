@@ -6,12 +6,12 @@ import {
   formatDelayedScript,
   getStatus,
 } from '../lib/delay-utils'
-import { useCurrentConnectedApp } from '@/hooks/shared/useCurrentConnectedApp'
 import useNow from '@/hooks/shared/useNow'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 export const useDelayedScripts = () => {
   const { apps } = useOrganizationState()
-  const connectedApp = useCurrentConnectedApp()
+  const { connectedApp } = useConnectedApp()
 
   const [rawDelayedScripts = [], { loading, error }] = useConnect(
     () => connectedApp?.onDelayedScripts({ first: 50 }),
@@ -44,7 +44,7 @@ export const useDelayedScript = scriptId => {
     loading: orgStateLoading,
     error: orgStateError,
   } = useOrganizationState()
-  const connectedApp = useCurrentConnectedApp()
+  const { connectedApp } = useConnectedApp()
   const [
     rawDelayedScript,
     { loading: rawDelayedScriptLoading, error: rawDelayedScriptError },

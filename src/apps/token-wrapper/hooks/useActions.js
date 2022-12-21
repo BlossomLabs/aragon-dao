@@ -10,7 +10,7 @@ import tokenActions from '../actions/token-action-types'
 
 import tokenAllowanceAbi from '../abi/token-allowance.json'
 import tokenSymbolAbi from '../abi/token-symbol.json'
-import { useCurrentConnectedApp } from '@/hooks/shared/useCurrentConnectedApp'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const tokenAbi = [].concat(tokenAllowanceAbi, tokenSymbolAbi)
 
@@ -19,7 +19,7 @@ const WRAP_GAS_LIMIT = 1000000
 
 export default function useActions() {
   const { account } = useWallet()
-  const connectedApp = useCurrentConnectedApp()
+  const { connectedApp } = useConnectedApp()
   const mounted = useMounted()
 
   const getAllowance = useCallback(
