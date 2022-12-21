@@ -15,9 +15,13 @@ const HomeScreen = () => {
       return []
     }
 
-    const returned = apps
+    const filteredApps = apps
       .filter(app => APPS_MENU_PANEL.includes(app.name))
+      .sort((app1, app2) => {
+        return app1.name.localeCompare(app2.name)
+      })
       .map(app => {
+        console.log(app)
         const appPresentation = getAppPresentation(app)
         return {
           ...app,
@@ -25,7 +29,7 @@ const HomeScreen = () => {
           icon: <AppIcon app={app} src={appPresentation.iconSrc} size={70} />,
         }
       })
-    return returned
+    return filteredApps
   }, [apps])
 
   const onOpenApp = useCallback(

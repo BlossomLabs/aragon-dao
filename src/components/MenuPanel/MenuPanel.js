@@ -8,7 +8,8 @@ import { useOrganizationState } from '../../providers/OrganizationProvider'
 import MenuPanelAppGroup from './MenuPanelAppGroup'
 import AppIcon from '../AppIcon/AppIcon'
 import { buildAppRoute, getAppPresentation } from '../../utils/app-utils'
-import { APPS_MENU_PANEL, APPS_ROUTING_TO_NAME } from '../../constants'
+import { APPS_MENU_PANEL } from '../../constants'
+import { addressesEqual } from '@/utils/web3-utils'
 
 export const MENU_PANEL_SHADOW_WIDTH = 3
 export const MENU_PANEL_WIDTH = 28 * GU
@@ -26,21 +27,25 @@ function MenuPanel({
   const { apps } = useOrganizationState()
   const history = useHistory()
   const location = useLocation()
-  const [activeApp, setActiveApp] = useState()
+  const [activeInstaceAddress, setActiveInstanceAddress] = useState()
 
   useEffect(() => {
     const parts = location.pathname.split('/')
-    const appLoaded = parts.length >= 1 ? parts[1] : null
+    const appAddress = parts.length >= 2 ? parts[2] : null
 
-    setActiveApp(appLoaded)
+    setActiveInstanceAddress(appAddress)
   }, [location])
 
   const onOpenApp = useCallback(
     (name, address) => {
-      setActiveApp(name)
+      if (activeInstaceAddress === address) {
+        return
+      }
+
+      setActiveInstanceAddress(address)
       history.push(buildAppRoute(name, address))
     },
-    [history]
+    [activeInstaceAddress, history]
   )
 
   const menuApps = useMemo(() => {
@@ -48,36 +53,55 @@ function MenuPanel({
       return []
     }
 
-    const returned = apps
-      .filter(app => APPS_MENU_PANEL.includes(app.name))
-      .map(app => ({
-        ...app,
-        icon: <AppIcon app={app} src={getAppPresentation(app).iconSrc} />,
-        name: getAppPresentation(app).humanName,
-        appName: getAppPresentation(app).appName,
-        appAddress: app.address,
-      }))
-    return returned
+    const appInstances = {}
+    const allowedMenuApps = apps.filter(app =>
+      APPS_MENU_PANEL.includes(app.name)
+    )
+    const appsSet = []
+
+    allowedMenuApps.forEach(app => {
+      if (!appInstances[app.codeAddress]) {
+        appInstances[app.codeAddress] = []
+        appsSet.push(app)
+      }
+
+      appInstances[app.codeAddress].push(app.address)
+    })
+
+    return appsSet.map(app => ({
+      appId: app.appId,
+      icon: <AppIcon app={app} src={getAppPresentation(app).iconSrc} />,
+      name: getAppPresentation(app).humanName,
+      appName: getAppPresentation(app).appName,
+      instances: appInstances[app.codeAddress],
+    }))
   }, [apps])
 
   const renderAppGroup = useCallback(
-    (app, index) => {
-      const { appId, name, icon, appName, appAddress } = app
+    app => {
+      const { appId, name, icon, appName, instances } = app
 
-      const isActive = appName === APPS_ROUTING_TO_NAME.get(activeApp)
+      const isActive =
+        instances.findIndex(instance =>
+          addressesEqual(instance, activeInstaceAddress)
+        ) !== -1
 
       return (
         <div key={appId}>
           <MenuPanelAppGroup
-            name={name}
+            name={appName}
+            humanName={name}
             icon={icon}
-            onActivate={() => onOpenApp(appName, appAddress, index)}
+            instances={instances}
+            activeInstance={activeInstaceAddress}
+            onActivate={onOpenApp}
             active={isActive}
+            expand={isActive}
           />
         </div>
       )
     },
-    [activeApp, onOpenApp]
+    [activeInstaceAddress, onOpenApp]
   )
 
   return (
@@ -125,7 +149,7 @@ function MenuPanel({
 function AnimatedMenuPanel({
   autoClosing,
   className,
-  onMenuPanelClose,
+  // onMenuPanelClose,
   opened,
   ...props
 }) {
@@ -167,7 +191,7 @@ function AnimatedMenuPanel({
         >
           {autoClosing && (
             <AnimDiv
-              onClick={onMenuPanelClose}
+              // onClick={onMenuPanelClose}
               css={`
                 position: absolute;
                 height: 100%;
@@ -209,7 +233,7 @@ function AnimatedMenuPanel({
 AnimatedMenuPanel.propTypes = {
   autoClosing: PropTypes.bool,
   className: PropTypes.string,
-  onMenuPanelClose: PropTypes.func.isRequired,
+  // onMenuPanelClose: PropTypes.func.isRequired,
   opened: PropTypes.bool,
   ...MenuPanel.propTypes,
 }
