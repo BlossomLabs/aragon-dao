@@ -40,7 +40,6 @@ function OrganizationProvider({ children }) {
     permissionsStatus.error ||
     connectedFinanceAppStatus.error
 
-  console.log('apps ', apps)
   return (
     <OrganizationContext.Provider
       value={{

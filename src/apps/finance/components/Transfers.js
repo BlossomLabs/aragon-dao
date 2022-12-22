@@ -27,6 +27,7 @@ import { useNetwork } from '@/hooks/shared'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 import TransfersFilters from './TransfersFilters'
 import { addressesEqual, toChecksumAddress } from '@/utils/web3-utils'
+import useBalances from '../hooks/useBalances'
 
 const formatDate = date => format(date, 'yyyy-MM-dd')
 
@@ -44,7 +45,6 @@ const formatDate = date => format(date, 'yyyy-MM-dd')
 const Transfers = React.memo(() => {
   const [transactions, { loading: isSyncing, error }] = useTransactions()
 
-  console.log('Transactions!!!! ', transactions, isSyncing, error)
   // const { appState } = useAragonApi()
 
   const { account: connectedAccount } = useWallet()
@@ -53,15 +53,7 @@ const Transfers = React.memo(() => {
   const theme = useTheme()
   // const toast = useToast()
 
-  const tokens = [
-    {
-      address: '0x0000000000000000000000000000000000000000',
-      amount: new BN('3100000000000000000'),
-      decimals: 18,
-      name: 'Ethereum',
-      symbol: 'ETH',
-    },
-  ]
+  const [tokens, { loading: loadingTokens, error: tokensError }] = useBalances()
   const {
     emptyResultsViaFilters,
     filteredTransfers,
@@ -78,16 +70,17 @@ const Transfers = React.memo(() => {
     transferTypes,
   } = useFilteredTransfers({ transactions, tokens })
 
-  const tokenDetails = tokens.reduce(
-    (details, { address, decimals, symbol }) => {
-      details[toChecksumAddress(address)] = {
-        decimals,
-        symbol,
-      }
-      return details
-    },
-    {}
-  )
+  console.log('tokens ', tokens)
+  const tokenDetails =
+    tokens.length > 0
+      ? tokens.reduce((details, { address, decimals, symbol }) => {
+          details[toChecksumAddress(address)] = {
+            decimals,
+            symbol,
+          }
+          return details
+        }, {})
+      : {}
 
   console.log('filtered transfers ', filteredTransfers)
   // const { resolve: resolveAddress } = useContext(IdentityContext)
@@ -132,11 +125,11 @@ const Transfers = React.memo(() => {
     if (emptyResultsViaFilters && transactions.length > 0) {
       return 'empty-filters'
     }
-    if (isSyncing) {
+    if (isSyncing || loadingTokens) {
       return 'loading'
     }
     return 'default'
-  }, [emptyResultsViaFilters, isSyncing, transactions.length])
+  }, [emptyResultsViaFilters, isSyncing, loadingTokens, transactions.length])
 
   return (
     <DataView
@@ -203,6 +196,7 @@ const Transfers = React.memo(() => {
       ]}
       entries={sortedTransfers}
       renderEntry={({ amount, date, entity, isIncoming, reference, token }) => {
+        if (loadingTokens) return []
         const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
         const { symbol, decimals } = tokenDetails[toChecksumAddress(token)]
 

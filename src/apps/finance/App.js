@@ -10,7 +10,7 @@ import {
 import { useGuiStyle } from '@/hooks/shared'
 // import { ETHER_TOKEN_FAKE_ADDRESS } from './lib/token-utils'
 // import { IdentityProvider } from './components/IdentityManager/IdentityManager'
-// import Balances from './components/Balances'
+import Balances from './components/Balances'
 // import NewTransferPanelContent from './components/NewTransfer/PanelContent'
 import Transfers from './components/Transfers'
 
@@ -99,10 +99,10 @@ class App extends React.Component {
             />
           }
         />
+        <Balances />
         <Transfers />
-        {/* <Balances balances={balances} />
-        
-        <SidePanel
+
+        {/* <SidePanel
           opened={newTransferOpened}
           onClose={this.handleNewTransferClose}
           title="New transfer"
