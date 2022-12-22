@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useConnect } from '@1hive/connect-react'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import BN from 'bn.js'
@@ -10,15 +11,19 @@ export const useTransactions = () => {
     [connectedFinanceApp]
   )
 
-  const reducedTransactions = transactions
-    ? transactions.map(transaction => ({
+  const transactionsKey = transactions.length.toString()
+
+  return [
+    useMemo(() => {
+      return transactions.map(transaction => ({
         ...transaction,
         amount: new BN(transaction.amount),
         date: toMs(transaction.date),
       }))
-    : []
-
-  return [reducedTransactions, { loading, error }]
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [transactions, transactionsKey]),
+    { loading, error },
+  ]
 }
 
 export default useTransactions

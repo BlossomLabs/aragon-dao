@@ -50,7 +50,7 @@ const useBalances = (timeout = 7000) => {
             let symbol
             if (tokenBalance.token === CHAIN_TOKEN_ADDRESS) {
               decimals = 18
-              symbol = 'Eth'
+              symbol = 'Xdai' // Todo: maybe have a network file with all this constants per network
             } else {
               decimals = await tokenContract.decimals()
               symbol = await tokenContract.symbol()
@@ -113,7 +113,18 @@ const useBalances = (timeout = 7000) => {
     }
   }, [timeout, tokenData, vaultContract])
 
-  return [tokenWithBalance, { loading: loadingBalances, error }]
+  const balancesKey = tokenWithBalance
+    .map(token => token.balance.toString())
+    .map(String)
+    .join('')
+
+  return [
+    useMemo(() => {
+      return tokenWithBalance
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tokenWithBalance, balancesKey]),
+    { loading: loadingBalances, error },
+  ]
 }
 
 export default useBalances

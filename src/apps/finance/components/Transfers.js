@@ -26,6 +26,7 @@ import useTransactions from '../hooks/useTransactions'
 import { useNetwork } from '@/hooks/shared'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 import TransfersFilters from './TransfersFilters'
+import NoTransfers from './NoTransfers'
 import { addressesEqual, toChecksumAddress } from '@/utils/web3-utils'
 import useBalances from '../hooks/useBalances'
 
@@ -42,9 +43,26 @@ const formatDate = date => format(date, 'yyyy-MM-dd')
 //   return filename
 // }
 
-const Transfers = React.memo(() => {
-  const [transactions, { loading: isSyncing, error }] = useTransactions()
+const TransfersWrapper = ({ tokens }) => {
+  const [transactions, { loading: isSyncing }] = useTransactions()
 
+  const syncing = isSyncing
+  return (
+    <div
+      css={`
+        margin-top: ${2 * GU}px;
+      `}
+    >
+      <Transfers
+        tokens={tokens}
+        transactions={transactions}
+        isSyncing={syncing}
+      />
+    </div>
+  )
+}
+
+const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
   // const { appState } = useAragonApi()
 
   const { account: connectedAccount } = useWallet()
@@ -53,7 +71,6 @@ const Transfers = React.memo(() => {
   const theme = useTheme()
   // const toast = useToast()
 
-  const [tokens, { loading: loadingTokens, error: tokensError }] = useBalances()
   const {
     emptyResultsViaFilters,
     filteredTransfers,
@@ -70,7 +87,6 @@ const Transfers = React.memo(() => {
     transferTypes,
   } = useFilteredTransfers({ transactions, tokens })
 
-  console.log('tokens ', tokens)
   const tokenDetails =
     tokens.length > 0
       ? tokens.reduce((details, { address, decimals, symbol }) => {
@@ -82,7 +98,6 @@ const Transfers = React.memo(() => {
         }, {})
       : {}
 
-  console.log('filtered transfers ', filteredTransfers)
   // const { resolve: resolveAddress } = useContext(IdentityContext)
   const handleDownload = () => {}
   // = useCallback(async () => {
@@ -125,25 +140,24 @@ const Transfers = React.memo(() => {
     if (emptyResultsViaFilters && transactions.length > 0) {
       return 'empty-filters'
     }
-    if (isSyncing || loadingTokens) {
+    if (isSyncing) {
       return 'loading'
     }
     return 'default'
-  }, [emptyResultsViaFilters, isSyncing, loadingTokens, transactions.length])
+  }, [emptyResultsViaFilters, isSyncing, transactions.length])
 
   return (
     <DataView
       status={dataViewStatus}
-      statusEmpty={
-        <p
-          css={`
-            ${textStyle('title2')};
-          `}
-        >
-          No transfers yet.
-        </p>
-      }
       page={page}
+      emptyState={status => {
+        if (status === 'loading') {
+          return <div>Loading!</div>
+        }
+
+        // Use the default for other `status` values.
+        return null
+      }}
       onPageChange={setPage}
       onStatusEmptyClear={handleClearFilters}
       heading={
@@ -196,7 +210,6 @@ const Transfers = React.memo(() => {
       ]}
       entries={sortedTransfers}
       renderEntry={({ amount, date, entity, isIncoming, reference, token }) => {
-        if (loadingTokens) return []
         const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
         const { symbol, decimals } = tokenDetails[toChecksumAddress(token)]
 
@@ -319,4 +332,4 @@ const ContextMenuViewTransaction = ({ transactionHash }) => {
   )
 }
 
-export default Transfers
+export default TransfersWrapper

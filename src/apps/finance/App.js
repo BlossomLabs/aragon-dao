@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  GU,
   Button,
   Header,
   IconPlus,
@@ -13,12 +14,10 @@ import { useGuiStyle } from '@/hooks/shared'
 import Balances from './components/Balances'
 // import NewTransferPanelContent from './components/NewTransfer/PanelContent'
 import Transfers from './components/Transfers'
+import useBalances from './hooks/useBalances'
+import NoTransfers from './components/NoTransfers'
 
-class App extends React.Component {
-  state = {
-    newTransferOpened: false,
-  }
-
+const App = () => {
   // handleNewTransferOpen = () => {
   //   this.setState({ newTransferOpened: true })
   // }
@@ -76,33 +75,44 @@ class App extends React.Component {
   //     .toPromise()
   // }
 
-  render() {
-    // const { appState, isSyncing } = this.props
-    // const { newTransferOpened } = this.state
-    // const { balances, transactions, tokens } = appState
+  const [tokenBalances, { loading: loadingTokens }] = useBalances()
 
-    return (
-      // <IdentityProvider
-      //   onResolve={this.handleResolveLocalIdentity}
-      //   onShowLocalIdentityModal={this.handleShowLocalIdentityModal}
-      // >
-      <>
-        <SyncIndicator visible={false} shift={50} />
-        <Header
-          primary="Finance"
-          secondary={
-            <Button
-              mode="strong"
-              onClick={this.handleNewTransferOpen}
-              label="New transfer"
-              icon={<IconPlus />}
-            />
-          }
-        />
-        <Balances />
-        <Transfers />
+  return (
+    // <IdentityProvider
+    //   onResolve={this.handleResolveLocalIdentity}
+    //   onShowLocalIdentityModal={this.handleShowLocalIdentityModal}
+    // >
+    <>
+      <Header
+        primary="Finance"
+        secondary={
+          <Button
+            mode="strong"
+            onClick={() => {}}
+            label="New transfer"
+            icon={<IconPlus />}
+          />
+        }
+      />
+      {loadingTokens ? (
+        <div
+          css={`
+            height: calc(100vh - ${8 * GU}px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          `}
+        >
+          <NoTransfers isSyncing={loadingTokens} />
+        </div>
+      ) : (
+        <>
+          <Balances tokenBalances={tokenBalances} loading={loadingTokens} />
+          <Transfers tokens={tokenBalances} />
+        </>
+      )}
 
-        {/* <SidePanel
+      {/* <SidePanel
           opened={newTransferOpened}
           onClose={this.handleNewTransferClose}
           title="New transfer"
@@ -114,10 +124,9 @@ class App extends React.Component {
             onDeposit={this.handleDeposit}
           />
         </SidePanel> */}
-      </>
-      // </IdentityProvider>
-    )
-  }
+    </>
+    // </IdentityProvider>
+  )
 }
 
 export default () => {
