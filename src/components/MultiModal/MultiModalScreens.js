@@ -10,6 +10,7 @@ import {
   useTheme,
   Viewport,
   RADIUS,
+  Root,
   GU,
 } from '@aragon/ui'
 import logoMarkOverlay from '../../assets/logo-mark-overlay.svg'
@@ -233,17 +234,21 @@ const MultiModalContent = React.memo(function ModalContent({ viewportWidth }) {
               </div>
             )
           )}
-
-          <div
-            css={`
-              /* For better performance we avoid reflowing long text between screen changes by matching the screen width with the modal width */
-              width: ${Math.min(viewportWidth, width || DEFAULT_MODAL_WIDTH)}px;
-              padding: ${title ? 0 : standardPadding}px ${standardPadding}px
-                ${standardPadding}px ${standardPadding}px;
-            `}
-          >
-            {content}
-          </div>
+          <Root.Provider>
+            <div
+              css={`
+                /* For better performance we avoid reflowing long text between screen changes by matching the screen width with the modal width */
+                width: ${Math.min(
+                  viewportWidth,
+                  width || DEFAULT_MODAL_WIDTH
+                )}px;
+                padding: ${title ? 0 : standardPadding}px ${standardPadding}px
+                  ${standardPadding}px ${standardPadding}px;
+              `}
+            >
+              {content}
+            </div>
+          </Root.Provider>
         </>
       )
     },
