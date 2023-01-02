@@ -48,6 +48,19 @@ function NewTransferScreens({ tokens, opened }) {
     [financeActions]
   )
 
+  const handleOnWithdraw = useCallback(
+    async (onComplete, tokenAddress, recipient, amount, reference) => {
+      await financeActions.withdraw(
+        { tokenAddress, recipient, amount, reference },
+        intent => {
+          setTransactions(intent)
+          onComplete()
+        }
+      )
+    },
+    [financeActions]
+  )
+
   const screens = useMemo(() => {
     return [
       {
@@ -56,13 +69,14 @@ function NewTransferScreens({ tokens, opened }) {
         content: (
           <DepositWithdraw
             onDeposit={handleOnDeposit}
+            onWithdraw={handleOnWithdraw}
             tokens={tokens}
             opened={opened}
           />
         ),
       },
     ]
-  }, [handleOnDeposit, opened, tokens])
+  }, [handleOnDeposit, handleOnWithdraw, opened, tokens])
 
   return (
     <ModalFlowBase

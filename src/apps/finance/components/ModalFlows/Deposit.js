@@ -121,9 +121,9 @@ class Deposit extends React.Component {
   handleReferenceUpdate = event => {
     this.setState({ reference: event.target.value })
   }
-  handleSubmit = (event, onComplete) => {
+  handleSubmit = event => {
     event.preventDefault()
-    const { onDeposit } = this.props
+    const { onDeposit, onComplete } = this.props
     const { amount, reference, selectedToken } = this.state
 
     if (this.validateInputs()) {
@@ -279,13 +279,7 @@ class Deposit extends React.Component {
     const selectedTokenSymbol = selectedToken?.data?.symbol || 'ETH'
 
     return (
-      <form
-        onSubmit={event =>
-          this.handleSubmit(event, () => {
-            onComplete()
-          })
-        }
-      >
+      <form onSubmit={this.handleSubmit}>
         <h1>{title}</h1>
         <TokenSelector
           onChange={this.handleSelectToken}
