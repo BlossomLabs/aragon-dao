@@ -22,17 +22,6 @@ const App = () => {
 
   return (
     <>
-      <Header
-        primary="Finance"
-        secondary={
-          <Button
-            mode="strong"
-            onClick={handleShowModal}
-            label="New transfer"
-            icon={<IconPlus />}
-          />
-        }
-      />
       {loadingTokens ? (
         <div
           css={`
@@ -46,6 +35,17 @@ const App = () => {
         </div>
       ) : (
         <>
+          <Header
+            primary="Finance"
+            secondary={
+              <Button
+                mode="strong"
+                onClick={handleShowModal}
+                label="New transfer"
+                icon={<IconPlus />}
+              />
+            }
+          />
           <Balances tokenBalances={tokenBalances} loading={loadingTokens} />
           <Transfers tokens={tokenBalances} />
         </>
