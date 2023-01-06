@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import STATUS from '../delay-status-types'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const NULL_FILTER_STATE = -1
 const STATUS_FILTER_ONGOING = 1
@@ -43,7 +44,8 @@ function checkAppFilter(filter, script, { apps, thisAppAddress }) {
 }
 
 const useFilterDelays = (delayedScripts, executionTargets) => {
-  const { connectedANDelayApp, loading } = useOrganizationState()
+  const { loading } = useOrganizationState()
+  const { connectedApp } = useConnectedApp()
 
   const [filteredDelays, setFilteredScripts] = useState(delayedScripts)
   const [statusFilter, setStatusFilter] = useState(NULL_FILTER_STATE)
@@ -65,7 +67,7 @@ const useFilterDelays = (delayedScripts, executionTargets) => {
         checkStatusFilter(statusFilter, script.status) &&
         checkAppFilter(appFilter, script, {
           apps: executionTargets,
-          thisAppAddress: connectedANDelayApp.address,
+          thisAppAddress: connectedApp.address,
         })
       )
     })
@@ -73,7 +75,7 @@ const useFilterDelays = (delayedScripts, executionTargets) => {
   }, [
     statusFilter,
     appFilter,
-    connectedANDelayApp,
+    connectedApp,
     loading,
     setFilteredScripts,
     delayedScripts,

@@ -1,8 +1,5 @@
 import React, { useContext } from 'react'
 import { useConnect } from '@1hive/connect-react'
-import connectVoting from '@rperez89/connect-tao-voting'
-import connectTokenWrapper from '@rperez89/connect-token-wrapper'
-import { connectANDelay } from '@blossom-labs/connect-an-delay'
 
 const OrganizationContext = React.createContext()
 
@@ -10,19 +7,7 @@ function OrganizationProvider({ children }) {
   const [org, orgStatus] = useConnect()
   const [apps, appsStatus] = useConnect(org => org.apps())
   const [permissions, permissionsStatus] = useConnect(org => org.permissions())
-  const [connectedDisputableApp, connectedDisputableAppStatus] = useConnect(
-    org => {
-      return connectVoting(org.onApp('blossom-tao-voting'))
-    }
-  )
-  const [connectedTokenWrapperApp, connectedTokenWrapperAppStatus] = useConnect(
-    org => {
-      return connectTokenWrapper(org.onApp('blossom-token-wrapper'))
-    }
-  )
-  const [connectedANDelayApp, connectedANDelayAppStatus] = useConnect(org =>
-    connectANDelay(org.onApp('delay'))
-  )
+
   const loading =
     orgStatus.loading || appsStatus.loading || permissionsStatus.loading
   const error = orgStatus.error || appsStatus.error || permissionsStatus.error
@@ -32,13 +17,8 @@ function OrganizationProvider({ children }) {
       value={{
         organization: org,
         apps,
+        appsStatus,
         connection: org?.connection,
-        connectedANDelayApp,
-        connectedANDelayAppStatus,
-        connectedDisputableApp,
-        connectedDisputableAppStatus,
-        connectedTokenWrapperApp,
-        connectedTokenWrapperAppStatus,
         permissions,
         loading,
         error,

@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react'
-import { useHistory } from 'react-router-dom'
 import {
   Bar,
   DropDown,
@@ -13,6 +12,7 @@ import {
 import EmptyFilteredVotes from '../components/EmptyFilteredVotes'
 import VoteCard from '../components/VoteCard/VoteCard'
 import VoteCardGroup from '../components/VoteCard/VoteCardGroup'
+import { usePath } from '@/hooks/shared'
 
 const sortVotes = (a, b) => {
   const dateDiff = b.data.endDate - a.data.endDate
@@ -181,16 +181,16 @@ const ThisVoting = ({ showTag }) => (
 )
 
 const VoteGroups = React.memo(({ openVotes, closedVotes }) => {
-  const history = useHistory()
+  const [, navigate] = usePath()
   const voteGroups = [
     ['Open votes', openVotes, openVotes.length],
     ['Closed votes', closedVotes.slice(0, 20), closedVotes.length],
   ]
   const handleVoteClick = useCallback(
     voteId => {
-      history.push(`/voting/votes/${voteId}`)
+      navigate(`votes/${voteId}`)
     },
-    [history]
+    [navigate]
   )
 
   return (

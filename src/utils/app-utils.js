@@ -1,3 +1,4 @@
+import { APPS_ROUTING } from '@/constants'
 import { getIpfsUrlFromUri } from '../utils/ipfs-utils'
 
 export function getAppPresentationByAddress(apps, appAddress) {
@@ -27,3 +28,10 @@ export function getAppPresentation(app) {
 export function getAppByName(apps, appName) {
   return apps.find(({ name }) => name === appName) || null
 }
+
+export function buildAppRoute(appName, appAddress) {
+  return `/${APPS_ROUTING.get(appName)}/${appAddress}`
+}
+
+export const buildAppInstanceRoute = appName =>
+  `/${APPS_ROUTING.get(appName)}/:appAddress`
