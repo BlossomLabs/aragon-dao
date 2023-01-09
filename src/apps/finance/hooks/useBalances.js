@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useConnect } from '@1hive/connect-react'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useContractReadOnly, getContract } from '@/hooks/shared/useContract'
 import { getAppByName } from '@/utils/app-utils'
 import BN from 'bn.js'
-import usePromise from '@/hooks/shared/usePromise'
-// import { toMs } from '@/utils/date-utils'
 
 import vaultBalanceAbi from '../abi/vault-balance.json'
 import minimeTokenAbi from '@/abi/minimeToken.json'
@@ -16,8 +15,20 @@ const INITIAL_TIMER = 2000
 
 const CHAIN_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+const cachedContracts = new Map([])
+
+const getContractInstance = tokenAddress => {
+  if (cachedContracts.has(tokenAddress)) {
+    return cachedContracts.get(tokenAddress)
+  }
+  const tokenContract = getContract(tokenAddress, minimeTokenAbi)
+  cachedContracts.set(tokenContract)
+  return tokenContract
+}
+
 const useBalances = (timeout = 7000) => {
-  const { apps, connectedFinanceApp } = useOrganizationState()
+  const { apps } = useOrganizationState()
+  const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const [tokenBalances = [], { loading, error }] = useConnect(
     () => connectedFinanceApp?.onBalance(),
     [connectedFinanceApp]
@@ -42,18 +53,22 @@ const useBalances = (timeout = 7000) => {
       try {
         const tokensWithData = await Promise.all(
           tokenBalances.map(async tokenBalance => {
-            const tokenContract = getContract(
-              tokenBalance.token,
-              minimeTokenAbi
-            )
+            const tokenContract = getContractInstance(tokenBalance.token)
+
+            console.log('token contract ', tokenContract)
             let decimals
             let symbol
             if (tokenBalance.token === CHAIN_TOKEN_ADDRESS) {
               decimals = 18
               symbol = 'Xdai' // Todo: maybe have a network file with all this constants per network
             } else {
-              decimals = await tokenContract.decimals()
-              symbol = await tokenContract.symbol()
+              const [dec, symb] = await Promise.all([
+                tokenContract.decimals(),
+                tokenContract.symbol(),
+              ])
+
+              decimals = dec
+              symbol = symb
             }
 
             return {
@@ -70,7 +85,7 @@ const useBalances = (timeout = 7000) => {
       }
     }
     getTokenData()
-  }, [mounted, tokenBalances, tokenBalances.length])
+  }, [mounted, tokenBalances])
 
   useEffect(() => {
     if (tokenData.length === 0 || !vaultContract) {

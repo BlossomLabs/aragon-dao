@@ -17,6 +17,7 @@ import {
 } from '@aragon/ui'
 import { useNetwork } from '@/hooks/shared'
 import { useWallet } from '@/providers/Wallet'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 import QRCode from 'qrcode.react'
 import tokenAbi from '@/abi/minimeToken.json'
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
@@ -31,7 +32,6 @@ import { addressesEqual } from '@/utils/web3-utils'
 import AmountInput from '../AmountInput'
 import ToggleContent from '../ToggleContent'
 import TokenSelector from '../TokenSelector'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -474,13 +474,13 @@ const ValidationError = ({ message }) => {
 }
 
 export default props => {
-  const { connectedFinanceApp } = useOrganizationState()
+  const { connectedApp } = useConnectedApp()
   const network = useNetwork()
   const { account } = useWallet()
 
   return (
     <Deposit
-      appAddress={connectedFinanceApp && connectedFinanceApp.address}
+      appAddress={connectedApp && connectedApp.address}
       connectedAccount={account}
       network={network}
       {...props}

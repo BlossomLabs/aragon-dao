@@ -29,7 +29,7 @@ function CreateNewVote({ getTransactions }) {
         css={`
           margin-top: ${3 * GU}px;
         `}
-        label="Delegate account (must be a valid ethereum address)"
+        label="Question"
         required
       >
         <TextInput

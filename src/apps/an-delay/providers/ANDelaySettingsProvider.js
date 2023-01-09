@@ -1,18 +1,17 @@
 import { useConnect } from '@1hive/connect-react'
 import React, { useContext, useEffect, useState } from 'react'
 import { useMounted } from '@/hooks/shared/useMounted'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const ANDelayContext = React.createContext()
 
 const ANDelaySettingsProvider = ({ children }) => {
   const [executionDelay, setExecutionDelay] = useState()
   const mounted = useMounted()
-  const { connectedANDelayApp } = useOrganizationState()
-  const [appData, appDataStatus] = useConnect(
-    () => connectedANDelayApp.appData(),
-    [connectedANDelayApp]
-  )
+  const { connectedApp } = useConnectedApp()
+  const [appData, appDataStatus] = useConnect(() => connectedApp.appData(), [
+    connectedApp,
+  ])
   const loading = appDataStatus.loading
   const error = appDataStatus.error
 

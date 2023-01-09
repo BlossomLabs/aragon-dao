@@ -2,11 +2,11 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Spring, animated } from 'react-spring/renderprops'
 import { ButtonBase, GU, textStyle, useTheme, springs } from '@aragon/ui'
-// import MenuPanelAppInstance, {
-//   MENU_PANEL_APP_INSTANCE_HEIGHT,
-// } from './MenuPanelAppInstance'
-// import { AppInstanceType } from '../../prop-types'
+import MenuPanelAppInstance, {
+  MENU_PANEL_APP_INSTANCE_HEIGHT,
+} from './MenuPanelAppInstance'
 import useLocalIdentity from '../../hooks/shared/useLocalIdentity'
+import { addressesEqual } from '@/utils/web3-utils'
 
 export const MENU_ITEM_BASE_HEIGHT = 5 * GU
 
@@ -14,25 +14,34 @@ const { div: AnimDiv } = animated
 
 const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
   name,
+  humanName,
   icon,
+  instances,
+  activeInstance,
   active,
+  expand,
   onActivate,
 }) {
   const theme = useTheme()
+  const singleInstance = instances.length === 1
 
   const handleAppClick = useCallback(() => {
-    onActivate()
-  }, [onActivate])
+    const instance = instances[0]
 
-  // const handleInstanceClick = useCallback(
-  //   instanceId => onActivate(instanceId),
-  //   [onActivate]
-  // )
+    if (instance) {
+      onActivate(name, instance)
+    }
+  }, [instances, name, onActivate])
+
+  const handleInstanceClick = useCallback(
+    instanceAddress => onActivate(name, instanceAddress),
+    [name, onActivate]
+  )
 
   return (
     <Spring
       config={springs.smooth}
-      to={{ openProgress: Number(active) }}
+      to={{ openProgress: Number(active && (singleInstance || expand)) }}
       native
     >
       {({ openProgress }) => (
@@ -81,25 +90,54 @@ const MenuPanelAppGroup = React.memo(function MenuPanelAppGroup({
           <MenuPanelItem
             active={active}
             icon={icon}
-            // instanceId={instances[0].instanceId}
-            name={name}
+            instanceId={instances[0]}
+            name={humanName}
             onClick={handleAppClick}
             openProgress={openProgress}
-            // singleInstance={singleInstance}
+            singleInstance={singleInstance}
           />
+
+          {instances.length > 1 && (
+            <animated.ul
+              className="instances"
+              style={{
+                height: openProgress.interpolate(
+                  v =>
+                    `${(instances.length * MENU_PANEL_APP_INSTANCE_HEIGHT + 0) *
+                      v}px`
+                ),
+              }}
+            >
+              {instances.map(address => {
+                const label = address
+                const active = addressesEqual(address, activeInstance)
+                return label ? (
+                  <li key={address}>
+                    <MenuPanelAppInstance
+                      address={address}
+                      name={label}
+                      active={active}
+                      onClick={handleInstanceClick}
+                    />
+                  </li>
+                ) : null
+              })}
+            </animated.ul>
+          )}
         </div>
       )}
     </Spring>
   )
 })
 MenuPanelAppGroup.propTypes = {
-  // active: PropTypes.bool.isRequired,
-  // activeInstanceId: PropTypes.string,
-  // expand: PropTypes.bool.isRequired,
-  // icon: PropTypes.object.isRequired,
-  // instances: PropTypes.arrayOf(AppInstanceType).isRequired,
-  // name: PropTypes.string.isRequired,
-  // onActivate: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  humanName: PropTypes.string.isRequired,
+  active: PropTypes.bool.isRequired,
+  activeInstance: PropTypes.string,
+  instances: PropTypes.arrayOf(PropTypes.string).isRequired,
+  expand: PropTypes.bool.isRequired,
+  icon: PropTypes.object.isRequired,
+  onActivate: PropTypes.func.isRequired,
 }
 
 const MenuPanelItem = React.memo(function MenuPanelItem({
@@ -108,7 +146,6 @@ const MenuPanelItem = React.memo(function MenuPanelItem({
   name,
   icon,
   instanceId,
-  openProgress,
   singleInstance,
 }) {
   const { name: localIdentity } = useLocalIdentity(instanceId)
@@ -148,7 +185,6 @@ MenuPanelItem.propTypes = {
   instanceId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  openProgress: PropTypes.object.isRequired,
   singleInstance: PropTypes.bool.isRequired,
 }
 

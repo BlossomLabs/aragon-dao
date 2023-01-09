@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { noop } from '@aragon/ui'
 import { BN } from 'bn.js'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
 import { getContract } from '@/hooks/shared/useContract'
 import { useMounted } from '@/hooks/shared/useMounted'
@@ -16,7 +16,7 @@ const DEPOSIT_GAS_LIMIT = 2000000
 
 export default function useActions() {
   const { account } = useWallet()
-  const { connectedFinanceApp } = useOrganizationState()
+  const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const mounted = useMounted()
 
   const getAllowance = useCallback(

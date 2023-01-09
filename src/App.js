@@ -11,6 +11,7 @@ import Header from './components/Header/Header'
 
 import { WalletProvider } from './providers/Wallet'
 import { IdentityProvider } from './providers/Identity'
+import { ConnectedAppProvider } from './providers/ConnectedApp'
 
 function App() {
   const { appearance } = useGuiStyle()
@@ -77,7 +78,9 @@ function App() {
                               `}
                             >
                               <ScrollView>
-                                <Router />
+                                <ConnectedAppProvider>
+                                  <Router />
+                                </ConnectedAppProvider>
                               </ScrollView>
                             </div>
                           </div>

@@ -7,12 +7,15 @@ import {
   getStatus,
 } from '../lib/delay-utils'
 import useNow from '@/hooks/shared/useNow'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 export const useDelayedScripts = () => {
-  const { apps, connectedANDelayApp } = useOrganizationState()
+  const { apps } = useOrganizationState()
+  const { connectedApp } = useConnectedApp()
+
   const [rawDelayedScripts = [], { loading, error }] = useConnect(
-    () => connectedANDelayApp?.onDelayedScripts({ first: 50 }),
-    [connectedANDelayApp]
+    () => connectedApp?.onDelayedScripts({ first: 50 }),
+    [connectedApp]
   )
   const now = useNow()
   const delayStatus = (rawDelayedScripts || []).map(script =>
@@ -38,15 +41,15 @@ export const useDelayedScripts = () => {
 export const useDelayedScript = scriptId => {
   const {
     apps,
-    connectedANDelayApp,
     loading: orgStateLoading,
     error: orgStateError,
   } = useOrganizationState()
+  const { connectedApp } = useConnectedApp()
   const [
     rawDelayedScript,
     { loading: rawDelayedScriptLoading, error: rawDelayedScriptError },
-  ] = useConnect(() => connectedANDelayApp?.onDelayedScript(scriptId), [
-    connectedANDelayApp,
+  ] = useConnect(() => connectedApp?.onDelayedScript(scriptId), [
+    connectedApp,
     scriptId,
   ])
   const now = useNow()
