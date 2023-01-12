@@ -1,27 +1,30 @@
 import { useCallback, useMemo } from 'react'
 import { noop } from '@aragon/ui'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { useWallet } from '@/providers/Wallet'
-import { getAppByName } from '@/utils/app-utils'
 import radspec from '@/radspec'
 import anDelayActions from '../actions/an-delay-action.types'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const GAS_LIMIT = 550000
 
 export default function useActions() {
   const { account } = useWallet()
-  const { apps: installedApps } = useOrganizationState()
-  const anDelayApp = getAppByName(installedApps, 'delay') // TODO move the app name to an env variable
+  const { connectedApp: connectedANDelayApp } = useConnectedApp()
 
   const execute = useCallback(
-    async (scriptId, onDone = noop) => {
-      let intent = await anDelayApp.intent('execute', [scriptId], {
-        actAs: account,
-      })
+    async ({ id, evmCallScript }, onDone = noop) => {
+      let intent = await connectedANDelayApp.intent(
+        'execute',
+        [id, evmCallScript],
+        {
+          actAs: account,
+        }
+      )
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
       const description = radspec[anDelayActions.EXECUTE]({
-        scriptId,
+        id,
+        evmCallScript,
       })
 
       const transactions = attachTrxMetadata(
@@ -32,14 +35,18 @@ export default function useActions() {
 
       onDone(transactions)
     },
-    [account, anDelayApp]
+    [account, connectedANDelayApp]
   )
 
   const delayExecution = useCallback(
-    async (evmCallScript, onDone = noop) => {
-      let intent = await anDelayApp.intent('delayExecution', [evmCallScript], {
-        actAs: account,
-      })
+    async ({ evmCallScript }, onDone = noop) => {
+      let intent = await connectedANDelayApp.intent(
+        'delayExecution',
+        [evmCallScript],
+        {
+          actAs: account,
+        }
+      )
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
@@ -56,19 +63,19 @@ export default function useActions() {
 
       onDone(transactions)
     },
-    [account, anDelayApp]
+    [account, connectedANDelayApp]
   )
 
   const pauseExecution = useCallback(
-    async (scriptId, onDone = noop) => {
-      let intent = await anDelayApp.intent('pauseExecution', [scriptId], {
+    async ({ id }, onDone = noop) => {
+      let intent = await connectedANDelayApp.intent('pauseExecution', [id], {
         actAs: account,
       })
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
       const description = radspec[anDelayActions.PAUSE_EXECUTION]({
-        scriptId,
+        id,
       })
 
       const transactions = attachTrxMetadata(
@@ -79,19 +86,19 @@ export default function useActions() {
 
       onDone(transactions)
     },
-    [account, anDelayApp]
+    [account, connectedANDelayApp]
   )
 
   const resumeExecution = useCallback(
-    async (scriptId, onDone = noop) => {
-      let intent = await anDelayApp.intent('resumeExecution', [scriptId], {
+    async ({ id }, onDone = noop) => {
+      let intent = await connectedANDelayApp.intent('resumeExecution', [id], {
         actAs: account,
       })
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
       const description = radspec[anDelayActions.RESUME_EXECUTION]({
-        scriptId,
+        id,
       })
 
       const transactions = attachTrxMetadata(
@@ -102,19 +109,19 @@ export default function useActions() {
 
       onDone(transactions)
     },
-    [account, anDelayApp]
+    [account, connectedANDelayApp]
   )
 
   const cancelExecution = useCallback(
-    async (scriptId, onDone = noop) => {
-      let intent = await anDelayApp.intent('cancelExecution', [scriptId], {
+    async ({ id }, onDone = noop) => {
+      let intent = await connectedANDelayApp.intent('cancelExecution', [id], {
         actAs: account,
       })
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
       const description = radspec[anDelayActions.CANCEL_EXECUTION]({
-        scriptId,
+        id,
       })
 
       const transactions = attachTrxMetadata(
@@ -125,7 +132,7 @@ export default function useActions() {
 
       onDone(transactions)
     },
-    [account, anDelayApp]
+    [account, connectedANDelayApp]
   )
 
   return useMemo(
