@@ -58,7 +58,7 @@ const App = () => {
   )
 }
 
-export default () => {
+export default function FinanceApp() {
   const { appearance } = useGuiStyle()
   return (
     <Main theme={appearance} assetsUrl="./aragon-ui">

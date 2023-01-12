@@ -47,7 +47,7 @@ const useBalances = (timeout = 7000) => {
 
   useEffect(() => {
     if (!tokenBalances?.length || !mounted) {
-      setLoadingBalances(false)
+      return
     }
     const getTokenData = async () => {
       try {
@@ -87,7 +87,7 @@ const useBalances = (timeout = 7000) => {
   }, [mounted, tokenBalances])
 
   useEffect(() => {
-    if (tokenData.length === 0 || !vaultContract) {
+    if (!vaultContract) {
       return
     }
 
