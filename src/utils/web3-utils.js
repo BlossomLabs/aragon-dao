@@ -8,7 +8,7 @@ const networks = {
     ensRegistry: '0xaafca6b0c89521752e559650206d7c925fd0e530',
     name: 'Gnosis Chain',
     type: 'xdai',
-    defaultEthNode: 'https://rpc.gnosischain.com',
+    defaultEthNode: 'https://rpc.gnosis.gateway.fm/',
   },
 }
 
@@ -116,3 +116,5 @@ export function transformAddresses(str, callback) {
       callback(part, ETH_ADDRESS_TEST_REGEX.test(part), index)
     )
 }
+
+export { getAddress as toChecksumAddress } from 'ethers/lib/utils'

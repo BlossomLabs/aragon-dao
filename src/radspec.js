@@ -40,4 +40,10 @@ export default {
   [organizationActions.APPROVE_TOKEN]: ({ tokenSymbol }) => {
     return `Approve ${tokenSymbol}`
   },
+  [organizationActions.DEPOSIT]: () => {
+    return `Deposit into finance`
+  },
+  [organizationActions.WITHDRAW]: () => {
+    return `New withdrawal`
+  },
 }

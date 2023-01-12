@@ -24,7 +24,7 @@ export const connectors = [
     properties: {
       chainId: [100], // add here to handle more injected chains
       rpc: {
-        '100': 'https://rpc.gnosischain.com',
+        '100': 'https://rpc.gnosis.gateway.fm/',
       },
     },
   },

@@ -9,16 +9,16 @@ import PropTypes from 'prop-types'
 import { useConnect } from '@1hive/connect-react'
 import { formatTokenAmount } from '@aragon/ui'
 import { useWallet } from '@/providers/Wallet'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { useContractReadOnly } from '@/hooks/shared/useContract'
+import usePromise from '@/hooks/shared/usePromise'
 import minimeTokenAbi from '@/abi/minimeToken.json'
 import { useAppState } from '../providers/VotingProvider'
 import { useVoterState } from './VoterProvider'
-import usePromise from '../hooks/usePromise'
 import { getUserBalanceAt } from '../token-utils'
 import { getCanUserVoteOnBehalfOf, getCanUserVote } from '../vote-utils'
 import votingAbi from '../abi/voting.json'
-import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const emptyPromise = defaultValue =>
   new Promise(resolve => resolve(defaultValue))
