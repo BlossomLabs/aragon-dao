@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import Finance from '../apps/finance/App'
+import FinanceRouter from '../apps/finance/routes/Router'
 import ANDelayRouter from '../apps/an-delay/routes/Router'
 import VotingRouter from '../apps/voting/routes/Router'
 import TokenWrapperRouter from '../apps/token-wrapper/routes/Router'
@@ -12,7 +12,7 @@ function Router() {
     <Switch>
       <Route exact path="/" component={HomeScreen} />
       <Route path="/delay" component={ANDelayRouter} />
-      <Route path="/finance" component={Finance} />
+      <Route path="/finance" component={FinanceRouter} />
       <Route path="/voting" component={VotingRouter} />
       <Route path="/wrapper" component={TokenWrapperRouter} />
     </Switch>

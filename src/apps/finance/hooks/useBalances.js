@@ -47,7 +47,7 @@ const useBalances = (timeout = 7000) => {
 
   useEffect(() => {
     if (!tokenBalances?.length || !mounted) {
-      return
+      setLoadingBalances(false)
     }
     const getTokenData = async () => {
       try {
@@ -55,7 +55,6 @@ const useBalances = (timeout = 7000) => {
           tokenBalances.map(async tokenBalance => {
             const tokenContract = getContractInstance(tokenBalance.token)
 
-            console.log('token contract ', tokenContract)
             let decimals
             let symbol
             if (tokenBalance.token === CHAIN_TOKEN_ADDRESS) {
