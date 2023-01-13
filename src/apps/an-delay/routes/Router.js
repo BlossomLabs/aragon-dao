@@ -13,7 +13,7 @@ import { AppRouting } from '@/components/AppRouting'
 
 const ANDelayRouter = () => (
   <AppRouting
-    appName="delay"
+    appName="an-delay"
     defaultPath="scripts"
     appRoutes={[
       ['scripts', Delays],
