@@ -7,7 +7,7 @@ import { useOrganizationState } from '@/providers/OrganizationProvider'
 export const AppRouting = ({ appName, defaultPath, appRoutes, children }) => {
   const { apps } = useOrganizationState()
 
-  const [app] = apps.filter(app => app.name === appName)
+  const app = apps.find(app => app.name === appName)
   const defaultAppAddress = app?.address ?? ''
   const appRoutingName = APPS_ROUTING.get(appName)
   const appInstancePath = buildAppInstanceRoute(appName)
