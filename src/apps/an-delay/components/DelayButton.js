@@ -23,7 +23,6 @@ function DelayButton({ label, beforeIcon, css, ...props }) {
 
 const CustomButton = styled(Button)`
   ${textStyle('body2')};
-  width: 50%;
   &:first-child {
     margin-right: ${GU / 2}px;
   }

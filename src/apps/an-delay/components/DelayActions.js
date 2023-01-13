@@ -50,12 +50,11 @@ const DelayActions = React.memo(({ status, onDelayAction }) => {
       `}
     >
       <DelayButton {...props} onClick={() => onDelayAction(props.mainAction)} />
-      {isGuardian && (
-        <DelayButton
-          label="Cancel"
-          onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
-        />
-      )}
+      <DelayButton
+        label="Cancel"
+        onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
+        disabled={!isGuardian}
+      />
     </div>
   )
 })

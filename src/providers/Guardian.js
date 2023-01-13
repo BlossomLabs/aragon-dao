@@ -18,6 +18,7 @@ const GuardianContext = React.createContext()
 function GuardianProvider({ children }) {
   const wallet = useWallet()
   const { account } = wallet
+  const [loading, setLoading] = useState()
   const [isGuardian, setIsGuardian] = useState(false)
   const guardiansTokenManager = useContract(
     GUARDIANS_TOKEN_MANAGER,
@@ -30,13 +31,19 @@ function GuardianProvider({ children }) {
     }
 
     async function checkIfIsGuardian() {
+      setLoading(true)
       /**
        * Pass an empty evm script as token manager doesn't use
        * it to perform a canForward check
        */
-      const canForward = await guardiansTokenManager.canForward(account, '0x')
-
-      setIsGuardian(canForward)
+      try {
+        const canForward = await guardiansTokenManager.canForward(account, '0x')
+        setIsGuardian(canForward)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
     }
 
     checkIfIsGuardian()
@@ -66,7 +73,7 @@ function GuardianProvider({ children }) {
   )
 
   return (
-    <GuardianContext.Provider value={{ isGuardian, callAsGuardian }}>
+    <GuardianContext.Provider value={{ isGuardian, callAsGuardian, loading }}>
       {children}
     </GuardianContext.Provider>
   )
