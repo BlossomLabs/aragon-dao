@@ -64,7 +64,7 @@ const ActionScreen = React.memo(({ getTransactions }) => {
   )
 })
 
-function DelayActionScreens({ action, delayedScript: { id } }) {
+function DelayActionScreens({ action, delayedScript }) {
   const { anDelayActions } = useActions()
   const [transactions, setTransactions] = useState([])
   const { modalTitle, fnMethod } = getActionData(action)
@@ -73,8 +73,8 @@ function DelayActionScreens({ action, delayedScript: { id } }) {
   const temporatyTrx = useRef([])
 
   const performAction = useCallback(
-    async scriptId => {
-      await anDelayActions[fnMethod](scriptId, intent => {
+    async delayedScript => {
+      await anDelayActions[fnMethod](delayedScript, intent => {
         temporatyTrx.current = temporatyTrx.current.concat(intent)
       })
     },
@@ -83,12 +83,12 @@ function DelayActionScreens({ action, delayedScript: { id } }) {
 
   const getTransactions = useCallback(
     async onComplete => {
-      await performAction(id)
+      await performAction(delayedScript)
 
       setTransactions(temporatyTrx.current)
       onComplete(temporatyTrx.current.length)
     },
-    [performAction, id]
+    [performAction, delayedScript]
   )
 
   const screens = useMemo(() => {

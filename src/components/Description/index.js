@@ -14,7 +14,7 @@ function Description({ disableBadgeInteraction, path }) {
         word-break: break-word;
       `}
     >
-      {path
+      {path?.length
         ? path.map((step, index) => (
             <DescriptionStep
               disableBadgeInteraction={disableBadgeInteraction}
@@ -22,7 +22,7 @@ function Description({ disableBadgeInteraction, path }) {
               step={step}
             />
           ))
-        : ''}
+        : 'No description available.'}
     </span>
   )
 }
