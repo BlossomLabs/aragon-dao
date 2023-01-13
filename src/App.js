@@ -12,6 +12,7 @@ import Header from './components/Header/Header'
 import { WalletProvider } from './providers/Wallet'
 import { IdentityProvider } from './providers/Identity'
 import { ConnectedAppProvider } from './providers/ConnectedApp'
+import { GuardianProvider } from './providers/Guardian'
 
 function App() {
   const { appearance } = useGuiStyle()
@@ -21,75 +22,77 @@ function App() {
         <WalletProvider>
           <IdentityProvider>
             <OrganizationProvider>
-              <Main
-                assetsUrl="/aragon-ui/"
-                layout={false}
-                scrollView={false}
-                theme={appearance}
-              >
-                <MainView>
-                  <div css="position: relative; z-index: 0">
-                    <div
-                      css={`
-                        display: flex;
-                        flex-direction: column;
-                        position: relative;
-                        height: 100vh;
-                        min-width: ${45 * GU}px;
-                      `}
-                    >
+              <GuardianProvider>
+                <Main
+                  assetsUrl="/aragon-ui/"
+                  layout={false}
+                  scrollView={false}
+                  theme={appearance}
+                >
+                  <MainView>
+                    <div css="position: relative; z-index: 0">
                       <div
                         css={`
                           display: flex;
                           flex-direction: column;
                           position: relative;
-                          height: 100%;
-                          width: 100%;
+                          height: 100vh;
+                          min-width: ${45 * GU}px;
                         `}
                       >
-                        <Header
-                          css={`
-                            position: relative;
-                            z-index: 1;
-                            flex-shrink: 0;
-                          `}
-                        />
                         <div
                           css={`
-                            flex-grow: 1;
-                            overflow-y: hidden;
-                            margin-top: 2px;
+                            display: flex;
+                            flex-direction: column;
+                            position: relative;
+                            height: 100%;
+                            width: 100%;
                           `}
                         >
+                          <Header
+                            css={`
+                              position: relative;
+                              z-index: 1;
+                              flex-shrink: 0;
+                            `}
+                          />
                           <div
                             css={`
-                              display: flex;
-                              height: 100%;
+                              flex-grow: 1;
+                              overflow-y: hidden;
+                              margin-top: 2px;
                             `}
                           >
-                            <MenuPanel />
-
                             <div
                               css={`
-                                position: relative;
-                                z-index: 1;
-                                flex-grow: 1;
-                                overflow: hidden;
+                                display: flex;
+                                height: 100%;
                               `}
                             >
-                              <ScrollView>
-                                <ConnectedAppProvider>
-                                  <Router />
-                                </ConnectedAppProvider>
-                              </ScrollView>
+                              <MenuPanel />
+
+                              <div
+                                css={`
+                                  position: relative;
+                                  z-index: 1;
+                                  flex-grow: 1;
+                                  overflow: hidden;
+                                `}
+                              >
+                                <ScrollView>
+                                  <ConnectedAppProvider>
+                                    <Router />
+                                  </ConnectedAppProvider>
+                                </ScrollView>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </MainView>
-              </Main>
+                  </MainView>
+                </Main>
+              </GuardianProvider>
             </OrganizationProvider>
           </IdentityProvider>
         </WalletProvider>

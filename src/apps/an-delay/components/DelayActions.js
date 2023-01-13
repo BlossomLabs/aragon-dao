@@ -7,6 +7,7 @@ import PauseIcon from '../assets/pause.svg'
 
 import STATUS from '../delay-status-types'
 import actions from '../actions/an-delay-action.types'
+import { useGuardianState } from '@/providers/Guardian'
 
 const getMainActionProps = (status, theme) => {
   switch (status) {
@@ -35,6 +36,7 @@ const getMainActionProps = (status, theme) => {
 }
 
 const DelayActions = React.memo(({ status, onDelayAction }) => {
+  const { isGuardian } = useGuardianState()
   const theme = useTheme()
   const props = getMainActionProps(status, theme)
 
@@ -48,10 +50,12 @@ const DelayActions = React.memo(({ status, onDelayAction }) => {
       `}
     >
       <DelayButton {...props} onClick={() => onDelayAction(props.mainAction)} />
-      <DelayButton
-        label="Cancel"
-        onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
-      />
+      {isGuardian && (
+        <DelayButton
+          label="Cancel"
+          onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
+        />
+      )}
     </div>
   )
 })

@@ -3,16 +3,15 @@ import { ZERO_ADDR } from './constants'
 import organizationActions from './actions/organization-action-types'
 
 export default {
-  [organizationActions.EXECUTE]: ({ scriptId }) =>
-    `Execute the script with ID ${scriptId}`,
-  [organizationActions.DELAY_EXECUTION]: ({ executionDelay }) =>
-    `Delays execution for ${executionDelay}`,
-  [organizationActions.PAUSE_EXECUTION]: ({ scriptId }) =>
-    `Pause the script execution with ID ${scriptId}`,
-  [organizationActions.RESUME_EXECUTION]: ({ scriptId }) =>
-    `Resume a paused script execution with ID ${scriptId}`,
-  [organizationActions.CANCEL_EXECUTION]: ({ scriptId }) =>
-    `Cancel script execution with ID ${scriptId}`,
+  [organizationActions.EXECUTE]: ({ id }) => `Execute the script with ID ${id}`,
+  [organizationActions.DELAY_EXECUTION]: ({ id, executionDelay }) =>
+    `Delay the script with ID ${id} execution for ${executionDelay} seconds `,
+  [organizationActions.PAUSE_EXECUTION]: ({ id }) =>
+    `Pause the script execution with ID ${id}`,
+  [organizationActions.RESUME_EXECUTION]: ({ id }) =>
+    `Resume a paused script execution with ID ${id}`,
+  [organizationActions.CANCEL_EXECUTION]: ({ id }) =>
+    `Cancel script execution with ID ${id}`,
   [organizationActions.DELEGATE_VOTING]: ({ representative }) => {
     return `${
       representative !== ZERO_ADDR
