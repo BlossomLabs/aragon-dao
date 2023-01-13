@@ -1,11 +1,14 @@
 import { shortenAddress } from '@aragon/ui'
 import { ZERO_ADDR } from './constants'
 import organizationActions from './actions/organization-action-types'
+import { formatTime } from './utils/time-utils'
 
 export default {
   [organizationActions.EXECUTE]: ({ id }) => `Execute the script with ID ${id}`,
   [organizationActions.DELAY_EXECUTION]: ({ id, executionDelay }) =>
-    `Delay the script with ID ${id} execution for ${executionDelay} seconds `,
+    `Delay the script with ID ${id} execution for ${formatTime(
+      executionDelay
+    )} seconds `,
   [organizationActions.PAUSE_EXECUTION]: ({ id }) =>
     `Pause the script execution with ID ${id}`,
   [organizationActions.RESUME_EXECUTION]: ({ id }) =>

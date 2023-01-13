@@ -8,8 +8,8 @@ import Delays from '../screens/Delays'
 import DelayDetail from '../screens/DelayDetail'
 import Title from '../components/Title'
 import { useGuiStyle } from '@/hooks/shared'
-import { formatTime } from '../lib/math-utils'
 import { AppRouting } from '@/components/AppRouting'
+import { formatTime } from '@/utils/time-utils'
 
 const ANDelayRouter = () => (
   <AppRouting

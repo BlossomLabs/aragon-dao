@@ -17,7 +17,6 @@ import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBad
 import LocalLabelAppBadge from '@/components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
-import { formatTime } from '../lib/math-utils'
 import { usePath } from '@/hooks/shared'
 import { useDelayedScript } from '../hooks/useDelayedScripts'
 import useDescribeScript from '@/hooks/shared/useDescribeScript'
@@ -27,6 +26,7 @@ import MultiModal from '@/components/MultiModal/MultiModal'
 import DelayActionScreens from '../components/ModalFlows/DelayActionScreens'
 import { useWallet } from '@/providers/Wallet'
 import LoadingSection from '@/components/Loading/LoadingSection'
+import { formatTime } from '@/utils/time-utils'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
