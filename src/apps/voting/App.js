@@ -24,6 +24,9 @@ import { SettingsProvider } from './vote-settings-manager'
 import { useWallet } from '../../providers/Wallet'
 import RevokeDelegationScreens from './components/ModalFlows/RevokeDelegation/RevokeDelegationScreens'
 import CreateVoteScreens from './components/ModalFlows/NewVote/CreateVoteScreens'
+import { useAppState } from './providers/VotingProvider'
+import { addressesEqual } from '@/utils/web3-utils'
+import { constants } from 'ethers'
 
 const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
 
@@ -43,6 +46,10 @@ const App = React.memo(function App() {
     selectedVote,
     votes,
   } = useAppLogic()
+  const { representativeManager } = useAppState()
+  const showDelegateButton =
+    !!representativeManager &&
+    addressesEqual(representativeManager, constants.AddressZero)
 
   const { appearance } = useGuiStyle()
 
@@ -115,7 +122,7 @@ const App = React.memo(function App() {
               secondary={
                 !selectedVote && (
                   <>
-                    {account && !voterStatus.loading && (
+                    {account && !voterStatus.loading && showDelegateButton && (
                       <Button
                         mode="normal"
                         onClick={() =>

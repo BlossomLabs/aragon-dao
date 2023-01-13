@@ -55,8 +55,11 @@ const reduceVotes = (votes = []) => {
 function VotingProvider({ children }) {
   const { connectedApp } = useConnectedApp()
   const [votes, setVotes] = useState([])
+  const [representativeManager, status] = useConnect(
+    () => connectedApp?._app.ethersContract().representativeManager(),
+    [connectedApp]
+  )
   const mounted = useMounted()
-
   const [connectVotes] = useConnect(() => {
     return connectedApp?.onVotes()
   }, [connectedApp])
@@ -68,10 +71,13 @@ function VotingProvider({ children }) {
     }
   }, [connectVotes, mounted])
 
+  const loading = status.loading
+
   return (
     <VotingContext.Provider
       value={{
         isSyncing: false,
+        loading,
         ready: true,
         tokenAddress: '0x67E48c61836af5578dC3baCb95B69F225d121637', // TODO- Super ugly get it from the voting settings
         tokenDecimals: new BN(18),
@@ -84,6 +90,7 @@ function VotingProvider({ children }) {
           tokenDecimals: tokenDecimalsNum,
         },
         votes: votes,
+        representativeManager,
       }}
     >
       {children}
