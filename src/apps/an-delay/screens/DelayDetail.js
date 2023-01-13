@@ -27,6 +27,7 @@ import DelayActionScreens from '../components/ModalFlows/DelayActionScreens'
 import { useWallet } from '@/providers/Wallet'
 import LoadingSection from '@/components/Loading/LoadingSection'
 import { formatTime } from '@/utils/time-utils'
+import DelayHeader from '../components/DelayHeader'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
@@ -50,6 +51,7 @@ const DelayDetailWrapper = ({ match }) => {
 
   return (
     <LayoutLimiter>
+      <DelayHeader />
       <Bar>
         <BackButton onClick={() => navigate('../')} />
       </Bar>
