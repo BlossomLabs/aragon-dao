@@ -1,33 +1,29 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useConnect } from '@1hive/connect-react'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useContractReadOnly, getContract } from '@/hooks/shared/useContract'
-import { getAppByName } from '@/utils/app-utils'
+import { useMounted } from '@/hooks/shared/useMounted'
 import BN from 'bn.js'
 
 import vaultBalanceAbi from '../abi/vault-balance.json'
 import minimeTokenAbi from '@/abi/minimeToken.json'
-import { useMounted } from '@/hooks/shared/useMounted'
 
-const VAULT_NAME = 'agent'
 const INITIAL_TIMER = 2000
 
 const CHAIN_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const cachedContracts = new Map([])
 
-const getContractInstance = tokenAddress => {
-  if (cachedContracts.has(tokenAddress)) {
-    return cachedContracts.get(tokenAddress)
+const getContractInstance = (address, abi) => {
+  if (cachedContracts.has(address)) {
+    return cachedContracts.get(address)
   }
-  const tokenContract = getContract(tokenAddress, minimeTokenAbi)
-  cachedContracts.set(tokenContract)
-  return tokenContract
+  const contract = getContract(address, abi)
+  cachedContracts.set(contract)
+  return contract
 }
 
 const useBalances = (timeout = 7000) => {
-  const { apps } = useOrganizationState()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const [tokenBalances = [], { loading, error }] = useConnect(
     () => connectedFinanceApp?.onBalance(),
@@ -38,12 +34,27 @@ const useBalances = (timeout = 7000) => {
   const [tokenWithBalance, setTokenWithBalance] = useState([])
   const [loadingBalances, setLoadingBalances] = useState(true)
 
+  const vaultAddress = useRef()
+
   const chainId = 100 // TODO HANDLE CHAINS
-  const vaultContract = useContractReadOnly(
-    getAppByName(apps, VAULT_NAME).address,
-    vaultBalanceAbi,
+
+  const financeContract = useContractReadOnly(
+    connectedFinanceApp?.address,
+    connectedFinanceApp?._app.abi,
     chainId
   )
+
+  useEffect(() => {
+    if (!financeContract) {
+      return
+    }
+    const getVaultContract = async () => {
+      const vaultAddr = await financeContract.vault()
+      vaultAddress.current = vaultAddr
+      getContractInstance(vaultAddress, vaultBalanceAbi)
+    }
+    getVaultContract()
+  }, [financeContract])
 
   useEffect(() => {
     if (!tokenBalances?.length || !mounted) {
@@ -53,7 +64,10 @@ const useBalances = (timeout = 7000) => {
       try {
         const tokensWithData = await Promise.all(
           tokenBalances.map(async tokenBalance => {
-            const tokenContract = getContractInstance(tokenBalance.token)
+            const tokenContract = getContractInstance(
+              tokenBalance.token,
+              minimeTokenAbi
+            )
 
             let decimals
             let symbol
@@ -87,9 +101,14 @@ const useBalances = (timeout = 7000) => {
   }, [mounted, tokenBalances])
 
   useEffect(() => {
-    if (!vaultContract) {
+    if (!vaultAddress.current) {
       return
     }
+
+    const vaultContract = getContractInstance(
+      vaultAddress?.current,
+      vaultBalanceAbi
+    )
 
     let cancelled = false
     let timeoutId
@@ -125,7 +144,7 @@ const useBalances = (timeout = 7000) => {
       cancelled = true
       window.clearTimeout(timeoutId)
     }
-  }, [timeout, tokenData, vaultContract])
+  }, [timeout, tokenData])
 
   const balancesKey = tokenWithBalance
     .map(token => token.balance.toString())
