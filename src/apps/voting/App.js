@@ -46,8 +46,11 @@ const App = React.memo(function App() {
     selectedVote,
     votes,
   } = useAppLogic()
+  const { voter, voterStatus } = useVoterState()
   const { representativeManager } = useAppState()
   const showDelegateButton =
+    account &&
+    !voterStatus.loading &&
     !!representativeManager &&
     addressesEqual(representativeManager, constants.AddressZero)
 
@@ -55,8 +58,6 @@ const App = React.memo(function App() {
 
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
-
-  const { voter, voterStatus } = useVoterState()
 
   const handleShowModal = useCallback(mode => {
     setModalVisible(true)
@@ -122,7 +123,7 @@ const App = React.memo(function App() {
               secondary={
                 !selectedVote && (
                   <>
-                    {account && !voterStatus.loading && showDelegateButton && (
+                    {showDelegateButton && (
                       <Button
                         mode="normal"
                         onClick={() =>

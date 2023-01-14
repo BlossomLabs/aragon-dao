@@ -71,13 +71,11 @@ function VotingProvider({ children }) {
     }
   }, [connectVotes, mounted])
 
-  const loading = status.loading
-
   return (
     <VotingContext.Provider
       value={{
         isSyncing: false,
-        loading,
+        loading: status.loading,
         ready: true,
         tokenAddress: '0x67E48c61836af5578dC3baCb95B69F225d121637', // TODO- Super ugly get it from the voting settings
         tokenDecimals: new BN(18),
