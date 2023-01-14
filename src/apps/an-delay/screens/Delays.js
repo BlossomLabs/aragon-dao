@@ -17,6 +17,7 @@ import { useDelayedScripts } from '../hooks/useDelayedScripts'
 import useFilterDelays from '../hooks/useFilterDelays'
 import NoDelays from './NoDelays'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
+import DelayHeader from '../components/DelayHeader'
 
 const classifyDelays = delays => {
   const ongoingDelays = delays.filter(delay => delay.status === STATUS.ONGOING)
@@ -108,6 +109,7 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
 
   return (
     <React.Fragment>
+      <DelayHeader />
       {layoutName !== 'small' && (
         <Bar>
           <div

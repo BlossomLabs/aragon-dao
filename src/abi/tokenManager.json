@@ -1,0 +1,32 @@
+[
+  {
+    "constant": false,
+    "inputs": [{ "name": "_evmScript", "type": "bytes" }],
+    "name": "forward",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "token",
+    "outputs": [{ "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      { "name": "_sender", "type": "address" },
+      { "name": "", "type": "bytes" }
+    ],
+    "name": "canForward",
+    "outputs": [{ "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
