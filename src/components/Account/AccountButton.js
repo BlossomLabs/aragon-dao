@@ -8,7 +8,7 @@ import {
   RADIUS,
   textStyle,
   useTheme,
-  useLayout,
+  useViewport,
 } from '@aragon/ui'
 import { useWallet } from 'use-wallet'
 import { shortenAddress } from '@/utils/web3-utils'
@@ -17,8 +17,8 @@ function AccountButton({ onClick }) {
   const theme = useTheme()
   const wallet = useWallet()
 
-  const { layoutName } = useLayout()
-  const compactMode = layoutName === 'small'
+  const { below } = useViewport()
+  const compactMode = below('medium')
 
   return (
     <ButtonBase
