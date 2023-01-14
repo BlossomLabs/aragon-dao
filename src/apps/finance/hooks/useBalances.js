@@ -7,7 +7,6 @@ import BN from 'bn.js'
 
 import vaultBalanceAbi from '../abi/vault-balance.json'
 import minimeTokenAbi from '@/abi/minimeToken.json'
-import financeAbi from '../abi/Finance.json'
 
 const INITIAL_TIMER = 2000
 
@@ -41,7 +40,7 @@ const useBalances = (timeout = 7000) => {
 
   const financeContract = useContractReadOnly(
     connectedFinanceApp?.address,
-    financeAbi,
+    connectedFinanceApp?._app.abi,
     chainId
   )
 
