@@ -4,20 +4,21 @@ import {
   GU,
   Link,
   IconExternal,
-  useLayout,
   useTheme,
   unselectable,
+  useViewport,
+  IconMenu,
+  ButtonIcon,
 } from '@aragon/ui'
 import HeaderLogo from './HeaderLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
-import LayoutLimiter from '../Layout/LayoutLimiter'
 import AccountModule from '../Account/AccountModule'
 
-function Header({ ...props }) {
+function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
   const history = useHistory()
-  const { layoutName } = useLayout()
-  const compactMode = layoutName === 'small'
+  const { below } = useViewport()
+  const compactMode = below('medium')
 
   const handleLogoClick = useCallback(() => {
     history.push('/')
@@ -47,9 +48,18 @@ function Header({ ...props }) {
               align-items: center;
             `}
           >
-            <Link onClick={handleLogoClick}>
-              <HeaderLogo />
-            </Link>
+            <div
+              css={`
+                margin-left: ${1 * GU}px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              `}
+            >
+              <Link onClick={handleLogoClick}>
+                <HeaderLogo />
+              </Link>
+            </div>
             <nav
               css={`
                 display: inline-grid;
@@ -84,7 +94,22 @@ function Header({ ...props }) {
             </nav>
           </div>
 
-          <AccountModule />
+          <div
+            css={`
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: ${2 * GU}px;
+              margin-right: ${1 * GU}px;
+            `}
+          >
+            <AccountModule />
+            {showMenu && (
+              <ButtonIcon label="Open menu" onClick={onMenuClick}>
+                <IconMenu />
+              </ButtonIcon>
+            )}
+          </div>
         </div>
       </LayoutGutter>
     </header>
