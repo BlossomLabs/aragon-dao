@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Split, SyncIndicator } from '@aragon/ui'
+import { SyncIndicator } from '@aragon/ui'
 import {
   TokenWrapperProvider,
   useAppState,
@@ -10,6 +10,7 @@ import Holders from './screens/Holders'
 import AppHeader from './components/AppHeader'
 import InfoBox from './components/InfoBox'
 import WrapTokenScreens from './components/ModalFlows/WrapTokenScreens/WrapTokenScreens'
+import LayoutColumns from '@/components/Layout/LayoutColumns'
 
 function App() {
   const [modalMode, setModalMode] = useState(null)
@@ -43,7 +44,7 @@ function App() {
         onWrapHolder={showHolders ? handleWrapToken : null}
         tokenSymbol={wrappedToken && wrappedToken.symbol}
       />
-      <Split
+      <LayoutColumns
         primary={
           showHolders ? (
             <Holders
