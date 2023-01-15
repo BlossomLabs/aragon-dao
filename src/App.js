@@ -65,7 +65,9 @@ function App() {
                 autoClosing={autoClosingPanel}
                 opened={menuPanelOpen}
                 onMenuPanelClose={() => setMenuPanelOpen(false)}
-                onOpenApp={() => setMenuPanelOpen(false)}
+                onOpenApp={() =>
+                  autoClosingPanel ? setMenuPanelOpen(false) : undefined
+                }
                 css="z-index: 3"
               />
 
