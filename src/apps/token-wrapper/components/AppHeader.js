@@ -2,21 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   Button,
-  Header,
   IconPlus,
   Tag,
   textStyle,
-  useLayout,
   useTheme,
   GU,
+  useViewport,
 } from '@aragon/ui'
+import InnerAppHeader from '@/components/AppHeader'
 
 const AppHeader = React.memo(function AppHeader({ tokenSymbol, onWrapHolder }) {
   const theme = useTheme()
-  const { layoutName } = useLayout()
+  const { below } = useViewport()
+  const compactMode = below('medium')
 
   return (
-    <Header
+    <InnerAppHeader
       primary={
         <div
           css={`
@@ -28,7 +29,7 @@ const AppHeader = React.memo(function AppHeader({ tokenSymbol, onWrapHolder }) {
         >
           <h1
             css={`
-              ${textStyle(layoutName === 'small' ? 'title3' : 'title2')};
+              ${textStyle(compactMode ? 'title3' : 'title2')};
               flex: 0 1 auto;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -51,7 +52,7 @@ const AppHeader = React.memo(function AppHeader({ tokenSymbol, onWrapHolder }) {
             label="Wrap tokens"
             icon={<IconPlus />}
             onClick={onWrapHolder}
-            display={layoutName === 'small' ? 'icon' : 'label'}
+            display={compactMode ? 'icon' : 'label'}
           />
         )
       }

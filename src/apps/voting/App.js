@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import {
   Button,
-  Header,
   GU,
   IconPlus,
   IconToken,
@@ -26,6 +25,7 @@ import CreateVoteScreens from './components/ModalFlows/NewVote/CreateVoteScreens
 import { useAppState } from './providers/VotingProvider'
 import { addressesEqual } from '@/utils/web3-utils'
 import { constants } from 'ethers'
+import AppHeader from '@/components/AppHeader'
 
 const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
 
@@ -115,7 +115,7 @@ const App = React.memo(function App() {
         {votes.length > 0 && (
           <React.Fragment>
             <SyncIndicator visible={isSyncing} shift={50} />
-            <Header
+            <AppHeader
               primary="Voting"
               secondary={
                 !selectedVote && (
