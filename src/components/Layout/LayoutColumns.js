@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useLayout, GU } from '@aragon/ui'
+import { GU, useViewport } from '@aragon/ui'
 
 function LayoutColumns({ primary, secondary, inverted }) {
-  const { layoutName } = useLayout()
-  const oneColumn = layoutName === 'small' || layoutName === 'medium'
+  const { below } = useViewport()
+  const oneColumn = below('large')
 
   const primaryContent = (
     <div

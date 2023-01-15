@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from 'react'
-import { Main, Split, SyncIndicator } from '@aragon/ui'
+import { Split, SyncIndicator } from '@aragon/ui'
 import {
   TokenWrapperProvider,
   useAppState,
 } from './providers/TokenWrapperProvider'
 import MultiModal from '@/components/MultiModal/MultiModal'
-import { useGuiStyle } from '@/hooks/shared'
 import NoWrappedTokens from './screens/NoWrappedTokens'
 import Holders from './screens/Holders'
 import AppHeader from './components/AppHeader'
@@ -15,7 +14,6 @@ import WrapTokenScreens from './components/ModalFlows/WrapTokenScreens/WrapToken
 function App() {
   const [modalMode, setModalMode] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
-  const { appearance } = useGuiStyle()
   const { depositedToken, holders, isSyncing, wrappedToken } = useAppState()
 
   const appStateReady = depositedToken.id && wrappedToken.id
@@ -39,7 +37,7 @@ function App() {
   }, [])
 
   return (
-    <Main theme={appearance}>
+    <>
       {showHolders && <SyncIndicator visible={isSyncing} />}
       <AppHeader
         onWrapHolder={showHolders ? handleWrapToken : null}
@@ -76,7 +74,7 @@ function App() {
       >
         <WrapTokenScreens mode={modalMode} />
       </MultiModal>
-    </Main>
+    </>
   )
 }
 

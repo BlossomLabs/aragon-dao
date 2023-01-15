@@ -48,7 +48,7 @@ const HomeScreen = () => {
   )
 
   return (
-    <div>
+    <>
       <div
         css={`
           position: absolute;
@@ -98,7 +98,7 @@ const HomeScreen = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

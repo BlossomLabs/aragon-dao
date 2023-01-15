@@ -1,13 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useLayout, GU } from '@aragon/ui'
+import { GU, useViewport } from '@aragon/ui'
 
 function LayoutGutter({ children, collapseWhenSmall, ...props }) {
-  const { layoutName } = useLayout()
-
+  const { below } = useViewport()
+  const compactMode = below('medium')
   const smallPaddingAmount = collapseWhenSmall ? 0 : 2 * GU
-  const paddingAmount =
-    layoutName === 'small' ? `${smallPaddingAmount}px` : '1%'
+  const paddingAmount = compactMode ? `${smallPaddingAmount}px` : '1%'
 
   return (
     <div

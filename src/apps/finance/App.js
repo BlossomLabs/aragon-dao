@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { GU, Button, Header, IconPlus, Main } from '@aragon/ui'
-import { useGuiStyle } from '@/hooks/shared'
+import { GU, Button, Header, IconPlus } from '@aragon/ui'
 import Balances from './components/Balances'
 import Transfers from './components/Transfers'
 import useBalances from './hooks/useBalances'
@@ -58,11 +57,4 @@ const App = () => {
   )
 }
 
-export default function FinanceApp() {
-  const { appearance } = useGuiStyle()
-  return (
-    <Main theme={appearance} assetsUrl="./aragon-ui">
-      <App />
-    </Main>
-  )
-}
+export default App

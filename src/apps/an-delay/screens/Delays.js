@@ -4,10 +4,10 @@ import {
   CardLayout,
   DropDown,
   GU,
-  useLayout,
   useTheme,
   Tag,
   textStyle,
+  useViewport,
 } from '@aragon/ui'
 
 import STATUS from '../delay-status-types'
@@ -95,7 +95,9 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
     handleClearFilters,
   } = useFilterDelays(delays, executionTargetApps)
 
-  const { layoutName } = useLayout()
+  const { below } = useViewport()
+  const compactMode = below('medium')
+
   const theme = useTheme()
 
   const { ongoingDelays, pausedDelays, pendingDelays } = classifyDelays(
@@ -110,7 +112,7 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
   return (
     <React.Fragment>
       <DelayHeader />
-      {layoutName !== 'small' && (
+      {!compactMode && (
         <Bar>
           <div
             css={`
@@ -211,8 +213,8 @@ const ThisApp = ({ showTag }) => (
 )
 
 const DelayGroups = ({ ongoingDelays, pausedDelays, pendingDelays }) => {
-  const { layoutName } = useLayout()
-  const compactMode = layoutName === 'small'
+  const { below } = useViewport()
+  const compactMode = below('medium')
   const rowHeight = compactMode ? null : 240
 
   const groups = [

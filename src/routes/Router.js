@@ -6,16 +6,22 @@ import ANDelayRouter from '../apps/an-delay/routes/Router'
 import VotingRouter from '../apps/voting/routes/Router'
 import TokenWrapperRouter from '../apps/token-wrapper/routes/Router'
 import HomeScreen from '../components/HomeScreen'
+import LayoutGutter from '@/components/Layout/LayoutGutter'
+import LayoutLimiter from '@/components/Layout/LayoutLimiter'
 
 function Router() {
   return (
-    <Switch>
-      <Route exact path="/" component={HomeScreen} />
-      <Route path="/delay" component={ANDelayRouter} />
-      <Route path="/finance" component={FinanceRouter} />
-      <Route path="/voting" component={VotingRouter} />
-      <Route path="/wrapper" component={TokenWrapperRouter} />
-    </Switch>
+    <LayoutGutter>
+      <LayoutLimiter>
+        <Switch>
+          <Route exact path="/" component={HomeScreen} />
+          <Route path="/delay" component={ANDelayRouter} />
+          <Route path="/finance" component={FinanceRouter} />
+          <Route path="/voting" component={VotingRouter} />
+          <Route path="/wrapper" component={TokenWrapperRouter} />
+        </Switch>
+      </LayoutLimiter>
+    </LayoutGutter>
   )
 }
 

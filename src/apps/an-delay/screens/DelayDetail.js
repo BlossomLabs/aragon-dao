@@ -7,8 +7,8 @@ import {
   Split,
   textStyle,
   Timer,
-  useLayout,
   useTheme,
+  useViewport,
 } from '@aragon/ui'
 import { ErrorNotFound } from '@1hive/connect-react'
 import DelayActions from '../components/DelayActions'
@@ -71,7 +71,8 @@ const DelayDetail = React.memo(({ delay, path }) => {
   const [, setModalMode] = useState(null)
   const [delayAction, setDelayAction] = useState()
   const theme = useTheme()
-  const { layoutName } = useLayout()
+  const { below } = useViewport()
+  const compactMode = below('large')
 
   const { id, creator, executionTargetData } = delay
 
@@ -105,10 +106,10 @@ const DelayDetail = React.memo(({ delay, path }) => {
               <div
                 css={`
                   display: grid;
-                  grid-template-columns: ${layoutName === 'large'
+                  grid-template-columns: ${!compactMode
                     ? '1fr minmax(300px, auto)'
                     : 'auto'};
-                  grid-gap: ${layoutName === 'large' ? 5 * GU : 2.5 * GU}px;
+                  grid-gap: ${!compactMode ? 5 * GU : 2.5 * GU}px;
                 `}
               >
                 <div>
