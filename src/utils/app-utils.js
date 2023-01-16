@@ -1,4 +1,4 @@
-import { APPS_ROUTING } from '@/constants'
+import { APPS_ROUTING, APP_CUSTOM_NAME } from '@/constants'
 import { getIpfsUrlFromUri } from '../utils/ipfs-utils'
 
 export function getAppPresentationByAddress(apps, appAddress) {
@@ -14,7 +14,7 @@ export function getAppPresentation(app) {
     const iconPath = icons && icons[0].src
 
     return {
-      humanName,
+      humanName: APP_CUSTOM_NAME.get(humanName) || humanName,
       iconSrc: iconPath ? getIpfsUrlFromUri(contentUri) + iconPath : '',
       name,
       appName: app.name,

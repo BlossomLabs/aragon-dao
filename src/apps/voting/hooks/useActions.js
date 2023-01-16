@@ -1,9 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import { noop } from '@aragon/ui'
 import { utils } from 'ethers'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
-import { getAppByName } from '@/utils/app-utils'
 import radspec from '@/radspec'
 import votingActions from '../actions/voting-action-types'
 
@@ -13,8 +12,7 @@ const GAS_LIMIT = 550000
 
 export default function useActions() {
   const { account, ethers } = useWallet()
-  const { apps: installedApps } = useOrganizationState()
-  const votingApp = getAppByName(installedApps, 'blossom-tao-voting') // TODO move the app name to an env variable
+  const { connectedApp: votingApp } = useConnectedApp()
 
   const delegateVoting = useCallback(
     async (representative, onDone = noop) => {
