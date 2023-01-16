@@ -81,7 +81,6 @@ export default function useActions() {
       )
 
       // intent = imposeGasLimit(intent, WRAP_GAS_LIMIT)
-
       const description = radspec[financeActions.WITHDRAW]()
 
       const transactions = attachTrxMetadata(

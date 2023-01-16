@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { ButtonBase, GU, useTheme } from '@aragon/ui'
 import { utils } from 'ethers'
+import { APPS_PANEL_INSTANCE_NAMES } from '@/constants'
 
 export const MENU_PANEL_APP_INSTANCE_HEIGHT = 4 * GU
 
@@ -40,7 +41,11 @@ const MenuPanelAppInstance = React.memo(function MenuPanelAppInstance({
           text-overflow: ellipsis;
         `}
       >
-        {utils.isAddress(name) ? shortenAddress(name) : name}
+        {APPS_PANEL_INSTANCE_NAMES.get(name)
+          ? APPS_PANEL_INSTANCE_NAMES.get(name)
+          : utils.isAddress(name)
+          ? shortenAddress(name)
+          : name}
       </span>
     </ButtonBase>
   )
