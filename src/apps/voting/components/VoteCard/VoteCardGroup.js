@@ -5,14 +5,14 @@ import {
   GU,
   textStyle,
   unselectable,
-  useLayout,
   useTheme,
+  useViewport,
 } from '@aragon/ui'
 
 const VoteCardGroup = ({ title, count, children }) => {
   const theme = useTheme()
-  const { layoutName } = useLayout()
-  const compactMode = layoutName === 'small'
+  const { below } = useViewport()
+  const compactMode = below('medium')
   const rowHeight = compactMode ? null : 294
 
   return (

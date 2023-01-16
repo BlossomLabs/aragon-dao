@@ -7,8 +7,8 @@ import {
   Link,
   Tag,
   textStyle,
-  useLayout,
   useTheme,
+  useViewport,
 } from '@aragon/ui'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import LayoutBox from '@/components/Layout/LayoutBox'
@@ -182,9 +182,9 @@ function Details({
 }) {
   const { context, creator } = vote
 
-  const { layoutName } = useLayout()
+  const { above } = useViewport()
 
-  const twoColumnMode = layoutName === 'max'
+  const twoColumnMode = above('medium')
 
   const justificationUrl = useMemo(
     () => (context.startsWith('ipfs') ? getIpfsUrlFromUri(context) : null),

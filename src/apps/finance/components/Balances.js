@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 // import BN from 'bn.js'
-import { Box, GU, textStyle, useTheme, useLayout } from '@aragon/ui'
+import { Box, GU, textStyle, useTheme, useViewport } from '@aragon/ui'
 import BalanceToken from './BalanceToken'
 // import { getConvertedAmount } from '../lib/conversion-utils'
 // import { useConvertRates } from './useConvertRates'
@@ -38,10 +38,10 @@ import useBalances from '../hooks/useBalances'
 
 function Balances({ tokenBalances, loading }) {
   const theme = useTheme()
-  const { layoutName } = useLayout()
+  const { below } = useViewport()
   // const balanceItems = useBalanceItems(balances)
 
-  const compact = layoutName === 'small'
+  const compact = below('medium')
 
   return (
     <div>

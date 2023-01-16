@@ -1,14 +1,13 @@
 import React, { useCallback } from 'react'
-import { Card, textStyle, GU, useLayout } from '@aragon/ui'
+import { Card, textStyle, GU, useViewport } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import becomeDelegate from '../../../assets/becomeDelegate.svg'
 import voteDelegate from '../../../assets/voteDelegate.svg'
 
 function DelegateInitialScreen({ onChooseAction }) {
-  const { layoutName } = useLayout()
+  const { above } = useViewport()
   const { next } = useMultiModal()
-  const multiColumnsMode =
-    layoutName === 'max' || layoutName === 'medium' || layoutName === 'large'
+  const multiColumnsMode = above('small')
 
   const handleOnChooseAction = useCallback(
     option => {
