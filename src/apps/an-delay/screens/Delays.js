@@ -95,9 +95,6 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
     handleClearFilters,
   } = useFilterDelays(delays, executionTargetApps)
 
-  const { below } = useViewport()
-  const compactMode = below('medium')
-
   const theme = useTheme()
 
   const { ongoingDelays, pausedDelays, pendingDelays } = classifyDelays(
@@ -112,69 +109,67 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
   return (
     <React.Fragment>
       <DelayHeader />
-      {!compactMode && (
-        <Bar>
-          <div
-            css={`
-              height: ${8 * GU}px;
-              display: grid;
-              grid-template-columns: auto auto auto 1fr;
-              grid-gap: ${1 * GU}px;
-              align-items: center;
-              padding-left: ${3 * GU}px;
-            `}
-          >
-            <DropDown
-              header="Status"
-              placeholder="Status"
-              selected={delayStatusFilter}
-              onChange={handleDelayStatusFilterChange}
-              items={[
-                <div>
-                  All
-                  <span
-                    css={`
-                      margin-left: ${1.5 * GU}px;
-                      display: inline-flex;
-                      align-items: center;
-                      justify-content: center;
-                      color: ${theme.info};
-                      ${textStyle('label3')};
-                    `}
-                  >
-                    <Tag limitDigits={4} label={delays.length} size="small" />
-                  </span>
-                </div>,
-                'Ongoing',
-                'Paused',
-                'Pending',
-              ]}
-              width="128px"
-            />
+      <Bar>
+        <div
+          css={`
+            height: ${8 * GU}px;
+            display: grid;
+            grid-template-columns: auto auto auto 1fr;
+            grid-gap: ${1 * GU}px;
+            align-items: center;
+            padding-left: ${3 * GU}px;
+          `}
+        >
+          <DropDown
+            header="Status"
+            placeholder="Status"
+            selected={delayStatusFilter}
+            onChange={handleDelayStatusFilterChange}
+            items={[
+              <div>
+                All
+                <span
+                  css={`
+                    margin-left: ${1.5 * GU}px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: ${theme.info};
+                    ${textStyle('label3')};
+                  `}
+                >
+                  <Tag limitDigits={4} label={delays.length} size="small" />
+                </span>
+              </div>,
+              'Ongoing',
+              'Paused',
+              'Pending',
+            ]}
+            width="128px"
+          />
 
-            <DropDown
-              header="App"
-              placeholder="App"
-              selected={delayAppFilter}
-              onChange={handleDelayAppFilterChange}
-              items={[
-                'All',
-                <ThisApp showTag={multipleOfTarget.get('Delay')} />,
-                ...executionTargetApps.map(
-                  ({ name, identifier }) =>
-                    `${name}${
-                      multipleOfTarget.get(name) && identifier
-                        ? ` (${identifier})`
-                        : ''
-                    }`
-                ),
-                'External',
-              ]}
-              width="128px"
-            />
-          </div>
-        </Bar>
-      )}
+          <DropDown
+            header="App"
+            placeholder="App"
+            selected={delayAppFilter}
+            onChange={handleDelayAppFilterChange}
+            items={[
+              'All',
+              <ThisApp showTag={multipleOfTarget.get('Delay')} />,
+              ...executionTargetApps.map(
+                ({ name, identifier }) =>
+                  `${name}${
+                    multipleOfTarget.get(name) && identifier
+                      ? ` (${identifier})`
+                      : ''
+                  }`
+              ),
+              'External',
+            ]}
+            width="128px"
+          />
+        </div>
+      </Bar>
 
       <React.Fragment>
         {!filteredDelays.length ? (

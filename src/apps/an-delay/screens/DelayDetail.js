@@ -4,7 +4,6 @@ import {
   Bar,
   Box,
   GU,
-  Split,
   textStyle,
   Timer,
   useTheme,
@@ -28,6 +27,7 @@ import { useWallet } from '@/providers/Wallet'
 import LoadingSection from '@/components/Loading/LoadingSection'
 import { formatTime } from '@/utils/time-utils'
 import DelayHeader from '../components/DelayHeader'
+import LayoutColumns from '@/components/Layout/LayoutColumns'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
@@ -78,7 +78,7 @@ const DelayDetail = React.memo(({ delay, path }) => {
 
   return (
     <>
-      <Split
+      <LayoutColumns
         primary={
           <Box>
             <LocalLabelAppBadge
