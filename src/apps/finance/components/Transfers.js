@@ -27,7 +27,6 @@ import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBad
 import TransfersFilters from './TransfersFilters'
 import NoTransfers from './NoTransfers'
 import { addressesEqual, toChecksumAddress } from '@/utils/web3-utils'
-import useBalances from '../hooks/useBalances'
 
 const formatDate = date => format(date, 'yyyy-MM-dd')
 
@@ -45,7 +44,6 @@ const formatDate = date => format(date, 'yyyy-MM-dd')
 const TransfersWrapper = ({ tokens }) => {
   const [transactions, { loading: isSyncing }] = useTransactions()
 
-  const syncing = isSyncing
   return (
     <div
       css={`
@@ -55,15 +53,13 @@ const TransfersWrapper = ({ tokens }) => {
       <Transfers
         tokens={tokens}
         transactions={transactions}
-        isSyncing={syncing}
+        isSyncing={isSyncing}
       />
     </div>
   )
 }
 
 const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
-  // const { appState } = useAragonApi()
-
   const { account: connectedAccount } = useWallet()
   // const currentApp = useCurrentApp()
   const { above, below } = useViewport()
