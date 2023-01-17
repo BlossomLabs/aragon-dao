@@ -8,6 +8,7 @@ import TokenWrapperRouter from '../apps/token-wrapper/routes/Router'
 import HomeScreen from '../components/HomeScreen'
 import LayoutGutter from '@/components/Layout/LayoutGutter'
 import LayoutLimiter from '@/components/Layout/LayoutLimiter'
+import App404 from '@/components/App404'
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
           <Route path="/finance" component={FinanceRouter} />
           <Route path="/voting" component={VotingRouter} />
           <Route path="/wrapper" component={TokenWrapperRouter} />
+          <Route path="*" component={App404} />
         </Switch>
       </LayoutLimiter>
     </LayoutGutter>
