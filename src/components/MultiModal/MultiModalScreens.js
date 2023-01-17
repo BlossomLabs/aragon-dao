@@ -6,12 +6,12 @@ import {
   IconCross,
   Modal,
   textStyle,
-  useLayout,
   useTheme,
   Viewport,
   RADIUS,
   Root,
   GU,
+  useViewport,
 } from '@aragon/ui'
 import logoMarkOverlay from '../../assets/logo-mark-overlay.svg'
 import { MultiModalProvider, useMultiModal } from './MultiModalProvider'
@@ -136,9 +136,9 @@ const MultiModalContent = React.memo(function ModalContent({ viewportWidth }) {
   const [applyStaticHeight, setApplyStaticHeight] = useState(false)
   const [height, setHeight] = useState(null)
   const [animationDisabled, enableAnimation] = useDisableAnimation()
-  const { layoutName } = useLayout()
+  const { below } = useViewport()
 
-  const smallMode = layoutName === 'small'
+  const smallMode = below('medium')
 
   const onStart = useCallback(() => {
     enableAnimation()

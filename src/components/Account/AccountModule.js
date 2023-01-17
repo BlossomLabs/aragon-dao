@@ -25,7 +25,7 @@ function AccountModule() {
   const { account, connector, error, status } = wallet
 
   const open = useCallback(() => setOpened(true), [])
-  const toggle = useCallback(() => setOpened((opened) => !opened), [])
+  const toggle = useCallback(() => setOpened(opened => !opened), [])
 
   useEffect(() => {
     if (status === 'error') {
@@ -41,17 +41,16 @@ function AccountModule() {
     wallet.reset()
   }, [wallet])
 
-  const handleActivate = useCallback(
-    (providerId) => wallet.connect(providerId),
-    [wallet]
-  )
+  const handleActivate = useCallback(providerId => wallet.connect(providerId), [
+    wallet,
+  ])
 
   const previousScreenIndex = useRef(-1)
 
   const { screenIndex, direction } = useMemo(() => {
     const screenId = status === 'disconnected' ? 'providers' : status
 
-    const screenIndex = SCREENS.findIndex((screen) => screen.id === screenId)
+    const screenIndex = SCREENS.findIndex(screen => screen.id === screenId)
     const direction = previousScreenIndex.current > screenIndex ? -1 : 1
 
     previousScreenIndex.current = screenIndex

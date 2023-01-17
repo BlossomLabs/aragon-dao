@@ -6,7 +6,7 @@ import {
   GU,
   Info,
   IdentityBadge,
-  useLayout,
+  useViewport,
 } from '@aragon/ui'
 import { useVoterState } from '../../../providers/VoterProvider'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
@@ -14,9 +14,8 @@ import { ZERO_ADDR } from '@/constants'
 
 export default function RevokeDelegation({ onCreateTransaction }) {
   const { voter } = useVoterState()
-  const { layoutName } = useLayout()
-  const multiColumnsMode =
-    layoutName === 'max' || layoutName === 'medium' || layoutName === 'large'
+  const { above } = useViewport()
+  const multiColumnsMode = above('small')
 
   const { prev, next } = useMultiModal()
 

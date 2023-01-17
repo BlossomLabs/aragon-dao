@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react'
-import { Button, GU, textStyle, useLayout, Info } from '@aragon/ui'
+import { Button, GU, textStyle, Info, useViewport } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 
 function BecomeADelegate() {
-  const { layoutName } = useLayout()
-  const multiColumnsMode =
-    layoutName === 'max' || layoutName === 'medium' || layoutName === 'large'
+  const { above } = useViewport()
+  const multiColumnsMode = above('small')
   const { prev } = useMultiModal()
 
   const handleOnBack = useCallback(() => {

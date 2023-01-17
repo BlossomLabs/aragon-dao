@@ -16,7 +16,7 @@ export const MENU_PANEL_WIDTH = 28 * GU
 
 const { div: AnimDiv } = animated
 
-function MenuPanel({ showOrgSwitcher }) {
+function MenuPanel({ showOrgSwitcher, onOpenApp }) {
   const { apps } = useOrganizationState()
   const history = useHistory()
   const location = useLocation()
@@ -29,16 +29,20 @@ function MenuPanel({ showOrgSwitcher }) {
     setActiveInstanceAddress(appAddress)
   }, [location])
 
-  const onOpenApp = useCallback(
+  const handleOpenApp = useCallback(
     (name, address) => {
       if (activeInstaceAddress === address) {
         return
       }
 
+      if (onOpenApp) {
+        onOpenApp()
+      }
+
       setActiveInstanceAddress(address)
       history.push(buildAppRoute(name, address))
     },
-    [activeInstaceAddress, history]
+    [activeInstaceAddress, history, onOpenApp]
   )
 
   const menuApps = useMemo(() => {
@@ -89,14 +93,14 @@ function MenuPanel({ showOrgSwitcher }) {
             icon={icon}
             instances={instances}
             activeInstance={activeInstaceAddress}
-            onActivate={onOpenApp}
+            onActivate={handleOpenApp}
             active={isActive}
             expand={isActive}
           />
         </div>
       )
     },
-    [activeInstaceAddress, onOpenApp]
+    [activeInstaceAddress, handleOpenApp]
   )
 
   return (
@@ -144,7 +148,7 @@ function MenuPanel({ showOrgSwitcher }) {
 function AnimatedMenuPanel({
   autoClosing,
   className,
-  // onMenuPanelClose,
+  onMenuPanelClose,
   opened,
   ...props
 }) {
@@ -186,7 +190,7 @@ function AnimatedMenuPanel({
         >
           {autoClosing && (
             <AnimDiv
-              // onClick={onMenuPanelClose}
+              onClick={onMenuPanelClose}
               css={`
                 position: absolute;
                 height: 100%;

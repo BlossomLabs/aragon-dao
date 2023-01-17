@@ -1,18 +1,19 @@
 import React, { useCallback, useMemo } from 'react'
 import {
-  Bar,
-  DropDown,
+  Box,
+  DropDown as AragonDropdown,
   Tag,
   GU,
   textStyle,
-  useLayout,
   useTheme,
   DateRangePicker,
+  useViewport,
 } from '@aragon/ui'
 import EmptyFilteredVotes from '../components/EmptyFilteredVotes'
 import VoteCard from '../components/VoteCard/VoteCard'
 import VoteCardGroup from '../components/VoteCard/VoteCardGroup'
 import { usePath } from '@/hooks/shared'
+import styled from 'styled-components'
 
 const sortVotes = (a, b) => {
   const dateDiff = b.data.endDate - a.data.endDate
@@ -44,9 +45,10 @@ const Votes = React.memo(function Votes({
   handleVoteDateRangeFilterChange,
   handleClearFilters,
 }) {
+  const { below } = useViewport()
   const theme = useTheme()
-  const { layoutName } = useLayout()
   const { openVotes, closedVotes } = useVotes(filteredVotes)
+  const compactMode = below('large')
 
   const multipleOfTarget = useMemo(
     () =>
@@ -59,93 +61,96 @@ const Votes = React.memo(function Votes({
 
   return (
     <React.Fragment>
-      {layoutName !== 'small' && (
-        <Bar>
-          <div
-            css={`
-              height: ${8 * GU}px;
-              display: grid;
-              grid-template-columns: auto auto auto 1fr;
-              grid-gap: ${1 * GU}px;
-              align-items: center;
-              padding-left: ${3 * GU}px;
-            `}
-          >
-            <DropDown
-              header="Status"
-              placeholder="Status"
-              selected={voteStatusFilter}
-              onChange={handleVoteStatusFilterChange}
-              items={[
-                <div>
-                  All
-                  <span
-                    css={`
-                      margin-left: ${1.5 * GU}px;
-                      display: inline-flex;
-                      align-items: center;
-                      justify-content: center;
-                      color: ${theme.info};
-                      ${textStyle('label3')};
-                    `}
-                  >
-                    <Tag limitDigits={4} label={votes.length} size="small" />
-                  </span>
-                </div>,
-                'Open',
-                'Closed',
-              ]}
-              width="128px"
+      <Box
+        css={`
+          margin-bottom: ${3 * GU}px;
+        `}
+        padding={1.5 * GU}
+      >
+        <div
+          css={`
+            display: flex;
+            gap: ${1 * GU}px;
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+
+            ${Dropdown} {
+              ${compactMode ? 'flex-grow: 1' : 'width: 136px'};
+            }
+          `}
+        >
+          <Dropdown
+            header="Status"
+            placeholder="Status"
+            selected={voteStatusFilter}
+            onChange={handleVoteStatusFilterChange}
+            items={[
+              <div>
+                All
+                <span
+                  css={`
+                    margin-left: ${1.5 * GU}px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: ${theme.info};
+                    ${textStyle('label3')};
+                  `}
+                >
+                  <Tag limitDigits={4} label={votes.length} size="small" />
+                </span>
+              </div>,
+              'Open',
+              'Closed',
+            ]}
+          />
+          {voteStatusFilter === 1 && (
+            <Dropdown
+              header="Trend"
+              placeholder="Trend"
+              selected={voteTrendFilter}
+              onChange={handleVoteTrendFilterChange}
+              items={['All', 'Will pass', 'Won’t pass']}
             />
-            {voteStatusFilter === 1 && (
-              <DropDown
-                header="Trend"
-                placeholder="Trend"
-                selected={voteTrendFilter}
-                onChange={handleVoteTrendFilterChange}
-                items={['All', 'Will pass', 'Won’t pass']}
-                width="128px"
-              />
-            )}
-            {voteStatusFilter !== 1 && (
-              <DropDown
-                header="Outcome"
-                placeholder="Outcome"
-                selected={voteOutcomeFilter}
-                onChange={handleVoteOutcomeFilterChange}
-                items={['All', 'Passed', 'Rejected', 'Enacted', 'Pending']}
-                width="128px"
-              />
-            )}
-            <DropDown
-              header="App"
-              placeholder="App"
-              selected={voteAppFilter}
-              onChange={handleVoteAppFilterChange}
-              items={[
-                'All',
-                <ThisVoting showTag={multipleOfTarget.get('Voting')} />,
-                ...executionTargets.map(
-                  ({ appAddress, name, identifier }) =>
-                    `${name}${
-                      multipleOfTarget.get(appAddress) && identifier
-                        ? ` (${identifier})`
-                        : ''
-                    }`
-                ),
-                'External',
-              ]}
-              width="128px"
+          )}
+          {voteStatusFilter !== 1 && (
+            <Dropdown
+              header="Outcome"
+              placeholder="Outcome"
+              selected={voteOutcomeFilter}
+              onChange={handleVoteOutcomeFilterChange}
+              items={['All', 'Passed', 'Rejected', 'Enacted', 'Pending']}
             />
-            <DateRangePicker
-              startDate={voteDateRangeFilter.start}
-              endDate={voteDateRangeFilter.end}
-              onChange={handleVoteDateRangeFilterChange}
-              format={'YYYY/MM/DD'}
-            />
-          </div>
-        </Bar>
-      )}
+          )}
+          <Dropdown
+            header="App"
+            placeholder="App"
+            selected={voteAppFilter}
+            onChange={handleVoteAppFilterChange}
+            items={[
+              'All',
+              <ThisVoting showTag={multipleOfTarget.get('Voting')} />,
+              ...executionTargets.map(
+                ({ appAddress, name, identifier }) =>
+                  `${name}${
+                    multipleOfTarget.get(appAddress) && identifier
+                      ? ` (${identifier})`
+                      : ''
+                  }`
+              ),
+              'External',
+            ]}
+          />
+          <DateRangePicker
+            startDate={voteDateRangeFilter.start}
+            endDate={voteDateRangeFilter.end}
+            onChange={handleVoteDateRangeFilterChange}
+            format={'YYYY/MM/DD'}
+          />
+        </div>
+      </Box>
+
       {!filteredVotes.length ? (
         <EmptyFilteredVotes onClear={handleClearFilters} />
       ) : (
@@ -211,5 +216,11 @@ const VoteGroups = React.memo(({ openVotes, closedVotes }) => {
     </React.Fragment>
   )
 })
+
+/**
+ * Wrap the dropdown in a styled component to be able to reference it
+ * with the styled component selector (https://styled-components.com/docs/advanced#referring-to-other-components)
+ */
+const Dropdown = styled(AragonDropdown)``
 
 export default Votes

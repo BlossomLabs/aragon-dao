@@ -1,11 +1,12 @@
 import React from 'react'
-import { textStyle, useLayout, unselectable, useTheme, GU } from '@aragon/ui'
+import { textStyle, unselectable, useTheme, GU, useViewport } from '@aragon/ui'
 import headerLogoSvg from '../../assets/aragonNetworkLogo.svg'
 
 function HeaderLogo() {
   const theme = useTheme()
-  const { layoutName } = useLayout()
-  const compactMode = layoutName === 'small'
+  const { below } = useViewport()
+  const compactMode = below('medium')
+
   return (
     <div
       css={`

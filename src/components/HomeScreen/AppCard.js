@@ -1,14 +1,17 @@
-import { Card, GU, textStyle } from '@aragon/ui'
+import { Card, GU, textStyle, useViewport } from '@aragon/ui'
 import React from 'react'
 
 const AppCard = ({ name, icon, onClick }) => {
+  const { below } = useViewport()
+  const compactMode = below('large')
+
   return (
     <Card
       css={`
         cursor: pointer;
       `}
-      width="180px"
-      height="200px"
+      height="220px"
+      width={!compactMode ? '220px' : undefined}
       onClick={onClick}
     >
       <div
@@ -24,7 +27,7 @@ const AppCard = ({ name, icon, onClick }) => {
         <div
           title={name}
           css={`
-            ${textStyle('body2')};
+            ${textStyle('title4')};
             max-width: ${17 * GU}px;
             overflow: hidden;
             white-space: nowrap;

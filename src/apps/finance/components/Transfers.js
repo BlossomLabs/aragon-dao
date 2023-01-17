@@ -1,5 +1,4 @@
-import React, { useMemo, useCallback, useContext } from 'react'
-import PropTypes from 'prop-types'
+import React, { useMemo, useCallback } from 'react'
 import { compareDesc, format } from 'date-fns'
 import BN from 'bn.js'
 import {
@@ -14,9 +13,9 @@ import {
   blockExplorerUrl,
   formatTokenAmount,
   textStyle,
-  useLayout,
   useTheme,
   useToast,
+  useViewport,
 } from '@aragon/ui'
 // import { saveAs } from 'file-saver'
 import { useWallet } from '@/providers/Wallet'
@@ -62,7 +61,8 @@ const TransfersWrapper = ({ tokens }) => {
 
 const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
   const { account: connectedAccount } = useWallet()
-  const { layoutName } = useLayout()
+  // const currentApp = useCurrentApp()
+  const { above, below } = useViewport()
   const theme = useTheme()
   // const toast = useToast()
 
@@ -120,7 +120,8 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
   //   toast,
   // ])
 
-  const compactMode = layoutName === 'small'
+  const compactMode = below('medium')
+  const normalMode = above('medium')
 
   const sortedTransfers = useMemo(
     () =>
@@ -231,7 +232,7 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
               ${!compactMode
                 ? `
                     display: inline-flex;
-                    max-width: ${layoutName === 'large' ? 'unset' : '150px'};
+                    max-width: ${normalMode ? 'unset' : '150px'};
                   `
                 : ''};
             `}

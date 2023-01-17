@@ -1,19 +1,17 @@
 import React, { useCallback, useState } from 'react'
 import {
   Button,
-  Header,
   GU,
   IconPlus,
   IconToken,
-  Main,
   SyncIndicator,
   Tabs,
-  useLayout,
+  useViewport,
 } from '@aragon/ui'
+
 import { useVoterState } from './providers/VoterProvider'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelegateVotingScreens from './components/ModalFlows/DelegateVotingScreens/DelegateVotingScreens'
-import { useGuiStyle } from '@/hooks/shared'
 import useFilterVotes from './hooks/useFilterVotes'
 import useScrollTop from './hooks/useScrollTop'
 import NoVotes from './screens/NoVotes'
@@ -27,6 +25,7 @@ import CreateVoteScreens from './components/ModalFlows/NewVote/CreateVoteScreens
 import { useAppState } from './providers/VotingProvider'
 import { addressesEqual } from '@/utils/web3-utils'
 import { constants } from 'ethers'
+import AppHeader from '@/components/AppHeader'
 
 const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
 
@@ -54,10 +53,8 @@ const App = React.memo(function App() {
     !!representativeManager &&
     addressesEqual(representativeManager, constants.AddressZero)
 
-  const { appearance } = useGuiStyle()
-
-  const { layoutName } = useLayout()
-  const compactMode = layoutName === 'small'
+  const { below } = useViewport()
+  const compactMode = below('medium')
 
   const handleShowModal = useCallback(mode => {
     setModalVisible(true)
@@ -98,7 +95,7 @@ const App = React.memo(function App() {
   useScrollTop(selectedVote)
 
   return (
-    <Main theme={appearance} assetsUrl="./aragon-ui">
+    <>
       <React.Fragment>
         {votes.length === 0 && (
           <div
@@ -118,7 +115,7 @@ const App = React.memo(function App() {
         {votes.length > 0 && (
           <React.Fragment>
             <SyncIndicator visible={isSyncing} shift={50} />
-            <Header
+            <AppHeader
               primary="Voting"
               secondary={
                 !selectedVote && (
@@ -196,7 +193,7 @@ const App = React.memo(function App() {
         {modalMode === 'revoke' && <RevokeDelegationScreens />}
         {modalMode === 'newVote' && <CreateVoteScreens />}
       </MultiModal>
-    </Main>
+    </>
   )
 })
 

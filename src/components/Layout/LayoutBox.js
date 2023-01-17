@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Box, useLayout, useTheme, GU } from '@aragon/ui'
+import { Box, useTheme, GU, useViewport } from '@aragon/ui'
 
 function LayoutBox({ children, heading, primary, mode, ...props }) {
-  const { layoutName } = useLayout()
+  const { below } = useViewport()
   const theme = useTheme()
-  const compactMode = layoutName === 'small'
+  const compactMode = below('medium')
 
   const { backgroundColor, borderColor } = useMemo(() => {
     const attributes = {

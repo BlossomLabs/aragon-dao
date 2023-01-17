@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { AppBadge, GU } from '@aragon/ui'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
-import { getAppPresentation, getAppByName } from '@/utils/app-utils'
+import { getAppPresentation } from '@/utils/app-utils'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
+import { useConnectedApp } from '@/providers/ConnectedApp'
+import { shortenAddress } from '@/utils/web3-utils'
 
 function TargetAppBadge({ useDefaultBadge, targetApp, loading }) {
   return (
@@ -19,15 +20,30 @@ function TargetAppBadge({ useDefaultBadge, targetApp, loading }) {
 
 /* eslint-disable react/prop-types */
 function DefaultAppBadge() {
-  const { apps } = useOrganizationState()
-  const disputableVotingApp = getAppByName(apps, 'blossom-tao-voting')
+  const {
+    connectedApp: connectedDisputableVotingApp,
+    connectedAppStatus,
+  } = useConnectedApp()
 
-  const { humanName, iconSrc } = getAppPresentation(disputableVotingApp)
+  if (connectedAppStatus.loading) {
+    return (
+      <LoadingSkeleton
+        css={`
+          height: ${3 * GU}px;
+          width: ${12 * GU}px;
+        `}
+      />
+    )
+  }
+
+  const { humanName, iconSrc } = getAppPresentation(
+    connectedDisputableVotingApp
+  )
 
   return (
     <AppBadge
       label={humanName}
-      appAddress={disputableVotingApp.address}
+      appAddress={shortenAddress(connectedDisputableVotingApp.address)}
       iconSrc={iconSrc}
       badgeOnly
     />
@@ -54,7 +70,7 @@ function AppBadgeWithSkeleton({ targetApp, loading }) {
 
   return (
     <AppBadge
-      label={name || address}
+      label={name || shortenAddress(address)}
       appAddress={address}
       iconSrc={icon}
       badgeOnly

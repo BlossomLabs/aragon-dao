@@ -1,16 +1,14 @@
 import React from 'react'
-import { BackButton, Bar, Header } from '@aragon/ui'
-import LayoutGutter from '@/components/Layout/LayoutGutter'
-import LayoutLimiter from '@/components/Layout/LayoutLimiter'
+import { BackButton, Bar } from '@aragon/ui'
 import LoadingSection from '@/components/Loading/LoadingSection'
 import { SingleVoteSubscriptionProvider } from '../providers/SingleVoteSubscription'
 import VoteDetails from './VoteDetails/VoteDetails'
 import { useSingleVote } from '../hooks/useSingleVote'
 import { usePath } from '@/hooks/shared'
+import AppHeader from '@/components/AppHeader'
 
 function VoteSingle({ match }) {
   const { id } = match.params
-
   return (
     <SingleVoteSubscriptionProvider voteId={id}>
       <VoteSingleContent />
@@ -23,17 +21,15 @@ function VoteSingleContent() {
   const [vote, loading] = useSingleVote()
 
   return (
-    <LayoutGutter>
-      <LayoutLimiter>
-        <Header primary="Votes" />
-        <Bar>
-          <BackButton onClick={() => navigate('../')} />
-        </Bar>
-        <LoadingSection show={loading} title="Loading vote">
-          <VoteDetails vote={vote} />
-        </LoadingSection>
-      </LayoutLimiter>
-    </LayoutGutter>
+    <>
+      <AppHeader primary="Voting" />
+      <Bar>
+        <BackButton onClick={() => navigate('../')} />
+      </Bar>
+      <LoadingSection show={loading} title="Loading vote">
+        <VoteDetails vote={vote} />
+      </LoadingSection>
+    </>
   )
 }
 

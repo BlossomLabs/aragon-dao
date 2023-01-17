@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Box, textStyle, useLayout, useTheme, GU } from '@aragon/ui'
+import { Box, textStyle, useTheme, GU, useViewport } from '@aragon/ui'
 import HelpTip from '../HelpTip'
 
 import { round, safeDiv } from '../../math-utils'
 import SummaryBar from './SummaryBar'
 
 function InfoBoxes({ vote, disabledProgressBars }) {
-  const { layoutName } = useLayout()
-  const compactMode = layoutName === 'small'
+  const { below } = useViewport()
+  const compactMode = below('medium')
 
   const totalVotes = parseFloat(vote.yeas) + parseFloat(vote.nays)
   const support = safeDiv(parseFloat(vote.yeas), totalVotes)
