@@ -8,6 +8,7 @@ import TokenWrapperRouter from '../apps/token-wrapper/routes/Router'
 import HomeScreen from '../components/HomeScreen'
 import LayoutGutter from '@/components/Layout/LayoutGutter'
 import LayoutLimiter from '@/components/Layout/LayoutLimiter'
+import NotFoundScreen from '@/components/NotFoundScreen'
 
 function Router() {
   return (
@@ -19,6 +20,15 @@ function Router() {
           <Route path="/finance" component={FinanceRouter} />
           <Route path="/voting" component={VotingRouter} />
           <Route path="/wrapper" component={TokenWrapperRouter} />
+          <Route
+            path="*"
+            render={props => (
+              <NotFoundScreen
+                {...props}
+                text="Oops, we couldn't find an app installed here."
+              />
+            )}
+          />
         </Switch>
       </LayoutLimiter>
     </LayoutGutter>
