@@ -64,6 +64,10 @@ function VotingProvider({ children }) {
     return connectedApp?.onVotes()
   }, [connectedApp])
 
+  const [token, tokenStatus] = useConnect(() => {
+    return connectedApp?.token()
+  }, [connectedApp])
+
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)
     if (mounted()) {
@@ -75,11 +79,11 @@ function VotingProvider({ children }) {
     <VotingContext.Provider
       value={{
         isSyncing: false,
-        loading: status.loading,
+        loading: status.loading || tokenStatus.loading,
         ready: true,
-        tokenAddress: '0x67E48c61836af5578dC3baCb95B69F225d121637', // TODO- Super ugly get it from the voting settings
-        tokenDecimals: new BN(18),
-        tokenSymbol: 'wANT', // TODO- Super ugly get it from the voting settings
+        tokenAddress: token?.id,
+        tokenDecimals: new BN(token?.decimals),
+        tokenSymbol: token?.symbol,
         pctBase: pctBase,
         voteTime: 432000 * 1000,
         connectedAccountVotes: [],
