@@ -1989,10 +1989,10 @@
     "@rperez89/connect-thegraph" "^0.8.0-alpha.6"
     graphql-tag "^2.10.3"
 
-"@rperez89/connect-tao-voting@^0.8.6":
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-tao-voting/-/connect-tao-voting-0.8.6.tgz#3c87e3af66cbe21689b138fc7dc7666401ebd631"
-  integrity sha512-4FaG+VYzUPkIgNCj0uDM+S7kxuXAA+LE75Q9t7eihcpIRmjCgI5QtZQGcnsmmtoBsNC7K9bjd+Dcq5QuX1skpg==
+"@rperez89/connect-tao-voting@^0.8.7":
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-tao-voting/-/connect-tao-voting-0.8.7.tgz#04f752c57b83992e90666e97e371d590a0e2259d"
+  integrity sha512-kk6jkLTXE3ghj+pytMX9udzF0/87AnrkJctT9pq1uIfGKJmjHjFBNiosbAE6QFkE6xBWx+i9b64+Uq1W2dFqRQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
@@ -14617,10 +14617,7 @@ usb@^1.6.0:
 
 use-inside@^0.2.0:
   version "0.2.0"
-  resolved "https://registry.yarnpkg.com/use-inside/-/use-inside-0.2.0.tgz#cdf7bc3e40495a154d16735584c242aa0f00eb13"
-  integrity sha512-GYJSslg+NyAeASSwWk1wyc6/Bek/ACIrmuFY/bPbgUjQAVrtVvzjSNiOxNh20e7zanJz/bPxtIQIxq7EzjSPqQ==
-  dependencies:
-    prop-types "^15.7.2"
+  resolved "https://github.com/aragon/use-inside#16f321e499d8f89e9b0fb0999e2d21db2b119bbf"
 
 use-token@^0.2.0:
   version "0.2.0"
