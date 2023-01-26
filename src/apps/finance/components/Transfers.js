@@ -1,20 +1,14 @@
 import React, { useMemo, useCallback } from 'react'
 import { compareDesc, format } from 'date-fns'
-import BN from 'bn.js'
 import {
-  Button,
   ContextMenu,
   ContextMenuItem,
   DataView,
   GU,
-  IconExternal,
-  IconLabel,
   IconToken,
-  blockExplorerUrl,
   formatTokenAmount,
   textStyle,
   useTheme,
-  useToast,
   useViewport,
 } from '@aragon/ui'
 // import { saveAs } from 'file-saver'
@@ -25,21 +19,13 @@ import useTransactions from '../hooks/useTransactions'
 import { useNetwork } from '@/hooks/shared'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 import TransfersFilters from './TransfersFilters'
-import NoTransfers from './NoTransfers'
-import { addressesEqual, toChecksumAddress } from '@/utils/web3-utils'
+import {
+  addressesEqual,
+  toChecksumAddress,
+  blockExplorerUrl,
+} from '@/utils/web3-utils'
 
 const formatDate = date => format(date, 'yyyy-MM-dd')
-
-// const getDownloadFilename = (appAddress, { start, end }) => {
-//   const today = formatDate(Date.now())
-//   let filename = `finance_${appAddress}_${today}.csv`
-//   if (start && end) {
-//     const formattedStart = formatDate(start)
-//     const formattedEnd = formatDate(end)
-//     filename = `finance_${appAddress}_${formattedStart}_to_${formattedEnd}.csv`
-//   }
-//   return filename
-// }
 
 const TransfersWrapper = ({ tokens }) => {
   const [transactions, { loading: isSyncing }] = useTransactions()
@@ -93,33 +79,6 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
         }, {})
       : {}
 
-  // const { resolve: resolveAddress } = useContext(IdentityContext)
-  const handleDownload = () => {}
-  // = useCallback(async () => {
-  //   if (!currentApp || !currentApp.appAddress) {
-  //     return
-  //   }
-
-  //   const data = await getDownloadData(
-  //     filteredTransfers,
-  //     tokenDetails,
-  //     resolveAddress
-  //   )
-  //   const filename = getDownloadFilename(
-  //     currentApp.appAddress,
-  //     selectedDateRange
-  //   )
-  //   saveAs(new Blob([data], { type: 'text/csv;charset=utf-8' }), filename)
-  //   toast('Transfers data exported')
-  // }, [
-  //   currentApp,
-  //   filteredTransfers,
-  //   tokenDetails,
-  //   resolveAddress,
-  //   selectedDateRange,
-  //   toast,
-  // ])
-
   const compactMode = below('medium')
   const normalMode = above('medium')
 
@@ -146,14 +105,6 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
     <DataView
       status={dataViewStatus}
       page={page}
-      emptyState={status => {
-        if (status === 'loading') {
-          return <div>Loading!</div>
-        }
-
-        // Use the default for other `status` values.
-        return null
-      }}
       onPageChange={setPage}
       onStatusEmptyClear={handleClearFilters}
       heading={
@@ -174,15 +125,6 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
             >
               Transfers
             </div>
-            {transactions.length > 0 && (
-              <div>
-                <Button
-                  icon={<IconExternal />}
-                  label="Export"
-                  onClick={handleDownload}
-                />
-              </div>
-            )}
           </div>
           {!compactMode && (
             <TransfersFilters
@@ -272,43 +214,21 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
   )
 })
 
-// const ContextMenuItemCustomLabel = ({ entity }) => {
-//   const theme = useTheme()
-//   const [label, showLocalIdentityModal] = useIdentity(entity)
-//   const handleEditLabel = useCallback(() => showLocalIdentityModal(entity))
-
-//   return (
-//     <ContextMenuItem onClick={handleEditLabel}>
-//       <IconLabel
-//         css={`
-//           color: ${theme.surfaceContentSecondary};
-//         `}
-//       />
-//       <span
-//         css={`
-//           margin-left: ${1 * GU}px;
-//         `}
-//       >
-//         {label ? 'Edit' : 'Add'} custom label
-//       </span>
-//     </ContextMenuItem>
-//   )
-// }
-
 const ContextMenuViewTransaction = ({ transactionHash }) => {
   const theme = useTheme()
   const network = useNetwork()
   const handleViewTransaction = useCallback(() => {
-    if (network && network.type) {
-      window.open(
-        blockExplorerUrl('transaction', transactionHash, {
-          networkType: network.type,
-        }),
-        '_blank',
-        'noopener'
-      )
-    }
-  }, [transactionHash, network])
+    // if (network && network.type) {
+    window.open(
+      blockExplorerUrl('transaction', transactionHash, {
+        networkType: 'xdai',
+        provider: 'blockscout',
+      }),
+      '_blank',
+      'noopener'
+    )
+    // }
+  }, [transactionHash])
 
   return (
     <ContextMenuItem onClick={handleViewTransaction}>

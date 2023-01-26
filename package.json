@@ -10,7 +10,7 @@
     "@blossom-labs/connect-an-delay": "^0.3.0",
     "@juggle/resize-observer": "^3.2.0",
     "@nomiclabs/buidler": "^1.4.8",
-    "@rperez89/connect-finance": "^0.8.3",
+    "@rperez89/connect-finance": "^0.8.4",
     "@rperez89/connect-tao-voting": "^0.8.7",
     "@rperez89/connect-token-wrapper": "^0.8.7",
     "bn.js": "^4.11.8",
