@@ -218,17 +218,17 @@ const ContextMenuViewTransaction = ({ transactionHash }) => {
   const theme = useTheme()
   const network = useNetwork()
   const handleViewTransaction = useCallback(() => {
-    // if (network && network.type) {
-    window.open(
-      blockExplorerUrl('transaction', transactionHash, {
-        networkType: 'xdai',
-        provider: 'blockscout',
-      }),
-      '_blank',
-      'noopener'
-    )
-    // }
-  }, [transactionHash])
+    if (network && network.type && network.explorer) {
+      window.open(
+        blockExplorerUrl('transaction', transactionHash, {
+          networkType: network.type,
+          provider: network.explorer,
+        }),
+        '_blank',
+        'noopener'
+      )
+    }
+  }, [network, transactionHash])
 
   return (
     <ContextMenuItem onClick={handleViewTransaction}>

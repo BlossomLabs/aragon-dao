@@ -8,7 +8,7 @@ export function useContractReadOnly(address, abi, chainId) {
     if (!address) {
       return null
     }
-    return getContract(address, abi, getDefaultProvider(chainId))
+    return getContractWithProvider(address, abi, getDefaultProvider(chainId))
   }, [abi, address, chainId])
 }
 
@@ -23,10 +23,23 @@ export function useContract(address, abi, signer) {
       return null
     }
 
-    return getContract(address, abi, signer ? ethers.getSigner() : ethers)
+    return getContractWithProvider(
+      address,
+      abi,
+      signer ? ethers.getSigner() : ethers
+    )
   }, [abi, account, address, ethers, signer])
 }
 
-export function getContract(address, abi, provider = getDefaultProvider()) {
+export function getContractWithProvider(
+  address,
+  abi,
+  provider = getDefaultProvider()
+) {
+  return new EthersContract(address, abi, provider)
+}
+
+export function getContract(address, abi, chainId) {
+  const provider = getDefaultProvider(chainId)
   return new EthersContract(address, abi, provider)
 }

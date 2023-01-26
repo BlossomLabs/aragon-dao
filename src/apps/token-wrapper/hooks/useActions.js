@@ -18,17 +18,13 @@ const APPROVE_GAS_LIMIT = 250000
 const WRAP_GAS_LIMIT = 1000000
 
 export default function useActions() {
-  const { account } = useWallet()
+  const { account, chainId } = useWallet()
   const { connectedApp } = useConnectedApp()
   const mounted = useMounted()
 
   const getAllowance = useCallback(
     async tokenAddress => {
-      const tokenContract = getContract(
-        tokenAddress,
-        tokenAbi,
-        getDefaultProvider(100) // TODO- handle chains
-      )
+      const tokenContract = getContract(tokenAddress, tokenAbi, chainId)
       if (!connectedApp || !tokenContract) {
         return
       }
@@ -43,7 +39,7 @@ export default function useActions() {
 
       return new BN(allowance.toString())
     },
-    [account, connectedApp]
+    [account, chainId, connectedApp]
   )
 
   const wrap = useCallback(
@@ -117,11 +113,7 @@ export default function useActions() {
 
   const approveTokenAmount = useCallback(
     async (tokenAddress, depositAmount, onDone = noop) => {
-      const tokenContract = getContract(
-        tokenAddress,
-        tokenAbi,
-        getDefaultProvider(100) // TODO- Handle chains
-      )
+      const tokenContract = getContract(tokenAddress, tokenAbi, chainId)
       if (!tokenContract || !connectedApp) {
         return
       }
@@ -141,7 +133,7 @@ export default function useActions() {
         onDone(transactions)
       }
     },
-    [approve, connectedApp, mounted]
+    [approve, chainId, connectedApp, mounted]
   )
 
   return useMemo(

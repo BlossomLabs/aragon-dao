@@ -15,6 +15,7 @@ import StatusVisual from './StatusVisual'
 
 import { springs } from '../../../style/springs'
 import { useDisableAnimation } from '../../../hooks/shared/useDisableAnimation'
+import { useNetwork } from '@/hooks/shared'
 
 const AnimatedSpan = animated.span
 
@@ -31,6 +32,7 @@ function Step({
 }) {
   const theme = useTheme()
   const [animationDisabled, enableAnimation] = useDisableAnimation()
+  const network = useNetwork()
 
   const { visualColor, descColor } = useMemo(() => {
     const appearance = {
@@ -187,7 +189,7 @@ function Step({
                 >
                   <TransactionBadge
                     transaction={currentHash}
-                    networkType={'xDai'} // TODO- handle chains
+                    networkType={network.type}
                   />
                 </AnimatedSpan>
               ) : (

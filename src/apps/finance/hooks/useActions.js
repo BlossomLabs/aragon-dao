@@ -5,7 +5,7 @@ import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
 import { getContract } from '@/hooks/shared/useContract'
 import { useMounted } from '@/hooks/shared/useMounted'
-import { getDefaultProvider, encodeFunctionData } from '@/utils/web3-utils'
+import { encodeFunctionData } from '@/utils/web3-utils'
 import radspec from '@/radspec'
 import financeActions from '../actions/finance-action-types'
 
@@ -15,17 +15,13 @@ const APPROVE_GAS_LIMIT = 250000
 const DEPOSIT_GAS_LIMIT = 2000000
 
 export default function useActions() {
-  const { account } = useWallet()
+  const { account, chainId } = useWallet()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const mounted = useMounted()
 
   const getAllowance = useCallback(
     async tokenAddress => {
-      const tokenContract = getContract(
-        tokenAddress,
-        tokenAbi,
-        getDefaultProvider(100) // TODO- handle chains
-      )
+      const tokenContract = getContract(tokenAddress, tokenAbi, chainId)
       if (!connectedFinanceApp || !tokenContract) {
         return
       }
@@ -40,7 +36,7 @@ export default function useActions() {
 
       return new BN(allowance.toString())
     },
-    [account, connectedFinanceApp]
+    [account, chainId, connectedFinanceApp]
   )
 
   const deposit = useCallback(
@@ -121,11 +117,7 @@ export default function useActions() {
 
   const approveTokenAmount = useCallback(
     async (tokenAddress, depositAmount, onDone = noop) => {
-      const tokenContract = getContract(
-        tokenAddress,
-        tokenAbi,
-        getDefaultProvider(100) // TODO- Handle chains
-      )
+      const tokenContract = getContract(tokenAddress, tokenAbi, chainId)
       if (!tokenContract || !connectedFinanceApp) {
         return
       }
@@ -149,7 +141,7 @@ export default function useActions() {
         onDone(transactions)
       }
     },
-    [approve, connectedFinanceApp, mounted]
+    [approve, chainId, connectedFinanceApp, mounted]
   )
 
   return useMemo(

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import BN from 'bn.js'
 import { useContractReadOnly } from './useContract'
 import minimeTokenAbi from '../../abi/minimeToken.json'
+import { useWallet } from '@/providers/Wallet'
 
 export function useTokenBalanceOf(tokenAddress, account, chainId) {
   const [balance, setBalance] = useState(new BN(-1))
@@ -28,12 +29,12 @@ export function useTokenBalanceOf(tokenAddress, account, chainId) {
 }
 
 export function useTokenBalances(account, token) {
+  const { chainId } = useWallet()
   const [balances, setBalances] = useState({
     balance: new BN(-1),
     totalSupply: new BN(-1),
   })
   const [loading, setLoading] = useState(true)
-  const chainId = 100 // TODO: Handle chains
   const tokenContract = useContractReadOnly(token, minimeTokenAbi, chainId)
 
   useEffect(() => {

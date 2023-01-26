@@ -12,6 +12,7 @@ import {
 } from './provider-types'
 
 const DEFAULT_LOCAL_CHAIN = ''
+
 const networks = {
   xdai: {
     chainId: 100,
@@ -20,6 +21,7 @@ const networks = {
     type: 'xdai',
     defaultEthNode: 'https://rpc.gnosis.gateway.fm/',
     explorer: 'blockscout',
+    nativeToken: 'Xdai',
   },
 }
 
@@ -60,6 +62,15 @@ export function getNetworkName(chainId = getPreferredChain()) {
   if (chainId === '137') return 'Polygon'
 
   return 'unknown'
+}
+
+export function getEthersNetwork(chainId) {
+  const { type, ensRegistry } = getNetwork(chainId)
+  return {
+    name: type,
+    chainId: chainId,
+    ensAddress: ensRegistry,
+  }
 }
 
 /**

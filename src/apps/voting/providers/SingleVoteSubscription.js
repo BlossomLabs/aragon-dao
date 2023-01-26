@@ -204,8 +204,7 @@ function useExtendVote(vote, voteId) {
 
 function useCanUserVoteOnBehalfOf(vote) {
   const { connectedApp } = useConnectedApp()
-  const { account: connectedAccount } = useWallet()
-  const chainId = 100 // TODO- handle chains
+  const { account: connectedAccount, chainId } = useWallet()
 
   const principals = useUserPrincipals(vote)
 
@@ -234,7 +233,7 @@ function useCanUserVoteOnBehalfOf(vote) {
 }
 
 function usePrincipals(vote) {
-  const chainId = 100 // TODO- handle chains
+  const { chainId } = useWallet()
   const {
     tokenAddress,
     numData: { tokenDecimals },
@@ -301,8 +300,7 @@ function useUserPrincipals(vote) {
 
 export function useCanUserVote(vote) {
   const { connectedApp } = useConnectedApp()
-  const { account: connectedAccount } = useWallet()
-  const chainId = 100 // TODO- handle chains
+  const { account: connectedAccount, chainId } = useWallet()
 
   const votingContract = useContractReadOnly(
     connectedApp?.address,
