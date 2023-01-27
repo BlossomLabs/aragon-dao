@@ -65,6 +65,7 @@ function TokenWrapperProvider({ children }) {
     account,
     chainId
   )
+
   const depositedTokenBalance = useTokenBalanceOf(
     depositedToken?.id,
     account,
