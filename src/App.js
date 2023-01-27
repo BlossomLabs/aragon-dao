@@ -13,6 +13,7 @@ import { WalletProvider } from './providers/Wallet'
 import { IdentityProvider } from './providers/Identity'
 import { ConnectedAppProvider } from './providers/ConnectedApp'
 import { GuardianProvider } from './providers/Guardian'
+import { ErrorHandler } from './components/Error/ErrorHandler'
 
 function App() {
   const { below } = useViewport()
@@ -110,7 +111,9 @@ function AppWrapper() {
                   theme={appearance}
                 >
                   <MainView>
-                    <App />
+                    <ErrorHandler>
+                      <App />
+                    </ErrorHandler>
                   </MainView>
                 </Main>
               </GuardianProvider>
