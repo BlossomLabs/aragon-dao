@@ -7,8 +7,10 @@ import NoTransfers from './components/NoTransfers'
 import MultiModal from '@/components/MultiModal/MultiModal'
 import NewTransferScreens from './components/ModalFlows/NewTransferScreens'
 import AppHeader from '@/components/AppHeader'
+import { useWallet } from '@/providers/Wallet'
 
 const App = () => {
+  const { account } = useWallet()
   const { below } = useViewport()
   const compactMode = below('medium')
 
@@ -41,13 +43,15 @@ const App = () => {
           <AppHeader
             primary="Finance"
             secondary={
-              <Button
-                mode="strong"
-                onClick={handleShowModal}
-                label="New transfer"
-                icon={<IconPlus />}
-                display={compactMode ? 'icon' : 'label'}
-              />
+              account && (
+                <Button
+                  mode="strong"
+                  onClick={handleShowModal}
+                  label="New transfer"
+                  icon={<IconPlus />}
+                  display={compactMode ? 'icon' : 'label'}
+                />
+              )
             }
           />
           <Balances tokenBalances={tokenBalances} loading={loadingTokens} />

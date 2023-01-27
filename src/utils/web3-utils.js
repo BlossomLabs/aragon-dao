@@ -1,7 +1,18 @@
 import { ethers, providers as Providers } from 'ethers'
 import { getPreferredChain } from '../local-settings'
+import {
+  ARBISCAN_NETWORK_TYPES,
+  ARBISCAN_TYPES,
+  BLOCKSCOUT_NETWORK_TYPES,
+  BLOCKSCOUT_TYPES,
+  ETHERSCAN_NETWORK_TYPES,
+  ETHERSCAN_TYPES,
+  POLYGONSCAN_NETWORK_TYPES,
+  POLYGONSCAN_TYPES,
+} from './provider-types'
 
 const DEFAULT_LOCAL_CHAIN = ''
+
 const networks = {
   xdai: {
     chainId: 100,
@@ -9,6 +20,17 @@ const networks = {
     name: 'Gnosis Chain',
     type: 'xdai',
     defaultEthNode: 'https://rpc.gnosis.gateway.fm/',
+    explorer: 'blockscout',
+    nativeToken: 'Xdai',
+  },
+  mainnet: {
+    chainId: 1,
+    ensRegistry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    name: 'Mainnet',
+    type: 'mainnet',
+    defaultEthNode: 'https://eth-rpc.gateway.pokt.network',
+    explorer: 'etherscan',
+    nativeToken: 'ETH',
   },
 }
 
@@ -49,6 +71,15 @@ export function getNetworkName(chainId = getPreferredChain()) {
   if (chainId === '137') return 'Polygon'
 
   return 'unknown'
+}
+
+export function getEthersNetwork(chainId) {
+  const { type, ensRegistry } = getNetwork(chainId)
+  return {
+    name: type,
+    chainId: chainId,
+    ensAddress: ensRegistry,
+  }
 }
 
 /**
@@ -115,6 +146,94 @@ export function transformAddresses(str, callback) {
     .map((part, index) =>
       callback(part, ETH_ADDRESS_TEST_REGEX.test(part), index)
     )
+}
+
+const BLOCK_EXPLORERS = {
+  etherscan: ({ type, value, networkType }) => {
+    if (networkType === 'private') {
+      return ''
+    }
+
+    if (!ETHERSCAN_NETWORK_TYPES.has(networkType)) {
+      throw new Error('provider not supported.')
+    }
+    if (!ETHERSCAN_TYPES.has(type)) {
+      throw new Error('type not supported.')
+    }
+
+    const subdomain = ETHERSCAN_NETWORK_TYPES.get(networkType)
+    const typePart = ETHERSCAN_TYPES.get(type)
+    return `https://${subdomain}etherscan.io/${typePart}/${value}`
+  },
+  blockscout: ({ type, value, networkType }) => {
+    if (networkType === 'private') {
+      return ''
+    }
+
+    if (!BLOCKSCOUT_NETWORK_TYPES.has(networkType)) {
+      throw new Error('provider not supported.')
+    }
+
+    if (!BLOCKSCOUT_TYPES.has(type)) {
+      throw new Error('type not supported.')
+    }
+
+    const networkName = BLOCKSCOUT_NETWORK_TYPES.get(networkType)
+    const typePart = BLOCKSCOUT_TYPES.get(type)
+    return `https://blockscout.com/poa/${networkName}/${typePart}/${value}`
+  },
+  polygonscan: ({ type, value, networkType }) => {
+    if (networkType === 'private') {
+      return ''
+    }
+
+    if (!POLYGONSCAN_NETWORK_TYPES.has(networkType)) {
+      throw new Error('provider not supported.')
+    }
+    if (!POLYGONSCAN_TYPES.has(type)) {
+      throw new Error('type not supported.')
+    }
+
+    const subdomain = POLYGONSCAN_NETWORK_TYPES.get(networkType)
+    const typePart = POLYGONSCAN_TYPES.get(type)
+    return `https://${subdomain}polygonscan.com/${typePart}/${value}`
+  },
+  arbiscan: ({ type, value, networkType }) => {
+    if (networkType === 'private') {
+      return ''
+    }
+
+    if (!ARBISCAN_NETWORK_TYPES.has(networkType)) {
+      throw new Error('provider not supported.')
+    }
+    if (!ARBISCAN_TYPES.has(type)) {
+      throw new Error('type not supported.')
+    }
+
+    const subdomain = ARBISCAN_NETWORK_TYPES.get(networkType)
+    const typePart = ARBISCAN_TYPES.get(type)
+    return `https://${subdomain}arbiscan.com/${typePart}/${value}`
+  },
+}
+
+export function blockExplorerUrl(
+  type,
+  value,
+  { networkType = 'xdai', provider = 'blockscout' } = {}
+) {
+  const explorer = BLOCK_EXPLORERS[provider]
+
+  if (!explorer) {
+    console.error('blockExplorerUrl(): provider not supported.')
+    return ''
+  }
+
+  try {
+    return explorer({ type, value, networkType })
+  } catch (err) {
+    console.error(`blockExplorerUrl(): ${err.message}`)
+    return ''
+  }
 }
 
 export { getAddress as toChecksumAddress } from 'ethers/lib/utils'

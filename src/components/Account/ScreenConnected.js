@@ -85,7 +85,7 @@ function ScreenConnected({ wallet }) {
               css={`
                 cursor: pointer;
               `}
-              networkType={'xdai'} // TODO: handle chains
+              networkType={walletNetworkName}
             />
             <IconCopy
               css={`

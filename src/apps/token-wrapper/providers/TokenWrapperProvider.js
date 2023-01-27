@@ -38,8 +38,7 @@ const reduceToken = token => {
 }
 
 function TokenWrapperProvider({ children }) {
-  const chainId = 100 // TODO- handle chains
-  const { account } = useWallet()
+  const { account, chainId } = useWallet()
   const [holders, setHolders] = useState([])
   const [wrappedToken, setWrappedToken] = useState()
   const [depositedToken, setDepositedToken] = useState()

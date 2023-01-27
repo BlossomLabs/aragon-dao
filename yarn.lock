@@ -1980,10 +1980,10 @@
     "@rperez89/connect-types" "^0.8.0-alpha.6"
     ethers "^5.0.7"
 
-"@rperez89/connect-finance@^0.8.3":
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-finance/-/connect-finance-0.8.3.tgz#8dfa8c58a899a57cd87050f6222e582ad3708999"
-  integrity sha512-Ros5JKJDOdqKKe8CON9+PsuV9ySYxxZIPSUe2X0TFSazIwp5EWv37njxnfyHPvmZkciwKCSqsPBojJn7XW/q5g==
+"@rperez89/connect-finance@^0.8.4":
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@rperez89/connect-finance/-/connect-finance-0.8.4.tgz#0bfb0220ad3f465c1163a4c7c75180acb7c279d6"
+  integrity sha512-dm9ZUJS/FOkIiJqVaBidZMpHaGf1EljTLq+0rJO+Kt4hNi7TCMiQv+FOqHwPmKEiR5PUH/Dau6Mgsy4hv2rUPg==
   dependencies:
     "@rperez89/connect-core" "^0.8.0-alpha.6"
     "@rperez89/connect-thegraph" "^0.8.0-alpha.6"

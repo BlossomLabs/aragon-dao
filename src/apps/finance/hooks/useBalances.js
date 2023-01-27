@@ -7,6 +7,8 @@ import BN from 'bn.js'
 
 import vaultBalanceAbi from '../abi/vault-balance.json'
 import minimeTokenAbi from '@/abi/minimeToken.json'
+import { useWallet } from '@/providers/Wallet'
+import { useNetwork } from '@/hooks/shared'
 
 const INITIAL_TIMER = 2000
 
@@ -14,16 +16,18 @@ const CHAIN_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const cachedContracts = new Map([])
 
-const getContractInstance = (address, abi) => {
+const getContractInstance = (address, abi, chainId) => {
   if (cachedContracts.has(address)) {
     return cachedContracts.get(address)
   }
-  const contract = getContract(address, abi)
+  const contract = getContract(address, abi, chainId)
   cachedContracts.set(contract)
   return contract
 }
 
 const useBalances = (timeout = 7000) => {
+  const { chainId } = useWallet()
+  const { nativeToken } = useNetwork()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const [tokenBalances = [], { loading, error }] = useConnect(
     () => connectedFinanceApp?.onBalance(),
@@ -35,8 +39,6 @@ const useBalances = (timeout = 7000) => {
   const [loadingBalances, setLoadingBalances] = useState(true)
 
   const vaultAddress = useRef()
-
-  const chainId = 100 // TODO HANDLE CHAINS
 
   const financeContract = useContractReadOnly(
     connectedFinanceApp?.address,
@@ -51,10 +53,10 @@ const useBalances = (timeout = 7000) => {
     const getVaultContract = async () => {
       const vaultAddr = await financeContract.vault()
       vaultAddress.current = vaultAddr
-      getContractInstance(vaultAddress, vaultBalanceAbi)
+      getContractInstance(vaultAddress, vaultBalanceAbi, chainId)
     }
     getVaultContract()
-  }, [financeContract])
+  }, [chainId, financeContract])
 
   useEffect(() => {
     if (!tokenBalances?.length || !mounted) {
@@ -66,14 +68,15 @@ const useBalances = (timeout = 7000) => {
           tokenBalances.map(async tokenBalance => {
             const tokenContract = getContractInstance(
               tokenBalance.token,
-              minimeTokenAbi
+              minimeTokenAbi,
+              chainId
             )
 
             let decimals
             let symbol
             if (tokenBalance.token === CHAIN_TOKEN_ADDRESS) {
               decimals = 18
-              symbol = 'Xdai' // Todo: maybe have a network file with all this constants per network
+              symbol = nativeToken
             } else {
               const [dec, symb] = await Promise.all([
                 tokenContract.decimals(),
@@ -98,7 +101,7 @@ const useBalances = (timeout = 7000) => {
       }
     }
     getTokenData()
-  }, [mounted, tokenBalances])
+  }, [chainId, mounted, nativeToken, tokenBalances])
 
   useEffect(() => {
     if (!vaultAddress.current) {
@@ -107,7 +110,8 @@ const useBalances = (timeout = 7000) => {
 
     const vaultContract = getContractInstance(
       vaultAddress?.current,
-      vaultBalanceAbi
+      vaultBalanceAbi,
+      chainId
     )
 
     let cancelled = false
@@ -144,7 +148,7 @@ const useBalances = (timeout = 7000) => {
       cancelled = true
       window.clearTimeout(timeoutId)
     }
-  }, [timeout, tokenData])
+  }, [chainId, timeout, tokenData])
 
   const balancesKey = tokenWithBalance
     .map(token => token.balance.toString())
