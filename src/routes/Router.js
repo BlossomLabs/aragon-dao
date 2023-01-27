@@ -22,12 +22,14 @@ function Router() {
           <Route path="/wrapper" component={TokenWrapperRouter} />
           <Route
             path="*"
-            render={props => (
-              <NotFoundScreen
-                {...props}
-                text="Oops, we couldn't find an app installed here."
-              />
-            )}
+            render={props => {
+              return (
+                <NotFoundScreen
+                  {...props}
+                  text="Oops, the current app is not installed on this DAO."
+                />
+              )
+            }}
           />
         </Switch>
       </LayoutLimiter>
