@@ -23,6 +23,15 @@ const networks = {
     explorer: 'blockscout',
     nativeToken: 'Xdai',
   },
+  mainnet: {
+    chainId: 1,
+    ensRegistry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    name: 'Mainnet',
+    type: 'mainnet',
+    defaultEthNode: 'https://eth-rpc.gateway.pokt.network',
+    explorer: 'etherscan',
+    nativeToken: 'ETH',
+  },
 }
 
 const ETH_ADDRESS_SPLIT_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g

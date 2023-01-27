@@ -22,7 +22,7 @@ function WalletAugmented({ children }) {
   const chain = connected ? chainId : DEFAULT_CHAIN_ID
 
   const ethers = useMemo(() => {
-    ethereum
+    return ethereum
       ? new EthersProviders.Web3Provider(ethereum, getEthersNetwork(chain))
       : getDefaultProvider()
   }, [chain, ethereum])
