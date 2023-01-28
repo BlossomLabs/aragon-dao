@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import BN from 'bn.js'
 import {
+  Button,
   ButtonBase,
   Field,
   GU,
@@ -14,14 +15,9 @@ import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import { toDecimals } from '../../../utils'
 import { formatTokenAmount } from '../../../utils/token-utils'
 import { useAppState } from '../../../providers/TokenWrapperProvider'
-import LoadingButton from '@/components/LoadingButton'
-import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
-
-const LOADING_BUTTON_ID = 'wrap-unwrap'
 
 const WrapUnwrap = React.memo(function WrapUnwrap({ mode, getTransactions }) {
   const theme = useTheme()
-  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const [amount, setAmount] = useState({
     value: '0',
     valueBN: new BN('0'),
@@ -103,13 +99,12 @@ const WrapUnwrap = React.memo(function WrapUnwrap({ mode, getTransactions }) {
   const handleSubmit = useCallback(
     event => {
       event.preventDefault()
-      setCurrentLoadingButton(LOADING_BUTTON_ID)
 
       getTransactions(() => {
         next()
       }, amount.valueBN.toString(10))
     },
-    [amount, getTransactions, next, setCurrentLoadingButton]
+    [amount, getTransactions, next]
   )
 
   const errorMessage = useMemo(() => {
@@ -205,8 +200,7 @@ const WrapUnwrap = React.memo(function WrapUnwrap({ mode, getTransactions }) {
         </Info>
       )}
 
-      <LoadingButton
-        id={LOADING_BUTTON_ID}
+      <Button
         label={wrapMode ? 'Wrap' : 'Unwrap'}
         wide
         type="submit"

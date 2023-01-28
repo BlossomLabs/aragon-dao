@@ -8,6 +8,7 @@ import useActions from '../../../hooks/useActions'
 function DelegateVotingScreens() {
   const [delegateMode, setDelegateMode] = useState(true)
   const [transactions, setTransactions] = useState([])
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
   const { votingActions } = useActions()
 
   const handleOnChooseAction = useCallback(delegate => {
@@ -16,11 +17,13 @@ function DelegateVotingScreens() {
 
   const getTransactions = useCallback(
     async (representative, onComplete) => {
+      setTransactionsLoading(true)
       // const choosenDelegate = delegate.current
       await votingActions.delegateVoting(representative, intent => {
         setTransactions(intent)
         onComplete()
       })
+      setTransactionsLoading(false)
     },
     [votingActions]
   )
@@ -62,8 +65,7 @@ function DelegateVotingScreens() {
   )
   return (
     <ModalFlowBase
-      frontLoad
-      // loading={loading}
+      loading={transactionsLoading}
       transactions={transactions}
       transactionTitle="Delegate your voting power"
       screens={screens}

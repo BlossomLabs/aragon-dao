@@ -5,14 +5,17 @@ import useActions from '../../../hooks/useActions'
 
 function RevokeDelegationScreens() {
   const [transactions, setTransactions] = useState([])
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
   const { votingActions } = useActions()
 
   const getTransactions = useCallback(
     async (onComplete, representative) => {
+      setTransactionsLoading(true)
       await votingActions.delegateVoting(representative, intent => {
         setTransactions(intent)
         onComplete()
       })
+      setTransactionsLoading(false)
     },
     [votingActions]
   )
@@ -27,8 +30,7 @@ function RevokeDelegationScreens() {
 
   return (
     <ModalFlowBase
-      frontLoad
-      // loading={loading}
+      loading={transactionsLoading}
       transactions={transactions}
       transactionTitle="Revoke your delegate"
       screens={screens}

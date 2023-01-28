@@ -13,6 +13,7 @@ function VoteScreens({
 }) {
   const { votingActions } = useActions()
   const [transactions, setTransactions] = useState([])
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
 
   const temporatyTrx = useRef([])
 
@@ -35,6 +36,7 @@ function VoteScreens({
 
   const getTransactions = useCallback(
     async onComplete => {
+      setTransactionsLoading(true)
       if (canUserVote) {
         await voteOnProposal(vote.voteId, supports)
       }
@@ -44,6 +46,7 @@ function VoteScreens({
       }
 
       setTransactions(temporatyTrx.current)
+      setTransactionsLoading(false)
       onComplete()
     },
     [
@@ -69,9 +72,9 @@ function VoteScreens({
 
   return (
     <ModalFlowBase
-      frontLoad={false}
       transactions={transactions}
       transactionTitle="Vote on decision"
+      loading={transactionsLoading}
       screens={screens}
     />
   )

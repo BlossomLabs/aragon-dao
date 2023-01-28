@@ -16,13 +16,7 @@ const indexNumber = {
   4: 'Fifth',
 }
 
-function ModalFlowBase({
-  frontLoad,
-  loading,
-  screens,
-  transactions,
-  transactionTitle,
-}) {
+function ModalFlowBase({ loading, screens, transactions, transactionTitle }) {
   const { ethers } = useWallet()
   const signer = useMemo(() => ethers.getSigner(), [ethers])
 
@@ -77,8 +71,7 @@ function ModalFlowBase({
   const extendedScreens = useMemo(() => {
     const allScreens = []
 
-    // Add loading screen as first item if enabled
-    if (frontLoad) {
+    if (loading) {
       allScreens.push({
         content: <LoadingScreen loading={loading} />,
       })
@@ -107,19 +100,12 @@ function ModalFlowBase({
     }
 
     return allScreens
-  }, [
-    transactions,
-    screens,
-    transactionSteps,
-    transactionTitle,
-    loading,
-    frontLoad,
-  ])
-
+  }, [transactions, screens, transactionSteps, transactionTitle, loading])
+  console.log('RENDERING MODAL FLOW BASE')
+  console.log(extendedScreens)
   return <MultiModalScreens screens={extendedScreens} />
 }
 
-/* eslint-disable react/prop-types */
 function LoadingScreen({ loading }) {
   const theme = useTheme()
   const { next } = useMultiModal()
@@ -144,12 +130,17 @@ function LoadingScreen({ loading }) {
       css={`
         display: flex;
         justify-content: center;
-        padding-top: ${16 * GU}px;
-        padding-bottom: ${16 * GU}px;
+        padding-top: ${14 * GU}px;
+        padding-bottom: ${14 * GU}px;
       `}
     >
       <div
         css={`
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: ${1 * GU}px;
           animation: ${keyframes`
             from {
               transform: scale(1.3);
@@ -166,11 +157,17 @@ function LoadingScreen({ loading }) {
             color: ${theme.accent};
           `}
         />
+        <div
+          css={`
+            color: ${theme.contentSecondary};
+          `}
+        >
+          Preparing action…
+        </div>
       </div>
     </div>
   )
 }
-/* eslint-enable react/prop-types */
 
 function modalWidthFromCount(count) {
   if (count >= 3) {
@@ -186,7 +183,6 @@ function modalWidthFromCount(count) {
 }
 
 ModalFlowBase.propTypes = {
-  frontLoad: PropTypes.bool,
   loading: PropTypes.bool,
   screens: PropTypes.array,
   transactions: PropTypes.array,
@@ -194,8 +190,7 @@ ModalFlowBase.propTypes = {
 }
 
 ModalFlowBase.defaultProps = {
-  frontLoad: true,
   transactionTitle: 'Create transaction',
 }
 
-export default ModalFlowBase
+export default React.memo(ModalFlowBase)

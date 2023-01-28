@@ -9,6 +9,7 @@ const ZERO_BN = new BN(0)
 
 function NewTransferScreens({ tokens, opened }) {
   const [transactions, setTransactions] = useState([])
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
 
   const { financeActions } = useActions()
 
@@ -16,6 +17,7 @@ function NewTransferScreens({ tokens, opened }) {
 
   const handleOnDeposit = useCallback(
     async (onComplete, tokenAddress, amount, reference) => {
+      setTransactionsLoading(true)
       const bnAmount = new BN(amount)
       const allowance = await financeActions.getAllowance(tokenAddress)
       if (allowance.lt(bnAmount)) {
@@ -43,6 +45,7 @@ function NewTransferScreens({ tokens, opened }) {
         }
       )
       setTransactions(temporatyTrx.current)
+      setTransactionsLoading(false)
       onComplete()
     },
     [financeActions]
@@ -50,6 +53,7 @@ function NewTransferScreens({ tokens, opened }) {
 
   const handleOnWithdraw = useCallback(
     async (onComplete, tokenAddress, recipient, amount, reference) => {
+      setTransactionsLoading(true)
       await financeActions.withdraw(
         { tokenAddress, recipient, amount, reference },
         intent => {
@@ -57,6 +61,7 @@ function NewTransferScreens({ tokens, opened }) {
           onComplete()
         }
       )
+      setTransactionsLoading(false)
     },
     [financeActions]
   )
@@ -80,8 +85,8 @@ function NewTransferScreens({ tokens, opened }) {
 
   return (
     <ModalFlowBase
-      frontLoad={false}
       transactions={transactions}
+      loading={transactionsLoading}
       transactionTitle={'New transaction'}
       screens={screens}
     />

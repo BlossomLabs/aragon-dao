@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
+import { noop } from '@aragon/ui'
+import React, { useCallback, useEffect, useState } from 'react'
 
+import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import actions from '../../actions/an-delay-action.types'
 import useActions from '../../hooks/useActions'
-import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
-import { GU, IconWarning, Info } from '@aragon/ui'
 
 const getActionData = action => {
   switch (action) {
@@ -21,92 +20,32 @@ const getActionData = action => {
   }
 }
 
-const ActionScreen = React.memo(({ getTransactions }) => {
-  const { next } = useMultiModal()
-
-  useEffect(() => {
-    getTransactions(transactionsExists => {
-      if (transactionsExists) {
-        next()
-      }
-    })
-  }, [getTransactions, next])
-
-  return (
-    <div
-      css={`
-        margin-bottom: ${2 * GU}px;
-      `}
-    >
-      <Info
-        mode="warning"
-        title={
-          <div
-            css={`
-              display: flex;
-              align-items: center;
-            `}
-          >
-            <IconWarning />{' '}
-            <div
-              css={`
-                vertical-align: 'middle';
-              `}
-            >
-              Action Impossible
-            </div>
-          </div>
-        }
-      >
-        The action failed to execute. You may not have the required permissions.
-      </Info>
-    </div>
-  )
-})
-
 function DelayActionScreens({ action, delayedScript }) {
   const { anDelayActions } = useActions()
   const [transactions, setTransactions] = useState([])
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
   const { modalTitle, fnMethod } = getActionData(action)
   const fullModalTitle = `Delayed Script ${modalTitle}`
 
-  const temporatyTrx = useRef([])
+  const getTransactions = useCallback(async () => {
+    setTransactionsLoading(true)
+    await anDelayActions[fnMethod](delayedScript, intent => {
+      setTransactions(intent)
+    })
 
-  const performAction = useCallback(
-    async delayedScript => {
-      await anDelayActions[fnMethod](delayedScript, intent => {
-        temporatyTrx.current = temporatyTrx.current.concat(intent)
-      })
-    },
-    [anDelayActions, fnMethod]
-  )
+    setTransactionsLoading(false)
+  }, [delayedScript, anDelayActions, fnMethod])
 
-  const getTransactions = useCallback(
-    async onComplete => {
-      await performAction(delayedScript)
-
-      setTransactions(temporatyTrx.current)
-      onComplete(temporatyTrx.current.length)
-    },
-    [performAction, delayedScript]
-  )
-
-  const screens = useMemo(() => {
-    return [
-      {
-        title: fullModalTitle,
-        graphicHeader: false,
-        content: <ActionScreen getTransactions={getTransactions} />,
-      },
-    ]
-  }, [getTransactions, fullModalTitle])
+  useEffect(() => {
+    getTransactions(noop)
+  }, [getTransactions])
 
   return (
     <ModalFlowBase
-      frontLoad={false}
       transactions={transactions}
+      loading={transactionsLoading}
       transactionTitle={fullModalTitle}
-      screens={screens}
+      screens={[]}
     />
   )
 }

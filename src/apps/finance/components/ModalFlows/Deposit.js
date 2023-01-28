@@ -13,6 +13,7 @@ import {
   GU,
   textStyle,
   useTheme,
+  Button,
 } from '@aragon/ui'
 import { useNetwork } from '@/hooks/shared'
 import { useWallet } from '@/providers/Wallet'
@@ -31,8 +32,6 @@ import { addressesEqual } from '@/utils/web3-utils'
 import AmountInput from '../AmountInput'
 import ToggleContent from '../ToggleContent'
 import TokenSelector from '../TokenSelector'
-import LoadingButton from '@/components/LoadingButton'
-import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -40,8 +39,6 @@ const DECIMALS_TOO_MANY_ERROR = Symbol('DECIMALS_TOO_MANY_ERROR')
 const TOKEN_NOT_FOUND_ERROR = Symbol('TOKEN_NOT_FOUND_ERROR')
 
 const TOKEN_ALLOWANCE_WEBSITE = 'https://tokenallowance.io/'
-
-const DEPOSIT_LOADING_BUTTON_ID = 'deposit'
 
 const initialState = {
   amount: {
@@ -126,10 +123,6 @@ class Deposit extends React.Component {
   }
   handleSubmit = event => {
     event.preventDefault()
-
-    if (this.props.setCurrentLoadingButton) {
-      this.props.setCurrentLoadingButton(DEPOSIT_LOADING_BUTTON_ID)
-    }
 
     const { onDeposit, onComplete } = this.props
     const { amount, reference, selectedToken } = this.state
@@ -312,15 +305,9 @@ class Deposit extends React.Component {
             wide
           />
         </Field>
-        <LoadingButton
-          id={DEPOSIT_LOADING_BUTTON_ID}
-          wide
-          mode="strong"
-          type="submit"
-          disabled={disabled}
-        >
+        <Button wide mode="strong" type="submit" disabled={disabled}>
           Submit deposit
-        </LoadingButton>
+        </Button>
         {errorMessage && <ValidationError message={errorMessage} />}
 
         <VSpace size={3} />
@@ -491,14 +478,12 @@ export default props => {
   const { connectedApp } = useConnectedApp()
   const network = useNetwork()
   const { account } = useWallet()
-  const { setCurrentLoadingButton } = useLoadingButtonInside()
 
   return (
     <Deposit
       appAddress={connectedApp && connectedApp.address}
       connectedAccount={account}
       network={network}
-      setCurrentLoadingButton={setCurrentLoadingButton}
       {...props}
     />
   )

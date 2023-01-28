@@ -7,13 +7,17 @@ import useActions from '../../../hooks/useActions'
 function CreateVoteScreens() {
   const { votingActions } = useActions()
   const [transactions, setTransactions] = useState([])
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
 
   const getTransactions = useCallback(
     async (onComplete, question) => {
+      setTransactionsLoading(true)
       await votingActions.newVote(question, intent => {
+        console.log(intent)
         setTransactions(intent)
         onComplete()
       })
+      setTransactionsLoading(false)
     },
     [votingActions]
   )
@@ -30,9 +34,10 @@ function CreateVoteScreens() {
 
   return (
     <ModalFlowBase
-      frontLoad={false}
+      loading={transactionsLoading}
       transactions={transactions}
       transactionTitle="Create Proposal"
+      transactionsLoading={transactionsLoading}
       screens={screens}
     />
   )

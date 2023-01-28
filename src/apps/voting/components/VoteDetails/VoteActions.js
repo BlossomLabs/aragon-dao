@@ -16,7 +16,6 @@ import { useWallet } from '@/providers/Wallet'
 import { dateFormat } from '../../utils/date-utils'
 import { getConnectedAccountCast } from '../../vote-utils'
 import { VOTE_YEA, VOTE_NAY } from '../../vote-types'
-import LoadingButton from '@/components/LoadingButton'
 
 function VoteActions({ vote, onVote, onExecute }) {
   const theme = useTheme()
@@ -171,8 +170,7 @@ const Buttons = ({ onVoteYes, onVoteNo, disabled = false }) => (
       margin-bottom: ${2 * GU}px;
     `}
   >
-    <LoadingButton
-      id="vote-yes"
+    <Button
       mode="positive"
       wide
       disabled={disabled}
@@ -192,9 +190,8 @@ const Buttons = ({ onVoteYes, onVoteNo, disabled = false }) => (
         `}
       />
       Yes
-    </LoadingButton>
-    <LoadingButton
-      id="vote-no"
+    </Button>
+    <Button
       mode="negative"
       wide
       disabled={disabled}
@@ -214,7 +211,7 @@ const Buttons = ({ onVoteYes, onVoteNo, disabled = false }) => (
         `}
       />
       No
-    </LoadingButton>
+    </Button>
   </div>
 )
 

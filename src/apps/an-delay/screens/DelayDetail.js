@@ -28,7 +28,6 @@ import LoadingSection from '@/components/Loading/LoadingSection'
 import { formatTime } from '@/utils/time-utils'
 import DelayHeader from '../components/DelayHeader'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
-import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
@@ -68,7 +67,6 @@ const DelayDetailWrapper = ({ match }) => {
 }
 const DelayDetail = React.memo(({ delay, path }) => {
   const { account } = useWallet()
-  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const [modalVisible, setModalVisible] = useState(false)
   const [, setModalMode] = useState(null)
   const [delayAction, setDelayAction] = useState()
@@ -80,8 +78,7 @@ const DelayDetail = React.memo(({ delay, path }) => {
 
   const handleModalClose = useCallback(() => {
     setModalVisible(false)
-    setCurrentLoadingButton()
-  }, [setCurrentLoadingButton])
+  }, [])
 
   return (
     <>

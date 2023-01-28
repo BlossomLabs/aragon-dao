@@ -43,7 +43,7 @@ export function useSteps(steps) {
   }, [steps])
 
   const setStep = useCallback(
-    (value) => {
+    value => {
       updateStep({ type: 'set', value, steps })
     },
     [steps]

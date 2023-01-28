@@ -11,10 +11,8 @@ import AppHeader from './components/AppHeader'
 import InfoBox from './components/InfoBox'
 import WrapTokenScreens from './components/ModalFlows/WrapTokenScreens/WrapTokenScreens'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
-import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 function App() {
-  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const [modalMode, setModalMode] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
   const { depositedToken, holders, isSyncing, wrappedToken } = useAppState()
@@ -37,8 +35,7 @@ function App() {
 
   const handleHideModal = useCallback(() => {
     setModalVisible(false)
-    setCurrentLoadingButton()
-  }, [setCurrentLoadingButton])
+  }, [])
 
   return (
     <>

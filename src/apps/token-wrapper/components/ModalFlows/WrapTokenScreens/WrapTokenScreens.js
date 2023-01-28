@@ -10,6 +10,7 @@ const ZERO_BN = new BN(0)
 
 function WrapTokenScreens({ mode }) {
   const [transactions, setTransactions] = useState([])
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
   const { wrappedToken, depositedToken } = useAppState()
 
   const { tokenWrapperActions } = useActions()
@@ -18,6 +19,7 @@ function WrapTokenScreens({ mode }) {
 
   const getTransactions = useCallback(
     async (onComplete, amount) => {
+      setTransactionsLoading(true)
       const bnAmount = new BN(amount)
       if (mode === 'wrap') {
         const allowance = await tokenWrapperActions.getAllowance(
@@ -53,6 +55,7 @@ function WrapTokenScreens({ mode }) {
           onComplete()
         })
       }
+      setTransactionsLoading(false)
     },
     [depositedToken.id, mode, tokenWrapperActions]
   )
@@ -74,8 +77,8 @@ function WrapTokenScreens({ mode }) {
 
   return (
     <ModalFlowBase
-      frontLoad={false}
       transactions={transactions}
+      loading={transactionsLoading}
       transactionTitle={mode === 'wrap' ? 'Wrap token' : 'Unwrap token'}
       screens={screens}
     />

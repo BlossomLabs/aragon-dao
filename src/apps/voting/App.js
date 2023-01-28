@@ -26,14 +26,12 @@ import { useAppState } from './providers/VotingProvider'
 import { addressesEqual } from '@/utils/web3-utils'
 import { constants } from 'ethers'
 import AppHeader from '@/components/AppHeader'
-import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
 
 // const VALUES = Array.from(SECTIONS.values())
 
 const App = React.memo(function App() {
-  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const [selectedTab, setSelectedTab] = useState(0)
   const { account } = useWallet()
 
@@ -75,9 +73,8 @@ const App = React.memo(function App() {
   }, [handleShowModal])
 
   const handleHideModal = useCallback(() => {
-    setCurrentLoadingButton()
     setModalVisible(false)
-  }, [setCurrentLoadingButton])
+  }, [])
 
   const {
     filteredVotes,
