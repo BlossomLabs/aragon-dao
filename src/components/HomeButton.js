@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ButtonBase, GU, RADIUS, useTheme } from '@aragon/ui'
 
-import logo from '../assets/aragonNetworkLogo.svg'
+import logo from '../assets/aragonDAOLogo.svg'
 
 function HomeButton({ onClick, ...props }) {
   const theme = useTheme()
@@ -26,7 +26,7 @@ function HomeButton({ onClick, ...props }) {
         }
       `}
     >
-      <img src={logo} width={4.5 * GU} alt="" />
+      <img src={logo} width={23 * GU} alt="" />
     </ButtonBase>
   )
 }
