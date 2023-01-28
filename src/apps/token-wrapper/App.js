@@ -42,6 +42,7 @@ function App() {
       {showHolders && <SyncIndicator visible={isSyncing} />}
       <AppHeader
         onWrapHolder={showHolders ? handleWrapToken : null}
+        onUnwrapTokens={handleUnwrapToken}
         tokenSymbol={wrappedToken && wrappedToken.symbol}
       />
       <LayoutColumns

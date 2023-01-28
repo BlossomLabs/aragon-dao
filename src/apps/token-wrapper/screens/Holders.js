@@ -48,11 +48,6 @@ const Holders = React.memo(function Holders({
           </div>,
         ]
       }}
-      renderEntryActions={({ address }) => {
-        return (
-          <EntryActions address={address} onUnwrapTokens={onUnwrapTokens} />
-        )
-      }}
     />
   )
 })
