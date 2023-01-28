@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { startOfDay, endOfDay, isAfter, isBefore } from 'date-fns'
-import { useSettings } from '../vote-settings-manager'
 import {
   VOTE_STATUS_ONGOING,
   VOTE_STATUS_REJECTED,
@@ -9,7 +8,8 @@ import {
   VOTE_STATUS_ENACTED,
 } from '../vote-types'
 import { getVoteStatus } from '../vote-utils'
-import { useApp } from '@/hooks/shared'
+import { useAppState } from '../providers/VotingProvider'
+import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const NULL_FILTER_STATE = -1
 const STATUS_FILTER_OPEN = 1
@@ -89,9 +89,9 @@ function testDateRangeFilter(filter, vote) {
 }
 
 const useFilterVotes = (votes, executionTargets) => {
-  // TODO: get app by address instead of name
-  const { address: appAddress } = useApp('blossom-tao-voting') || {}
-  const { pctBase } = useSettings()
+  const { connectedApp } = useConnectedApp()
+  const { pctBase } = useAppState()
+  const appAddress = connectedApp?.address
 
   const [filteredVotes, setFilteredVotes] = useState(votes)
   const [statusFilter, setStatusFilter] = useState(NULL_FILTER_STATE)
@@ -120,6 +120,10 @@ const useFilterVotes = (votes, executionTargets) => {
   ])
 
   useEffect(() => {
+    if (!appAddress) {
+      return
+    }
+
     const filtered = votes.filter(vote => {
       const voteStatus = getVoteStatus(vote, pctBase)
       return (
