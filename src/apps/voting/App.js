@@ -26,12 +26,14 @@ import { useAppState } from './providers/VotingProvider'
 import { addressesEqual } from '@/utils/web3-utils'
 import { constants } from 'ethers'
 import AppHeader from '@/components/AppHeader'
+import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
 
 // const VALUES = Array.from(SECTIONS.values())
 
 const App = React.memo(function App() {
+  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const [selectedTab, setSelectedTab] = useState(0)
   const { account } = useWallet()
 
@@ -40,7 +42,6 @@ const App = React.memo(function App() {
   const {
     executionTargets,
     isSyncing,
-    newVotePanel,
     selectVote,
     selectedVote,
     votes,
@@ -74,8 +75,9 @@ const App = React.memo(function App() {
   }, [handleShowModal])
 
   const handleHideModal = useCallback(() => {
+    setCurrentLoadingButton()
     setModalVisible(false)
-  }, [])
+  }, [setCurrentLoadingButton])
 
   const {
     filteredVotes,
@@ -106,10 +108,7 @@ const App = React.memo(function App() {
               justify-content: center;
             `}
           >
-            <NoVotes
-              onNewVote={newVotePanel.requestOpen}
-              isSyncing={isSyncing}
-            />
+            <NoVotes onNewVote={handleNewVote} isSyncing={isSyncing} />
           </div>
         )}
         {votes.length > 0 && (
@@ -142,13 +141,15 @@ const App = React.memo(function App() {
                         `}
                       />
                     )}
-                    <Button
-                      mode="strong"
-                      onClick={handleNewVote}
-                      label="New vote"
-                      icon={<IconPlus />}
-                      display={compactMode ? 'icon' : 'label'}
-                    />
+                    {account && (
+                      <Button
+                        mode="strong"
+                        onClick={handleNewVote}
+                        label="New Proposal"
+                        icon={<IconPlus />}
+                        display={compactMode ? 'icon' : 'label'}
+                      />
+                    )}
                   </>
                 )
               }

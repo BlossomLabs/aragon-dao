@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react'
 import { useApi, usePath } from '@/hooks/shared'
 import { useAppState } from './providers/VotingProvider'
 import { EMPTY_CALLSCRIPT } from './evmscript-utils'
-import usePanelState from './hooks/usePanelState'
 import useVotes from './hooks/useVotes'
 import { noop } from './utils'
 import { VOTE_YEA } from './vote-types'
@@ -93,10 +92,9 @@ export function useAppLogic() {
 
   const [votes, executionTargets] = useVotes()
   const [selectedVote, selectVote] = useSelectedVote(votes)
-  const newVotePanel = usePanelState()
 
   const actions = {
-    createVote: useCreateVoteAction(newVotePanel.requestClose),
+    createVote: useCreateVoteAction(),
     vote: useVoteAction(),
     execute: useExecuteAction(),
   }
@@ -105,7 +103,6 @@ export function useAppLogic() {
     actions,
     executionTargets,
     isSyncing: isSyncing || !ready,
-    newVotePanel,
     selectVote,
     selectedVote,
     votes,

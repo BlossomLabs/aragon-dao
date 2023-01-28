@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react'
-import { Button, Field, GU, Info, TextInput, textStyle } from '@aragon/ui'
+import { Field, GU, Info, TextInput, textStyle } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
+import LoadingButton from '@/components/LoadingButton'
 
 function CreateNewVote({ getTransactions }) {
-  const [question, setQuestion] = useState()
+  const [question, setQuestion] = useState('')
   const { next } = useMultiModal()
+  const disableButton = !question.length
 
   const handleQuestionChange = useCallback(event => {
     const updatedQuestion = event.target.value
@@ -48,19 +50,21 @@ function CreateNewVote({ getTransactions }) {
           margin-top: ${3 * GU}px;
         `}
       >
-        These votes are informative and used for signaling. They don’t have any
-        direct repercussions on the organization.
+        These proposals are informative and used for signaling. They don’t have
+        any direct repercussions on the organization.
       </Info>
-      <Button
+      <LoadingButton
+        id="new-proposal"
         mode="strong"
         wide
         css={`
           margin-top: ${2 * GU}px;
         `}
         onClick={handleOnCreateVote}
+        disabled={disableButton}
       >
-        Create new vote
-      </Button>
+        Create new proposal
+      </LoadingButton>
     </div>
   )
 }

@@ -21,7 +21,7 @@ function CreateVoteScreens() {
   const screens = useMemo(() => {
     return [
       {
-        title: 'New Vote',
+        title: 'New Proposal',
         graphicHeader: false,
         content: <CreateNewVote getTransactions={getTransactions} />,
       },
@@ -32,7 +32,7 @@ function CreateVoteScreens() {
     <ModalFlowBase
       frontLoad={false}
       transactions={transactions}
-      transactionTitle="Create Vote"
+      transactionTitle="Create Proposal"
       screens={screens}
     />
   )

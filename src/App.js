@@ -14,6 +14,7 @@ import { IdentityProvider } from './providers/Identity'
 import { ConnectedAppProvider } from './providers/ConnectedApp'
 import { GuardianProvider } from './providers/Guardian'
 import { ErrorHandler } from './components/Error/ErrorHandler'
+import { LoadingButtonInside } from './components/LoadingButton/LoadingButtonInside'
 
 function App() {
   const { below } = useViewport()
@@ -112,7 +113,9 @@ function AppWrapper() {
                 >
                   <MainView>
                     <ErrorHandler>
-                      <App />
+                      <LoadingButtonInside>
+                        <App />
+                      </LoadingButtonInside>
                     </ErrorHandler>
                   </MainView>
                 </Main>

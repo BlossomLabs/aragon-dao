@@ -1,8 +1,10 @@
 import React from 'react'
 import { Button, EmptyStateCard, GU, LoadingRing } from '@aragon/ui'
 import noVotesPng from '../assets/no-votes.png'
+import { useWallet } from '@/providers/Wallet'
 
 const NoVotes = React.memo(function NoVotes({ onNewVote, isSyncing }) {
+  const { account } = useWallet()
   return (
     <EmptyStateCard
       text={
@@ -20,13 +22,15 @@ const NoVotes = React.memo(function NoVotes({ onNewVote, isSyncing }) {
             <span>Syncing…</span>
           </div>
         ) : (
-          'No votes here!'
+          'No proposals here!'
         )
       }
       action={
-        <Button wide mode="strong" onClick={onNewVote}>
-          Create a new vote
-        </Button>
+        account ? (
+          <Button wide mode="strong" onClick={onNewVote}>
+            Create a new proposal
+          </Button>
+        ) : null
       }
       illustration={
         <img
@@ -35,7 +39,7 @@ const NoVotes = React.memo(function NoVotes({ onNewVote, isSyncing }) {
             height: 170px;
           `}
           src={noVotesPng}
-          alt="No vote here"
+          alt="No proposal here"
         />
       }
     />
