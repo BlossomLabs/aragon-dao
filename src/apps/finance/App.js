@@ -8,9 +8,11 @@ import MultiModal from '@/components/MultiModal/MultiModal'
 import NewTransferScreens from './components/ModalFlows/NewTransferScreens'
 import AppHeader from '@/components/AppHeader'
 import { useWallet } from '@/providers/Wallet'
+import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 const App = () => {
   const { account } = useWallet()
+  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const { below } = useViewport()
   const compactMode = below('medium')
 
@@ -22,8 +24,9 @@ const App = () => {
   }, [])
 
   const handleHideModal = useCallback(() => {
+    setCurrentLoadingButton()
     setModalVisible(false)
-  }, [])
+  }, [setCurrentLoadingButton])
 
   return (
     <>

@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 import {
-  Button,
   DropDown,
   IconCross,
   Info,
@@ -14,6 +13,8 @@ import {
 } from '@aragon/ui'
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
 import AmountInput from '../AmountInput'
+import LoadingButton from '@/components/LoadingButton'
+import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const RECEIPIENT_NOT_ADDRESS_ERROR = Symbol('RECEIPIENT_NOT_ADDRESS_ERROR')
@@ -21,6 +22,8 @@ const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
 const DECIMALS_TOO_MANY_ERROR = Symbol('DECIMALS_TOO_MANY_ERROR')
 
 const NULL_SELECTED_TOKEN = -1
+
+const WITHDRAW_LOADING_BUTTON_ID = 'withdraw'
 
 class Withdrawal extends React.Component {
   static defaultProps = {
@@ -74,6 +77,11 @@ class Withdrawal extends React.Component {
   }
   handleSubmit = event => {
     event.preventDefault()
+
+    if (this.props.setCurrentLoadingButton) {
+      this.props.setCurrentLoadingButton(WITHDRAW_LOADING_BUTTON_ID)
+    }
+
     const { onWithdraw, onComplete } = this.props
     const { amount, recipient, reference, selectedToken } = this.state
 
@@ -201,9 +209,15 @@ class Withdrawal extends React.Component {
             wide
           />
         </Field>
-        <Button disabled={disabled} mode="strong" type="submit" wide>
+        <LoadingButton
+          id={WITHDRAW_LOADING_BUTTON_ID}
+          disabled={disabled}
+          mode="strong"
+          type="submit"
+          wide
+        >
           Submit withdrawal
-        </Button>
+        </LoadingButton>
         {errorMessage && <ValidationError message={errorMessage} />}
       </form>
     ) : (
@@ -247,9 +261,16 @@ const ValidationError = ({ message }) => {
 }
 
 export default props => {
+  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const [readyToFocus, setReadyToFocus] = useState(false)
   useLayoutEffect(() => {
     setReadyToFocus(true)
   }, [])
-  return <Withdrawal readyToFocus={readyToFocus} {...props} />
+  return (
+    <Withdrawal
+      setCurrentLoadingButton={setCurrentLoadingButton}
+      readyToFocus={readyToFocus}
+      {...props}
+    />
+  )
 }

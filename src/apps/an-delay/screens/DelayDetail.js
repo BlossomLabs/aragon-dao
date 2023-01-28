@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   BackButton,
   Bar,
@@ -28,6 +28,7 @@ import LoadingSection from '@/components/Loading/LoadingSection'
 import { formatTime } from '@/utils/time-utils'
 import DelayHeader from '../components/DelayHeader'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
+import { useLoadingButtonInside } from '@/components/LoadingButton/LoadingButtonInside'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
@@ -67,6 +68,7 @@ const DelayDetailWrapper = ({ match }) => {
 }
 const DelayDetail = React.memo(({ delay, path }) => {
   const { account } = useWallet()
+  const { setCurrentLoadingButton } = useLoadingButtonInside()
   const [modalVisible, setModalVisible] = useState(false)
   const [, setModalMode] = useState(null)
   const [delayAction, setDelayAction] = useState()
@@ -75,6 +77,11 @@ const DelayDetail = React.memo(({ delay, path }) => {
   const compactMode = below('large')
 
   const { id, creator, executionTargetData } = delay
+
+  const handleModalClose = useCallback(() => {
+    setModalVisible(false)
+    setCurrentLoadingButton()
+  }, [setCurrentLoadingButton])
 
   return (
     <>
@@ -166,7 +173,7 @@ const DelayDetail = React.memo(({ delay, path }) => {
               )}
               <MultiModal
                 visible={modalVisible}
-                onClose={() => setModalVisible(false)}
+                onClose={handleModalClose}
                 onClosed={() => setModalMode(null)}
               >
                 <DelayActionScreens

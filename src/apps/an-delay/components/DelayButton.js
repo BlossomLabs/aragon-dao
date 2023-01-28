@@ -1,11 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Button, GU, textStyle } from '@aragon/ui'
+import { GU, textStyle } from '@aragon/ui'
+import LoadingButton from '@/components/LoadingButton'
 
 function DelayButton({ label, beforeIcon, css, ...props }) {
   return (
-    <CustomButton wide css={css} {...props}>
+    <CustomButton id={label} wide css={css} {...props}>
       {beforeIcon && (
         <img
           src={beforeIcon}
@@ -21,7 +22,7 @@ function DelayButton({ label, beforeIcon, css, ...props }) {
   )
 }
 
-const CustomButton = styled(Button)`
+const CustomButton = styled(LoadingButton)`
   ${textStyle('body2')};
   &:first-child {
     margin-right: ${GU / 2}px;
