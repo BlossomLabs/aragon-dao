@@ -154,6 +154,7 @@ const WrapUnwrap = React.memo(function WrapUnwrap({ mode, getTransactions }) {
             </ButtonBase>
           }
           adornmentPosition="end"
+          type="number"
         />
         <span
           css={`

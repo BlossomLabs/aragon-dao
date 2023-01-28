@@ -33,6 +33,7 @@ const AmountInput = React.forwardRef(function AmountInput(
       }
       adornmentPosition="end"
       adornmentSettings={{ width: MAX_BUTTON_WIDTH, padding: 1 }}
+      type="number"
       {...props}
     />
   )
