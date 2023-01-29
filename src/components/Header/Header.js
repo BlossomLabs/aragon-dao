@@ -13,6 +13,7 @@ import {
 import HeaderLogo from './HeaderLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
 import AccountModule from '../Account/AccountModule'
+import { MAIN_HEADER_HEIGHT } from '@/constants'
 
 function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
@@ -34,7 +35,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
       <LayoutGutter collapseWhenSmall={false}>
         <div
           css={`
-            height: ${8 * GU}px;
+            height: ${MAIN_HEADER_HEIGHT + GU}px;
             width: 100%;
             display: flex;
             align-items: center;

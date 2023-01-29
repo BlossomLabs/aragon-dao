@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import {
   Bar,
   CardLayout,
@@ -15,9 +15,10 @@ import DelayCard from '../components/DelayCard'
 import EmptyFilteredDelays from '../components/EmptyFilteredDelays'
 import { useDelayedScripts } from '../hooks/useDelayedScripts'
 import useFilterDelays from '../hooks/useFilterDelays'
-import NoDelays from './NoDelays'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import DelayHeader from '../components/DelayHeader'
+import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
+import { useWait } from '@/hooks/shared/useWait'
 
 const classifyDelays = delays => {
   const ongoingDelays = delays.filter(delay => delay.status === STATUS.ONGOING)
@@ -30,7 +31,6 @@ const classifyDelays = delays => {
 }
 
 const DelaysWrapper = () => {
-  const [isWaiting, setIsWaiting] = useState(false)
   const { apps = [] } = useOrganizationState()
   // TODO: handle error case
   const [delays, { loading: delaysLoading }] = useDelayedScripts()
@@ -51,33 +51,16 @@ const DelaysWrapper = () => {
         .sort((a, b) => a.name.localeCompare(b.name)),
     [apps, delays]
   )
-
-  useEffect(() => {
-    /**
-     * Get a smoother transition from the empty state card
-     * to a fast-loaded delays list by setting a minimum wait
-     * time
-     */
-    const timer = setTimeout(() => setIsWaiting(true), 100)
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [])
+  const isWaiting = useWait()
+  const isLoading = delaysLoading || isWaiting
 
   return (
     <div>
-      {!isWaiting || delaysLoading || !delays.length ? (
-        <div
-          css={`
-            height: calc(100vh - ${8 * GU}px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          `}
-        >
-          <NoDelays isSyncing={delaysLoading || !isWaiting} />
-        </div>
+      {!delays?.length || isLoading ? (
+        <LoadingAppScreen
+          emptyStateLabel="No delayed scripts yet"
+          isLoading={isLoading}
+        />
       ) : (
         <Delays delays={delays} executionTargetApps={executionTargetApps} />
       )}

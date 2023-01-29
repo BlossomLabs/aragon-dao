@@ -20,20 +20,17 @@ function voteIdFromPath(path) {
 // Get the vote currently selected, or null otherwise.
 export function useSelectedVote(votes) {
   const [path, requestPath] = usePath()
-  const { ready } = useAppState()
 
   // The memoized vote currently selected.
   const selectedVote = useMemo(() => {
     const voteId = voteIdFromPath(path)
 
-    // The `ready` check prevents a vote to be
-    // selected until the app state is fully ready.
-    if (!ready || voteId === NO_VOTE_ID) {
+    if (voteId === NO_VOTE_ID) {
       return null
     }
 
     return votes.find(vote => vote.voteId === voteId) || null
-  }, [path, ready, votes])
+  }, [path, votes])
 
   const selectVote = useCallback(
     voteId => {
@@ -88,7 +85,7 @@ export function useExecuteAction(onDone = noop) {
 
 // Handles the main logic of the app.
 export function useAppLogic() {
-  const { isSyncing, ready } = useAppState()
+  const { isSyncing } = useAppState()
 
   const [votes, executionTargets] = useVotes()
   const [selectedVote, selectVote] = useSelectedVote(votes)
@@ -102,7 +99,7 @@ export function useAppLogic() {
   return {
     actions,
     executionTargets,
-    isSyncing: isSyncing || !ready,
+    isSyncing,
     selectVote,
     selectedVote,
     votes,

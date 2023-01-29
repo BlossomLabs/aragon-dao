@@ -94,23 +94,20 @@ function TokenWrapperProvider({ children }) {
   }, [connectDepositedToken, mounted])
 
   const error =
-    !connectHoldersStatus?.error &&
-    !connectWrappedTokensStatus?.error &&
-    !connectDepositedTokensStatus.error
+    connectHoldersStatus?.error ||
+    connectWrappedTokensStatus?.error ||
+    connectDepositedTokensStatus.error
 
   const loading =
-    !connectHoldersStatus?.loading &&
-    !connectWrappedTokensStatus.loading &&
-    !connectDepositedTokensStatus.loading &&
-    account &&
-    !wrappedTokenBalance.eq(new BN(-1)) &&
-    account &&
-    !depositedTokenBalance.eq(new BN(-1))
+    connectHoldersStatus?.loading ||
+    connectWrappedTokensStatus.loading ||
+    connectDepositedTokensStatus.loading
 
   return (
     <TokenWrapperContext.Provider
       value={{
-        isSyncing: !loading && !error,
+        isSyncing: loading || error,
+        error,
         holders,
         wrappedToken: { ...wrappedToken, accountBalance: wrappedTokenBalance },
         depositedToken: {

@@ -104,9 +104,7 @@ function VotingProvider({ children }) {
   return (
     <VotingContext.Provider
       value={{
-        isSyncing: false,
-        loading,
-        ready: true,
+        isSyncing: loading,
         tokenAddress: token?.id,
         tokenDecimals: new BN(token?.decimals),
         tokenSymbol: token?.symbol,

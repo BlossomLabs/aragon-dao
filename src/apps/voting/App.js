@@ -1,20 +1,12 @@
 import React, { useCallback, useState } from 'react'
-import {
-  Button,
-  GU,
-  IconPlus,
-  IconToken,
-  SyncIndicator,
-  Tabs,
-  useViewport,
-} from '@aragon/ui'
+import { Button, GU, IconPlus, IconToken, Tabs, useViewport } from '@aragon/ui'
+import { constants } from 'ethers'
 
 import { useVoterState } from './providers/VoterProvider'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelegateVotingScreens from './components/ModalFlows/DelegateVotingScreens/DelegateVotingScreens'
 import useFilterVotes from './hooks/useFilterVotes'
 import useScrollTop from './hooks/useScrollTop'
-import NoVotes from './screens/NoVotes'
 import Votes from './screens/Votes'
 import DelegatedBy from './components/DelegatedBy'
 import { useAppLogic } from './app-logic'
@@ -24,12 +16,12 @@ import RevokeDelegationScreens from './components/ModalFlows/RevokeDelegation/Re
 import CreateVoteScreens from './components/ModalFlows/NewVote/CreateVoteScreens'
 import { useAppState } from './providers/VotingProvider'
 import { addressesEqual } from '@/utils/web3-utils'
-import { constants } from 'ethers'
 import AppHeader from '@/components/AppHeader'
+import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
+import { useWait } from '@/hooks/shared/useWait'
+import noVotesPng from './assets/no-votes.png'
 
 const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
-
-// const VALUES = Array.from(SECTIONS.values())
 
 const App = React.memo(function App() {
   const [selectedTab, setSelectedTab] = useState(0)
@@ -39,7 +31,7 @@ const App = React.memo(function App() {
   const [modalVisible, setModalVisible] = useState(false)
   const {
     executionTargets,
-    isSyncing,
+    isSyncing: isAppSyncing,
     selectVote,
     selectedVote,
     votes,
@@ -53,7 +45,9 @@ const App = React.memo(function App() {
     addressesEqual(representativeManager, constants.AddressZero)
 
   const { below } = useViewport()
+  const isWaiting = useWait()
   const compactMode = below('medium')
+  const isLoading = isAppSyncing || isWaiting
 
   const handleShowModal = useCallback(mode => {
     setModalVisible(true)
@@ -96,21 +90,30 @@ const App = React.memo(function App() {
   return (
     <>
       <React.Fragment>
-        {votes.length === 0 && (
-          <div
-            css={`
-              height: 100vh;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            `}
-          >
-            <NoVotes onNewVote={handleNewVote} isSyncing={isSyncing} />
-          </div>
-        )}
-        {votes.length > 0 && (
+        {votes?.length === 0 || isLoading ? (
+          <LoadingAppScreen
+            isLoading={isLoading}
+            emptyStateLabel="No proposals yet"
+            action={
+              account ? (
+                <Button wide mode="strong" onClick={handleNewVote}>
+                  Create a new proposal
+                </Button>
+              ) : null
+            }
+            illustration={
+              <img
+                css={`
+                  margin: auto;
+                  height: 170px;
+                `}
+                src={noVotesPng}
+                alt="No proposal here"
+              />
+            }
+          />
+        ) : (
           <React.Fragment>
-            <SyncIndicator visible={isSyncing} shift={50} />
             <AppHeader
               primary="Voting"
               secondary={

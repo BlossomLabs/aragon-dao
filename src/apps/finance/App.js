@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react'
-import { GU, Button, IconPlus, useViewport } from '@aragon/ui'
+import { Button, IconPlus, useViewport } from '@aragon/ui'
 import Balances from './components/Balances'
 import Transfers from './components/Transfers'
 import useBalances from './hooks/useBalances'
-import NoTransfers from './components/NoTransfers'
 import MultiModal from '@/components/MultiModal/MultiModal'
 import NewTransferScreens from './components/ModalFlows/NewTransferScreens'
 import AppHeader from '@/components/AppHeader'
 import { useWallet } from '@/providers/Wallet'
+import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
 
 const App = () => {
   const { account } = useWallet()
@@ -28,16 +28,7 @@ const App = () => {
   return (
     <>
       {loadingTokens ? (
-        <div
-          css={`
-            height: calc(100vh - ${8 * GU}px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          `}
-        >
-          <NoTransfers isSyncing={loadingTokens} />
-        </div>
+        <LoadingAppScreen isLoading={loadingTokens} />
       ) : (
         <>
           <AppHeader
