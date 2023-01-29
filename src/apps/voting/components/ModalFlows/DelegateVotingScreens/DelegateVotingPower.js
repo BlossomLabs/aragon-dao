@@ -28,6 +28,7 @@ function DelegateVotingPower({ onCreateTransaction }) {
   }, [])
 
   const handleOnDelegatevotingPower = useCallback(() => {
+    next()
     onCreateTransaction(delegateAccount, () => {
       next()
     })

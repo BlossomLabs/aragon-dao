@@ -24,6 +24,7 @@ export default function RevokeDelegation({ onCreateTransaction }) {
   }, [prev])
 
   const handleOnRevoke = useCallback(() => {
+    next()
     onCreateTransaction(() => {
       next()
     }, ZERO_ADDR)

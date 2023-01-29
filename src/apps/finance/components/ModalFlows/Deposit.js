@@ -32,6 +32,7 @@ import { addressesEqual } from '@/utils/web3-utils'
 import AmountInput from '../AmountInput'
 import ToggleContent from '../ToggleContent'
 import TokenSelector from '../TokenSelector'
+import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -124,7 +125,7 @@ class Deposit extends React.Component {
   handleSubmit = event => {
     event.preventDefault()
 
-    const { onDeposit, onComplete } = this.props
+    const { onDeposit, next } = this.props
     const { amount, reference, selectedToken } = this.state
 
     if (this.validateInputs()) {
@@ -132,9 +133,11 @@ class Deposit extends React.Component {
         amount.value,
         selectedToken.data.decimals
       )
+
+      next()
       onDeposit(
         () => {
-          onComplete()
+          next()
         },
         selectedToken.value,
         adjustedAmount,
@@ -475,6 +478,7 @@ const ValidationError = ({ message }) => {
 }
 
 export default props => {
+  const { next } = useMultiModal()
   const { connectedApp } = useConnectedApp()
   const network = useNetwork()
   const { account } = useWallet()
@@ -484,6 +488,7 @@ export default props => {
       appAddress={connectedApp && connectedApp.address}
       connectedAccount={account}
       network={network}
+      next={next}
       {...props}
     />
   )

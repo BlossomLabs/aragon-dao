@@ -1,12 +1,10 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { keyframes } from 'styled-components'
-import { useTheme, GU } from '@aragon/ui'
-import LoadingSpinner from '../Loading/LoadingSpinner'
+import { GU } from '@aragon/ui'
 import MultiModalScreens from './MultiModalScreens'
 import Stepper from '../Stepper/Stepper'
 import { useWallet } from '../../providers/Wallet'
-import { useMultiModal } from './MultiModalProvider'
+import ErrorScreen from './screens/ErrorScreen'
 
 const indexNumber = {
   0: 'First',
@@ -16,7 +14,12 @@ const indexNumber = {
   4: 'Fifth',
 }
 
-function ModalFlowBase({ loading, screens, transactions, transactionTitle }) {
+function ModalFlowBase({
+  displayErrorScreen,
+  screens,
+  transactions,
+  transactionTitle,
+}) {
   const { ethers } = useWallet()
   const signer = useMemo(() => ethers.getSigner(), [ethers])
 
@@ -71,10 +74,12 @@ function ModalFlowBase({ loading, screens, transactions, transactionTitle }) {
   const extendedScreens = useMemo(() => {
     const allScreens = []
 
-    if (loading) {
-      allScreens.push({
-        content: <LoadingScreen loading={loading} />,
-      })
+    if (displayErrorScreen) {
+      return [
+        {
+          content: <ErrorScreen />,
+        },
+      ]
     }
 
     // Spread in our flow screens
@@ -100,73 +105,15 @@ function ModalFlowBase({ loading, screens, transactions, transactionTitle }) {
     }
 
     return allScreens
-  }, [transactions, screens, transactionSteps, transactionTitle, loading])
-  console.log('RENDERING MODAL FLOW BASE')
-  console.log(extendedScreens)
+  }, [
+    displayErrorScreen,
+    transactions,
+    screens,
+    transactionSteps,
+    transactionTitle,
+  ])
+
   return <MultiModalScreens screens={extendedScreens} />
-}
-
-function LoadingScreen({ loading }) {
-  const theme = useTheme()
-  const { next } = useMultiModal()
-
-  useEffect(() => {
-    let timeout
-
-    if (!loading) {
-      // Provide a minimum appearance duration to avoid visual confusion on very fast requests
-      timeout = setTimeout(() => {
-        next()
-      }, 100)
-    }
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [loading, next])
-
-  return (
-    <div
-      css={`
-        display: flex;
-        justify-content: center;
-        padding-top: ${14 * GU}px;
-        padding-bottom: ${14 * GU}px;
-      `}
-    >
-      <div
-        css={`
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          gap: ${1 * GU}px;
-          animation: ${keyframes`
-            from {
-              transform: scale(1.3);
-            }
-
-            to {
-              transform: scale(1);
-            }
-          `} 0.3s ease;
-        `}
-      >
-        <LoadingSpinner
-          css={`
-            color: ${theme.accent};
-          `}
-        />
-        <div
-          css={`
-            color: ${theme.contentSecondary};
-          `}
-        >
-          Preparing action…
-        </div>
-      </div>
-    </div>
-  )
 }
 
 function modalWidthFromCount(count) {
@@ -183,7 +130,6 @@ function modalWidthFromCount(count) {
 }
 
 ModalFlowBase.propTypes = {
-  loading: PropTypes.bool,
   screens: PropTypes.array,
   transactions: PropTypes.array,
   transactionTitle: PropTypes.string,
@@ -191,6 +137,7 @@ ModalFlowBase.propTypes = {
 
 ModalFlowBase.defaultProps = {
   transactionTitle: 'Create transaction',
+  displayErrorScreen: false,
 }
 
 export default React.memo(ModalFlowBase)

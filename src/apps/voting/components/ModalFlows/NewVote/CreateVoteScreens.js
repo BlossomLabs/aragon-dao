@@ -3,21 +3,24 @@ import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import CreateNewVote from './CreateNewVote'
 
 import useActions from '../../../hooks/useActions'
+import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 function CreateVoteScreens() {
   const { votingActions } = useActions()
+  const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
   const [transactions, setTransactions] = useState([])
-  const [transactionsLoading, setTransactionsLoading] = useState(false)
 
   const getTransactions = useCallback(
     async (onComplete, question) => {
-      setTransactionsLoading(true)
       await votingActions.newVote(question, intent => {
-        console.log(intent)
+        if (!intent || !intent.length) {
+          setDisplayErrorScreen(true)
+          return
+        }
+
         setTransactions(intent)
         onComplete()
       })
-      setTransactionsLoading(false)
     },
     [votingActions]
   )
@@ -29,15 +32,17 @@ function CreateVoteScreens() {
         graphicHeader: false,
         content: <CreateNewVote getTransactions={getTransactions} />,
       },
+      {
+        content: <LoadingScreen />,
+      },
     ]
   }, [getTransactions])
 
   return (
     <ModalFlowBase
-      loading={transactionsLoading}
+      displayErrorScreen={displayErrorScreen}
       transactions={transactions}
       transactionTitle="Create Proposal"
-      transactionsLoading={transactionsLoading}
       screens={screens}
     />
   )

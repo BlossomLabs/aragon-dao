@@ -13,6 +13,8 @@ function CreateNewVote({ getTransactions }) {
   }, [])
 
   const handleOnCreateVote = useCallback(() => {
+    next()
+
     getTransactions(() => {
       next()
     }, question)

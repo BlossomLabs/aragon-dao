@@ -1,9 +1,10 @@
-import { noop } from '@aragon/ui'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import actions from '../../actions/an-delay-action.types'
 import useActions from '../../hooks/useActions'
+import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
+import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 const getActionData = action => {
   switch (action) {
@@ -20,32 +21,60 @@ const getActionData = action => {
   }
 }
 
+const ActionScreen = React.memo(({ getTransactions }) => {
+  const { next } = useMultiModal()
+
+  useEffect(() => {
+    next()
+    getTransactions(() => {
+      next()
+    })
+  }, [getTransactions, next])
+
+  return <div />
+})
+
 function DelayActionScreens({ action, delayedScript }) {
   const { anDelayActions } = useActions()
   const [transactions, setTransactions] = useState([])
-  const [transactionsLoading, setTransactionsLoading] = useState(false)
+  const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
+
   const { modalTitle, fnMethod } = getActionData(action)
   const fullModalTitle = `Delayed Script ${modalTitle}`
 
-  const getTransactions = useCallback(async () => {
-    setTransactionsLoading(true)
-    await anDelayActions[fnMethod](delayedScript, intent => {
-      setTransactions(intent)
-    })
+  const getTransactions = useCallback(
+    async onComplete => {
+      await anDelayActions[fnMethod](delayedScript, intent => {
+        if (!intent) {
+          setDisplayErrorScreen(true)
+          return
+        }
 
-    setTransactionsLoading(false)
-  }, [delayedScript, anDelayActions, fnMethod])
+        setTransactions(intent)
+        onComplete()
+      })
+    },
+    [delayedScript, anDelayActions, fnMethod]
+  )
 
-  useEffect(() => {
-    getTransactions(noop)
-  }, [getTransactions])
-
+  const screens = useMemo(
+    () => [
+      {
+        title: fullModalTitle,
+        content: <ActionScreen getTransactions={getTransactions} />,
+      },
+      {
+        content: <LoadingScreen />,
+      },
+    ],
+    [fullModalTitle, getTransactions]
+  )
   return (
     <ModalFlowBase
+      displayErrorScreen={displayErrorScreen}
       transactions={transactions}
-      loading={transactionsLoading}
       transactionTitle={fullModalTitle}
-      screens={[]}
+      screens={screens}
     />
   )
 }

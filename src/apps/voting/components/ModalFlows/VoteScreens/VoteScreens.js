@@ -3,6 +3,7 @@ import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import VoteOnDecision from './Vote'
 
 import useActions from '../../../hooks/useActions'
+import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 function VoteScreens({
   canUserVote,
@@ -13,7 +14,7 @@ function VoteScreens({
 }) {
   const { votingActions } = useActions()
   const [transactions, setTransactions] = useState([])
-  const [transactionsLoading, setTransactionsLoading] = useState(false)
+  const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
 
   const temporatyTrx = useRef([])
 
@@ -36,7 +37,6 @@ function VoteScreens({
 
   const getTransactions = useCallback(
     async onComplete => {
-      setTransactionsLoading(true)
       if (canUserVote) {
         await voteOnProposal(vote.voteId, supports)
       }
@@ -45,8 +45,10 @@ function VoteScreens({
         await voteOnBehalfOf(vote.voteId, supports, principals)
       }
 
+      if (!temporatyTrx.current.length) {
+        setDisplayErrorScreen(true)
+      }
       setTransactions(temporatyTrx.current)
-      setTransactionsLoading(false)
       onComplete()
     },
     [
@@ -67,14 +69,17 @@ function VoteScreens({
         graphicHeader: false,
         content: <VoteOnDecision getTransactions={getTransactions} />,
       },
+      {
+        content: <LoadingScreen />,
+      },
     ]
   }, [getTransactions, supports])
 
   return (
     <ModalFlowBase
+      displayErrorScreen={displayErrorScreen}
       transactions={transactions}
       transactionTitle="Vote on decision"
-      loading={transactionsLoading}
       screens={screens}
     />
   )
