@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {
   GU,
   IconCheck,
-  IdentityBadge,
   Link,
   Tag,
   textStyle,
@@ -39,6 +38,7 @@ import TargetAppBadge from '../TargetAppBadge'
 import useDescribeScript from '@/hooks/shared/useDescribeScript'
 import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
 import useActions from '../../hooks/useActions'
+import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 
 function getPresentation(disputableStatus) {
   const disputablePresentation = {
@@ -253,7 +253,7 @@ function Details({
             align-items: flex-start;
           `}
         >
-          <IdentityBadge entity={creator} />
+          <LocalIdentityBadge entity={creator} />
         </div>
       </InfoField>
     </div>
