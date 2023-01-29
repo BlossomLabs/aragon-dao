@@ -104,6 +104,7 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
   return (
     <DataView
       status={dataViewStatus}
+      mode={compactMode ? 'list' : 'table'}
       page={page}
       onPageChange={setPage}
       onStatusEmptyClear={handleClearFilters}

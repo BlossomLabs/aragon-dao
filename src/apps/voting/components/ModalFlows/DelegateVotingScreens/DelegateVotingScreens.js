@@ -4,10 +4,12 @@ import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import BecomeADelegate from './BecomeADelegate'
 import DelegateVotingPower from './DelegateVotingPower'
 import useActions from '../../../hooks/useActions'
+import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 function DelegateVotingScreens() {
   const [delegateMode, setDelegateMode] = useState(true)
   const [transactions, setTransactions] = useState([])
+  const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
   const { votingActions } = useActions()
 
   const handleOnChooseAction = useCallback(delegate => {
@@ -18,6 +20,11 @@ function DelegateVotingScreens() {
     async (representative, onComplete) => {
       // const choosenDelegate = delegate.current
       await votingActions.delegateVoting(representative, intent => {
+        if (!intent || !intent.length) {
+          setDisplayErrorScreen(true)
+          return
+        }
+
         setTransactions(intent)
         onComplete()
       })
@@ -43,6 +50,9 @@ function DelegateVotingScreens() {
                 <DelegateVotingPower onCreateTransaction={getTransactions} />
               ),
             },
+            {
+              content: <LoadingScreen />,
+            },
           ]
         : [
             {
@@ -62,12 +72,10 @@ function DelegateVotingScreens() {
   )
   return (
     <ModalFlowBase
-      frontLoad
-      // loading={loading}
+      displayErrorScreen={displayErrorScreen}
       transactions={transactions}
       transactionTitle="Delegate your voting power"
       screens={screens}
-      onComplete={() => {}}
       // onCompleteActions={<GoToProposal />}
     />
   )

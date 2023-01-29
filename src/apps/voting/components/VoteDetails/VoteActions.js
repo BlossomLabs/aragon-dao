@@ -240,7 +240,6 @@ const TokenReference = ({
             <strong>
               {accountBalanceNow} {tokenSymbol}
             </strong>
-            )
           </span>
         ) : (
           ''

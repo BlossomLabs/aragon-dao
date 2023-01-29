@@ -5,11 +5,13 @@ import { useAppState } from '../../../providers/TokenWrapperProvider'
 import useActions from '../../../hooks/useActions'
 
 import BN from 'bn.js'
+import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 const ZERO_BN = new BN(0)
 
 function WrapTokenScreens({ mode }) {
   const [transactions, setTransactions] = useState([])
+  const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
   const { wrappedToken, depositedToken } = useAppState()
 
   const { tokenWrapperActions } = useActions()
@@ -44,11 +46,20 @@ function WrapTokenScreens({ mode }) {
         await tokenWrapperActions.wrap({ amount }, intent => {
           temporatyTrx.current = temporatyTrx.current.concat(intent)
         })
+        if (!temporatyTrx.current.length) {
+          setDisplayErrorScreen(true)
+          return
+        }
         setTransactions(temporatyTrx.current)
         onComplete()
       }
       if (mode === 'unwrap') {
         await tokenWrapperActions.unwrap({ amount }, intent => {
+          if (!intent || !intent.length) {
+            setDisplayErrorScreen(true)
+            return
+          }
+
           setTransactions(intent)
           onComplete()
         })
@@ -69,12 +80,15 @@ function WrapTokenScreens({ mode }) {
         graphicHeader: false,
         content: <WrapUnwrap mode={mode} getTransactions={getTransactions} />,
       },
+      {
+        content: <LoadingScreen />,
+      },
     ]
   }, [getTransactions, mode, title])
 
   return (
     <ModalFlowBase
-      frontLoad={false}
+      displayErrorScreen={displayErrorScreen}
       transactions={transactions}
       transactionTitle={mode === 'wrap' ? 'Wrap token' : 'Unwrap token'}
       screens={screens}

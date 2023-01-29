@@ -52,21 +52,39 @@ const reduceVotes = (votes = []) => {
   return reducedVotes
 }
 
+const formatSettings = (settings = {}) => {
+  return {
+    createdAt: new Date(parseInt(settings.createdAt, 10) * 1000),
+    voteTime: parseInt(settings.voteTime, 10),
+    executionDelay: parseInt(settings.executionDelay, 10),
+    quietEndingPeriod: parseInt(settings.quietEndingPeriod, 10),
+    quietEndingExtension: parseInt(settings.quietEndingExtension, 10),
+    delegatedVotingPeriod: parseInt(settings.delegatedVotingPeriod, 10),
+    minimumAcceptanceQuorumPct: new BN(settings.minimumAcceptanceQuorumPct),
+    supportRequiredPct: new BN(settings.supportRequiredPct),
+  }
+}
+
 function VotingProvider({ children }) {
   const { connectedApp } = useConnectedApp()
   const [votes, setVotes] = useState([])
+  const [currentSettings, setCurrentSettings] = useState({})
   const [representativeManager, status] = useConnect(
     () => connectedApp?._app.ethersContract().representativeManager(),
     [connectedApp]
   )
-  const mounted = useMounted()
-  const [connectVotes] = useConnect(() => {
-    return connectedApp?.onVotes()
+  const [rawSettings, rawSettingsStatus] = useConnect(() => {
+    return connectedApp?.currentSetting()
   }, [connectedApp])
-
   const [token, tokenStatus] = useConnect(() => {
     return connectedApp?.token()
   }, [connectedApp])
+  const [connectVotes] = useConnect(() => {
+    return connectedApp?.onVotes()
+  }, [connectedApp])
+  const mounted = useMounted()
+  const loading =
+    status.loading || tokenStatus.loading || rawSettingsStatus.loading
 
   useEffect(() => {
     const reducedVotes = reduceVotes(connectVotes)
@@ -75,23 +93,29 @@ function VotingProvider({ children }) {
     }
   }, [connectVotes, mounted])
 
+  useEffect(() => {
+    const formattedSettings = formatSettings(rawSettings)
+
+    if (mounted()) {
+      setCurrentSettings(formattedSettings)
+    }
+  }, [rawSettings, mounted])
+
   return (
     <VotingContext.Provider
       value={{
-        isSyncing: false,
-        loading: status.loading || tokenStatus.loading,
-        ready: true,
+        isSyncing: loading,
         tokenAddress: token?.id,
         tokenDecimals: new BN(token?.decimals),
         tokenSymbol: token?.symbol,
         pctBase: pctBase,
-        voteTime: 432000 * 1000,
+        currentSettings: currentSettings,
         connectedAccountVotes: [],
         numData: {
           pctBase: pctBaseNum,
           tokenDecimals: tokenDecimalsNum,
         },
-        votes: votes,
+        votes,
         representativeManager,
       }}
     >

@@ -1,12 +1,10 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { keyframes } from 'styled-components'
-import { useTheme, GU } from '@aragon/ui'
-import LoadingSpinner from '../Loading/LoadingSpinner'
+import { GU } from '@aragon/ui'
 import MultiModalScreens from './MultiModalScreens'
 import Stepper from '../Stepper/Stepper'
 import { useWallet } from '../../providers/Wallet'
-import { useMultiModal } from './MultiModalProvider'
+import ErrorScreen from './screens/ErrorScreen'
 
 const indexNumber = {
   0: 'First',
@@ -17,8 +15,7 @@ const indexNumber = {
 }
 
 function ModalFlowBase({
-  frontLoad,
-  loading,
+  displayErrorScreen,
   screens,
   transactions,
   transactionTitle,
@@ -77,11 +74,12 @@ function ModalFlowBase({
   const extendedScreens = useMemo(() => {
     const allScreens = []
 
-    // Add loading screen as first item if enabled
-    if (frontLoad) {
-      allScreens.push({
-        content: <LoadingScreen loading={loading} />,
-      })
+    if (displayErrorScreen) {
+      return [
+        {
+          content: <ErrorScreen />,
+        },
+      ]
     }
 
     // Spread in our flow screens
@@ -108,69 +106,15 @@ function ModalFlowBase({
 
     return allScreens
   }, [
+    displayErrorScreen,
     transactions,
     screens,
     transactionSteps,
     transactionTitle,
-    loading,
-    frontLoad,
   ])
 
   return <MultiModalScreens screens={extendedScreens} />
 }
-
-/* eslint-disable react/prop-types */
-function LoadingScreen({ loading }) {
-  const theme = useTheme()
-  const { next } = useMultiModal()
-
-  useEffect(() => {
-    let timeout
-
-    if (!loading) {
-      // Provide a minimum appearance duration to avoid visual confusion on very fast requests
-      timeout = setTimeout(() => {
-        next()
-      }, 100)
-    }
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [loading, next])
-
-  return (
-    <div
-      css={`
-        display: flex;
-        justify-content: center;
-        padding-top: ${16 * GU}px;
-        padding-bottom: ${16 * GU}px;
-      `}
-    >
-      <div
-        css={`
-          animation: ${keyframes`
-            from {
-              transform: scale(1.3);
-            }
-
-            to {
-              transform: scale(1);
-            }
-          `} 0.3s ease;
-        `}
-      >
-        <LoadingSpinner
-          css={`
-            color: ${theme.accent};
-          `}
-        />
-      </div>
-    </div>
-  )
-}
-/* eslint-enable react/prop-types */
 
 function modalWidthFromCount(count) {
   if (count >= 3) {
@@ -186,16 +130,14 @@ function modalWidthFromCount(count) {
 }
 
 ModalFlowBase.propTypes = {
-  frontLoad: PropTypes.bool,
-  loading: PropTypes.bool,
   screens: PropTypes.array,
   transactions: PropTypes.array,
   transactionTitle: PropTypes.string,
 }
 
 ModalFlowBase.defaultProps = {
-  frontLoad: true,
   transactionTitle: 'Create transaction',
+  displayErrorScreen: false,
 }
 
-export default ModalFlowBase
+export default React.memo(ModalFlowBase)

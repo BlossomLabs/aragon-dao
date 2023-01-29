@@ -1,3 +1,5 @@
+import { GU } from '@aragon/ui'
+
 export const DEFAULT_CHAIN_ID = 100
 
 export const ZERO_ADDR = '0x0000000000000000000000000000000000000000'
@@ -33,3 +35,5 @@ export const APPS_PANEL_INSTANCE_NAMES = new Map([
 ])
 
 export const APP_CUSTOM_NAME = new Map([['Tao Voting', 'Delegate Voting']])
+
+export const MAIN_HEADER_HEIGHT = 8 * GU

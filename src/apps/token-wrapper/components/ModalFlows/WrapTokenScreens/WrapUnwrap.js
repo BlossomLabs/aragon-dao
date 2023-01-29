@@ -100,6 +100,7 @@ const WrapUnwrap = React.memo(function WrapUnwrap({ mode, getTransactions }) {
     event => {
       event.preventDefault()
 
+      next()
       getTransactions(() => {
         next()
       }, amount.valueBN.toString(10))

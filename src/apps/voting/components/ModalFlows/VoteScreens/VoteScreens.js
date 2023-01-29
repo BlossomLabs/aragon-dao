@@ -3,6 +3,7 @@ import ModalFlowBase from '@/components/MultiModal/ModalFlowBase'
 import VoteOnDecision from './Vote'
 
 import useActions from '../../../hooks/useActions'
+import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 function VoteScreens({
   canUserVote,
@@ -13,6 +14,7 @@ function VoteScreens({
 }) {
   const { votingActions } = useActions()
   const [transactions, setTransactions] = useState([])
+  const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
 
   const temporatyTrx = useRef([])
 
@@ -43,6 +45,9 @@ function VoteScreens({
         await voteOnBehalfOf(vote.voteId, supports, principals)
       }
 
+      if (!temporatyTrx.current.length) {
+        setDisplayErrorScreen(true)
+      }
       setTransactions(temporatyTrx.current)
       onComplete()
     },
@@ -64,12 +69,15 @@ function VoteScreens({
         graphicHeader: false,
         content: <VoteOnDecision getTransactions={getTransactions} />,
       },
+      {
+        content: <LoadingScreen />,
+      },
     ]
   }, [getTransactions, supports])
 
   return (
     <ModalFlowBase
-      frontLoad={false}
+      displayErrorScreen={displayErrorScreen}
       transactions={transactions}
       transactionTitle="Vote on decision"
       screens={screens}

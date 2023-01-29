@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { buildAppInstanceRoute } from '@/utils/app-utils'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import NotFoundScreen from './NotFoundScreen'
+import { useWait } from '@/hooks/shared/useWait'
 
 function AppSection({ component: Component, appAddresses, appName, ...props }) {
   const appAddress = props.match.params?.appAddress
@@ -18,6 +19,7 @@ function AppSection({ component: Component, appAddresses, appName, ...props }) {
 }
 
 export const AppRouting = ({ appName, defaultPath, appRoutes, children }) => {
+  const isWaiting = useWait(50)
   const { apps } = useOrganizationState()
 
   const appAddresses = apps
@@ -27,6 +29,15 @@ export const AppRouting = ({ appName, defaultPath, appRoutes, children }) => {
   const defaultAppAddress = app?.address ?? ''
   const appRoutingName = APPS_ROUTING.get(appName)
   const appInstancePath = buildAppInstanceRoute(appName)
+
+  // TODO: Find a better way to handle this
+  /**
+   * When switching from one app to another, we need to wait a little bit
+   * for the connected app to update.
+   */
+  if (isWaiting) {
+    return null
+  }
 
   return (
     <Switch>

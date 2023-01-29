@@ -2,14 +2,18 @@ import { GU, textStyle, useViewport } from '@aragon/ui'
 import React, { useCallback, useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 import { APPS_MENU_PANEL } from '../../constants'
+import imgEagle from '@/assets/eagle.svg'
 import { useOrganizationState } from '../../providers/OrganizationProvider'
 import { buildAppRoute, getAppPresentation } from '../../utils/app-utils'
 import AppIcon from '../AppIcon/AppIcon'
 import AppCard from './AppCard'
 
+const EAGLE_DIMENSIONS = [1241, 833]
+
 const HomeScreen = () => {
   const { below } = useViewport()
   const compactMode = below('large')
+  const smallMode = below('medium')
   const history = useHistory()
   const { apps } = useOrganizationState()
   const menuApps = useMemo(() => {
@@ -59,7 +63,10 @@ const HomeScreen = () => {
           display: grid;
           align-items: center;
           justify-content: center;
-
+          background: fixed ${smallMode ? '0%' : '50%'} 100% /
+            ${EAGLE_DIMENSIONS[0]}px ${EAGLE_DIMENSIONS[1]}px no-repeat
+            url(${imgEagle});
+          opacity: 0.8;
           overflow: auto;
         `}
       >

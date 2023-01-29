@@ -3,11 +3,9 @@ import styled from 'styled-components'
 import { SidePanel, Tabs, GU } from '@aragon/ui'
 import Deposit from './Deposit'
 import Withdrawal from './Withdrawal'
-import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 
 const PanelContent = ({ onWithdraw, onDeposit, opened, tokens }) => {
   const [screenIndex, setScreenIndex] = useState(0)
-  const { next } = useMultiModal()
 
   return (
     <div>
@@ -20,15 +18,10 @@ const PanelContent = ({ onWithdraw, onDeposit, opened, tokens }) => {
       </TabsWrapper>
 
       {screenIndex === 0 && (
-        <Deposit
-          opened={opened}
-          tokens={tokens}
-          onDeposit={onDeposit}
-          onComplete={next}
-        />
+        <Deposit opened={opened} tokens={tokens} onDeposit={onDeposit} />
       )}
       {screenIndex === 1 && (
-        <Withdrawal tokens={tokens} onWithdraw={onWithdraw} onComplete={next} />
+        <Withdrawal tokens={tokens} onWithdraw={onWithdraw} />
       )}
     </div>
   )

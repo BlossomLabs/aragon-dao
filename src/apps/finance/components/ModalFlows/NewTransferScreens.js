@@ -4,11 +4,13 @@ import DepositWithdraw from './DepositWithdraw'
 import useActions from '../../hooks/useActions'
 
 import BN from 'bn.js'
+import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 const ZERO_BN = new BN(0)
 
 function NewTransferScreens({ tokens, opened }) {
   const [transactions, setTransactions] = useState([])
+  const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
 
   const { financeActions } = useActions()
 
@@ -42,6 +44,11 @@ function NewTransferScreens({ tokens, opened }) {
           temporatyTrx.current = temporatyTrx.current.concat(intent)
         }
       )
+      if (!temporatyTrx.current.length) {
+        setDisplayErrorScreen(true)
+        return
+      }
+
       setTransactions(temporatyTrx.current)
       onComplete()
     },
@@ -53,6 +60,11 @@ function NewTransferScreens({ tokens, opened }) {
       await financeActions.withdraw(
         { tokenAddress, recipient, amount, reference },
         intent => {
+          if (!intent || !intent.length) {
+            setDisplayErrorScreen(true)
+            return
+          }
+
           setTransactions(intent)
           onComplete()
         }
@@ -75,12 +87,15 @@ function NewTransferScreens({ tokens, opened }) {
           />
         ),
       },
+      {
+        content: <LoadingScreen />,
+      },
     ]
   }, [handleOnDeposit, handleOnWithdraw, opened, tokens])
 
   return (
     <ModalFlowBase
-      frontLoad={false}
+      displayErrorScreen={displayErrorScreen}
       transactions={transactions}
       transactionTitle={'New transaction'}
       screens={screens}

@@ -31,7 +31,7 @@ export default {
     } on behalf of principals on decision: #${voteId}`
   },
   [organizationActions.NEW_VOTE]: () => {
-    return `New signaling vote`
+    return `New signaling proposal`
   },
   [organizationActions.WRAP]: () => {
     return `Wrap token`

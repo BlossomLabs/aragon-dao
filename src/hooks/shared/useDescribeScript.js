@@ -9,20 +9,22 @@ import { toUtf8String } from 'ethers/lib/utils'
 const cachedDescriptions = new Map([])
 
 const formatNewVoteStep = step => {
+  const formattedDescription = formatDescription(step.description ?? '')
   const formattedAnnotatedDescription = step.annotatedDescription?.length
-    ? step.annotatedDescription.map(item =>
-        item.type === 'bytes32'
-          ? { ...item, value: toUtf8String(item.value) }
-          : item
-      )
+    ? step.annotatedDescription.map(item => {
+        const newItem = { ...item }
+        switch (item.type) {
+          case 'bytes32':
+            newItem.value = toUtf8String(item.value)
+            break
+          case 'text':
+            newItem.value = formatDescription(item.value)
+            break
+        }
+
+        return newItem
+      })
     : undefined
-  const formattedDescription = step.description
-    // Split to easily access utf-8-codified string segment
-    .split(' ')
-    .map(segment =>
-      segment.startsWith('0x') ? toUtf8String(segment) : segment
-    )
-    .join(' ')
 
   return {
     ...step,
@@ -35,6 +37,15 @@ const isNewVoteStep = step => {
   const sigHash = step.data.substring(0, 10)
 
   return sigHash === '0x0a0932da' // sig hash for "newVote(bytes,bytes)""
+}
+
+const formatDescription = rawDescription => {
+  return rawDescription
+    .split('"')
+    .map(fragment =>
+      fragment.startsWith('0x') ? toUtf8String(fragment) : fragment
+    )
+    .join('"')
 }
 
 // TODO: temporary solution for steps of new votes with context until

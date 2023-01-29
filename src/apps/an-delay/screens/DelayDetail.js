@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   BackButton,
   Bar,
@@ -75,6 +75,10 @@ const DelayDetail = React.memo(({ delay, path }) => {
   const compactMode = below('large')
 
   const { id, creator, executionTargetData } = delay
+
+  const handleModalClose = useCallback(() => {
+    setModalVisible(false)
+  }, [])
 
   return (
     <>
@@ -166,7 +170,7 @@ const DelayDetail = React.memo(({ delay, path }) => {
               )}
               <MultiModal
                 visible={modalVisible}
-                onClose={() => setModalVisible(false)}
+                onClose={handleModalClose}
                 onClosed={() => setModalMode(null)}
               >
                 <DelayActionScreens

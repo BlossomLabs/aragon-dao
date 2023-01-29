@@ -20,7 +20,7 @@ import { formatTokenAmount } from '../../../token-utils'
 const INVALID_ADDRESS_ERROR = 'Recipient must be a valid Ethereum address'
 
 function DelegateVotingPower({ onCreateTransaction }) {
-  const [delegateAccount, setDelegateAccount] = useState()
+  const [delegateAccount, setDelegateAccount] = useState('')
   const { account } = useWallet()
   const { next } = useMultiModal()
   const { tokenAddress, tokenDecimals, tokenSymbol } = useAppState()
@@ -38,6 +38,8 @@ function DelegateVotingPower({ onCreateTransaction }) {
       setInvalidAddress(true)
       return
     }
+
+    next()
     onCreateTransaction(delegateAccount, () => {
       next()
     })

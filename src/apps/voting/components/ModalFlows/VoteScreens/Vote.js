@@ -5,6 +5,7 @@ const Vote = React.memo(function VoteOnDecision({ getTransactions }) {
   const { next } = useMultiModal()
 
   useEffect(() => {
+    next()
     getTransactions(() => {
       next()
     })

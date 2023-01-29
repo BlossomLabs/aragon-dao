@@ -7,6 +7,8 @@ import { fromDecimals } from '../utils'
 function InfoBox({ depositedToken, wrappedToken }) {
   const network = useNetwork()
   const theme = useTheme()
+  const depositedTokenAddress = depositedToken.address ?? depositedToken.id
+  const wrappedTokenAddress = wrappedToken.address ?? wrappedToken.id
 
   const totalSupply = wrappedToken.totalSupply
     ? fromDecimals(
@@ -27,7 +29,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
         >
           <TokenBadge
             compact
-            address={depositedToken.address}
+            address={depositedTokenAddress}
             network={network && network.type}
             symbol={depositedToken.symbol}
           />
@@ -36,12 +38,12 @@ function InfoBox({ depositedToken, wrappedToken }) {
           </span>
           <TokenBadge
             compact
-            address={wrappedToken.address}
+            address={wrappedTokenAddress}
             network={network && network.type}
             symbol={wrappedToken.symbol}
           />
         </h2>
-        <p
+        <div
           css={`
             margin-top: ${1 * GU}px;
           `}
@@ -49,20 +51,22 @@ function InfoBox({ depositedToken, wrappedToken }) {
           You can wrap{' '}
           <TokenBadge
             compact
-            address={depositedToken.address}
+            badgeOnly
+            address={depositedTokenAddress}
             network={network && network.type}
             symbol={depositedToken.symbol}
           />{' '}
           tokens for{' '}
           <TokenBadge
             compact
-            address={wrappedToken.address}
+            badgeOnly
+            address={wrappedTokenAddress}
             network={network && network.type}
             symbol={wrappedToken.symbol}
           />{' '}
           tokens used in this organization for governance.
-        </p>
-        <p
+        </div>
+        <div
           css={`
             margin-top: ${1 * GU}px;
           `}
@@ -70,19 +74,20 @@ function InfoBox({ depositedToken, wrappedToken }) {
           You can unwrap{' '}
           <TokenBadge
             compact
+            badgeOnly
             address={wrappedToken.address}
             network={network && network.type}
             symbol={wrappedToken.symbol}
           />{' '}
           at any time to return your original tokens.
-        </p>
-        <p
+        </div>
+        <div
           css={`
             margin-top: ${1 * GU}px;
           `}
         >
           1 {depositedToken.symbol} = 1 {wrappedToken.symbol}
-        </p>
+        </div>
       </Box>
       <Box heading="Token Info">
         <ul>
@@ -92,7 +97,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
             [
               'Token',
               <TokenBadge
-                address={wrappedToken.address}
+                address={wrappedTokenAddress}
                 name={wrappedToken.name}
                 network={network && network.type}
                 symbol={wrappedToken.symbol}

@@ -5,7 +5,7 @@ import { Button, GU, textStyle } from '@aragon/ui'
 
 function DelayButton({ label, beforeIcon, css, ...props }) {
   return (
-    <CustomButton wide css={css} {...props}>
+    <CustomButton id={label} wide css={css} {...props}>
       {beforeIcon && (
         <img
           src={beforeIcon}

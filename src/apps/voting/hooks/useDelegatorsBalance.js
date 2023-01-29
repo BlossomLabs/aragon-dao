@@ -12,7 +12,7 @@ const emptyPromise = defaultValue =>
 export default function useDelegatorsBalance(delegators) {
   const [loading, setLoading] = useState(true)
   const { tokenAddress } = useAppState()
-  const { chainId } = useWallet
+  const { chainId } = useWallet()
   const tokenContract = useContractReadOnly(
     tokenAddress,
     minimeTokenAbi,

@@ -9,10 +9,9 @@ import vaultBalanceAbi from '../abi/vault-balance.json'
 import minimeTokenAbi from '@/abi/minimeToken.json'
 import { useWallet } from '@/providers/Wallet'
 import { useNetwork } from '@/hooks/shared'
+import { constants } from 'ethers'
 
 const INITIAL_TIMER = 2000
-
-const CHAIN_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const cachedContracts = new Map([])
 
@@ -29,7 +28,7 @@ const useBalances = (timeout = 7000) => {
   const { chainId } = useWallet()
   const { nativeToken } = useNetwork()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
-  const [tokenBalances = [], { loading, error }] = useConnect(
+  const [tokenBalances = [], { error }] = useConnect(
     () => connectedFinanceApp?.onBalance(),
     [connectedFinanceApp]
   )
@@ -74,7 +73,7 @@ const useBalances = (timeout = 7000) => {
 
             let decimals
             let symbol
-            if (tokenBalance.token === CHAIN_TOKEN_ADDRESS) {
+            if (tokenBalance.token === constants.AddressZero) {
               decimals = 18
               symbol = nativeToken
             } else {

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Button, EmptyStateCard, GU } from '@aragon/ui'
 import appNotFoundPng from './assets/app-not-found.png'
 import { useHistory } from 'react-router-dom'
+import { MAIN_HEADER_HEIGHT } from '@/constants'
 
 const NotFoundScreen = ({ text, actionText = 'Go back', onAction }) => {
   const history = useHistory()
@@ -26,7 +27,7 @@ const NotFoundScreen = ({ text, actionText = 'Go back', onAction }) => {
 
 const Main = styled.div`
   display: flex;
-  height: calc(100vh - ${8 * GU}px);
+  height: calc(100vh - ${MAIN_HEADER_HEIGHT - GU}px);
   align-items: center;
   justify-content: center;
 `

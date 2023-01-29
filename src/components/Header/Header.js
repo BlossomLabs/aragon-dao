@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useRouteMatch, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import {
   GU,
   Link,
@@ -13,6 +13,10 @@ import {
 import HeaderLogo from './HeaderLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
 import AccountModule from '../Account/AccountModule'
+import { MAIN_HEADER_HEIGHT } from '@/constants'
+
+const GET_ANT_LINK =
+  'https://v2.info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae'
 
 function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
@@ -27,7 +31,6 @@ function Header({ showMenu, onMenuClick, ...props }) {
   return (
     <header
       css={`
-        box-shadow: 0px 0px 10px rgba(160, 168, 194, 0.3);
         background-color: ${theme.surface};
       `}
       {...props}
@@ -35,7 +38,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
       <LayoutGutter collapseWhenSmall={false}>
         <div
           css={`
-            height: ${8 * GU}px;
+            height: ${MAIN_HEADER_HEIGHT + GU}px;
             width: 100%;
             display: flex;
             align-items: center;
@@ -50,7 +53,6 @@ function Header({ showMenu, onMenuClick, ...props }) {
           >
             <div
               css={`
-                margin-left: ${1 * GU}px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -70,7 +72,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
             >
               <NavItem>
                 <Link
-                  href="https://app.uniswap.org/#/swap?outputCurrency=0x960b236A07cf122663c4303350609A66A7B288C0"
+                  href={GET_ANT_LINK}
                   css={`
                     display: flex;
                     align-items: center;
@@ -99,8 +101,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
               display: flex;
               justify-content: center;
               align-items: center;
-              gap: ${2 * GU}px;
-              margin-right: ${1 * GU}px;
+              gap: ${0.5 * GU}px;
             `}
           >
             <AccountModule />
@@ -116,33 +117,6 @@ function Header({ showMenu, onMenuClick, ...props }) {
   )
 }
 
-/* eslint-disable react/prop-types */
-function InteralLink({ to, children }) {
-  const history = useHistory()
-  const theme = useTheme()
-  const active = useRouteMatch(to) !== null
-
-  const handlePageRequest = useCallback(() => {
-    history.push(to)
-  }, [history, to])
-
-  return (
-    <Link
-      onClick={handlePageRequest}
-      css={`
-        ${unselectable};
-        padding: ${0.5 * GU}px 0;
-        text-decoration: none;
-        color: ${theme.contentSecondary};
-
-        ${active ? `color: ${theme.content}` : ''};
-      `}
-    >
-      {children}
-    </Link>
-  )
-}
-
 function NavItem({ children }) {
   return (
     <div
@@ -155,6 +129,5 @@ function NavItem({ children }) {
     </div>
   )
 }
-/* eslint-enable react/prop-types */
 
 export default Header

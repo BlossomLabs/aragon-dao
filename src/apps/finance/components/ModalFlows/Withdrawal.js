@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 import {
-  Button,
   DropDown,
   IconCross,
   Info,
@@ -11,9 +10,11 @@ import {
   GU,
   textStyle,
   useTheme,
+  Button,
 } from '@aragon/ui'
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
 import AmountInput from '../AmountInput'
+import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const RECEIPIENT_NOT_ADDRESS_ERROR = Symbol('RECEIPIENT_NOT_ADDRESS_ERROR')
@@ -74,7 +75,8 @@ class Withdrawal extends React.Component {
   }
   handleSubmit = event => {
     event.preventDefault()
-    const { onWithdraw, onComplete } = this.props
+
+    const { onWithdraw, next } = this.props
     const { amount, recipient, reference, selectedToken } = this.state
 
     const tokens = this.nonZeroTokens()
@@ -108,10 +110,11 @@ class Withdrawal extends React.Component {
       }))
       return
     }
+    next()
 
     onWithdraw(
       () => {
-        onComplete()
+        next()
       },
       token.address,
       recipientAddress,
@@ -247,9 +250,10 @@ const ValidationError = ({ message }) => {
 }
 
 export default props => {
+  const { next } = useMultiModal()
   const [readyToFocus, setReadyToFocus] = useState(false)
   useLayoutEffect(() => {
     setReadyToFocus(true)
   }, [])
-  return <Withdrawal readyToFocus={readyToFocus} {...props} />
+  return <Withdrawal readyToFocus={readyToFocus} next={next} {...props} />
 }

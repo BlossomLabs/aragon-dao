@@ -1,11 +1,17 @@
-import React from 'react'
 import { EmptyStateCard, GU, LoadingRing } from '@aragon/ui'
+import React from 'react'
 
-const NoDelays = React.memo(({ isSyncing }) => {
+function EmptyAppStateCard({
+  emptyStateLabel = 'No data found',
+  isLoading,
+  action,
+  ...props
+}) {
+  const actionProp = action ? { action } : {}
   return (
     <EmptyStateCard
       text={
-        isSyncing ? (
+        isLoading ? (
           <div
             css={`
               display: grid;
@@ -15,15 +21,17 @@ const NoDelays = React.memo(({ isSyncing }) => {
               grid-gap: ${1 * GU}px;
             `}
           >
-            <LoadingRing />
+            <LoadingRing mode="half-circle" />
             <span>Loading…</span>
           </div>
         ) : (
-          'No delayed scripts!'
+          <span>{emptyStateLabel}</span>
         )
       }
+      {...props}
+      {...(isLoading ? {} : actionProp)}
     />
   )
-})
+}
 
-export default NoDelays
+export default EmptyAppStateCard
