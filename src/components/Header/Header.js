@@ -15,6 +15,9 @@ import LayoutGutter from '../Layout/LayoutGutter'
 import AccountModule from '../Account/AccountModule'
 import { MAIN_HEADER_HEIGHT } from '@/constants'
 
+const GET_ANT_LINK =
+  'https://v2.info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae'
+
 function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
   const history = useHistory()
@@ -69,7 +72,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
             >
               <NavItem>
                 <Link
-                  href="https://app.uniswap.org/#/swap?outputCurrency=0x960b236A07cf122663c4303350609A66A7B288C0"
+                  href={GET_ANT_LINK}
                   css={`
                     display: flex;
                     align-items: center;
