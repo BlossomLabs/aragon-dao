@@ -5,6 +5,8 @@ import useActions from '../../hooks/useActions'
 
 import BN from 'bn.js'
 import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
+import { addressesEqual } from '@/utils/web3-utils'
+import { constants } from 'ethers'
 
 const ZERO_BN = new BN(0)
 
@@ -18,32 +20,36 @@ function NewTransferScreens({ tokens, opened }) {
 
   const handleOnDeposit = useCallback(
     async (onComplete, tokenAddress, amount, reference) => {
-      const bnAmount = new BN(amount)
-      const allowance = await financeActions.getAllowance(tokenAddress)
-      if (allowance.lt(bnAmount)) {
-        if (!allowance.eq(new BN(0))) {
+      if (!addressesEqual(tokenAddress, constants.AddressZero)) {
+        const bnAmount = new BN(amount)
+        const allowance = await financeActions.getAllowance(tokenAddress)
+        if (allowance.lt(bnAmount)) {
+          if (!allowance.eq(new BN(0))) {
+            await financeActions.approveTokenAmount(
+              tokenAddress,
+              ZERO_BN,
+              intent => {
+                temporatyTrx.current = temporatyTrx.current.concat(intent)
+              }
+            )
+          }
           await financeActions.approveTokenAmount(
             tokenAddress,
-            ZERO_BN,
+            amount,
             intent => {
               temporatyTrx.current = temporatyTrx.current.concat(intent)
             }
           )
         }
-        await financeActions.approveTokenAmount(
-          tokenAddress,
-          amount,
-          intent => {
-            temporatyTrx.current = temporatyTrx.current.concat(intent)
-          }
-        )
       }
+
       await financeActions.deposit(
         { tokenAddress, amount, reference },
         intent => {
           temporatyTrx.current = temporatyTrx.current.concat(intent)
         }
       )
+
       if (!temporatyTrx.current.length) {
         setDisplayErrorScreen(true)
         return

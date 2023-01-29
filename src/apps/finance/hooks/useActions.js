@@ -10,6 +10,7 @@ import radspec from '@/radspec'
 import financeActions from '../actions/finance-action-types'
 
 import tokenAbi from '@/abi/minimeToken.json'
+import { constants } from 'ethers'
 
 const APPROVE_GAS_LIMIT = 250000
 const DEPOSIT_GAS_LIMIT = 2000000
@@ -50,6 +51,17 @@ export default function useActions() {
       )
 
       intent = imposeGasLimit(intent, DEPOSIT_GAS_LIMIT)
+
+      /**
+       * We need to add the amount as tx value when depositting
+       * native tokens
+       */
+      if (
+        tokenAddress === constants.AddressZero &&
+        intent.transactions.length
+      ) {
+        intent.transactions[intent.transactions.length - 1].value = amount
+      }
 
       const description = radspec[financeActions.DEPOSIT]()
 
