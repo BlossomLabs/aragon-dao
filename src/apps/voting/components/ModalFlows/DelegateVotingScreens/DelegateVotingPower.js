@@ -3,10 +3,13 @@ import {
   Button,
   Field,
   GU,
+  isAddress,
+  IconCross,
   Info,
   LoadingRing,
   TextInput,
   textStyle,
+  useTheme,
 } from '@aragon/ui'
 import { useAppState } from '../../../providers/VotingProvider'
 import { useTokenBalances } from '@/hooks/shared/useAccountTokenBalance'
@@ -14,11 +17,14 @@ import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import { useWallet } from '@/providers/Wallet'
 import { formatTokenAmount } from '../../../token-utils'
 
+const INVALID_ADDRESS_ERROR = 'Recipient must be a valid Ethereum address'
+
 function DelegateVotingPower({ onCreateTransaction }) {
   const [delegateAccount, setDelegateAccount] = useState()
   const { account } = useWallet()
   const { next } = useMultiModal()
   const { tokenAddress, tokenDecimals, tokenSymbol } = useAppState()
+  const [invalidAddress, setInvalidAddress] = useState(false)
 
   const [{ balance }, loadingBalance] = useTokenBalances(account, tokenAddress)
 
@@ -28,6 +34,10 @@ function DelegateVotingPower({ onCreateTransaction }) {
   }, [])
 
   const handleOnDelegatevotingPower = useCallback(() => {
+    if (!isAddress(delegateAccount)) {
+      setInvalidAddress(true)
+      return
+    }
     onCreateTransaction(delegateAccount, () => {
       next()
     })
@@ -92,6 +102,35 @@ function DelegateVotingPower({ onCreateTransaction }) {
       >
         Delegate your voting power
       </Button>
+      {invalidAddress && <ValidationError message={INVALID_ADDRESS_ERROR} />}
+    </div>
+  )
+}
+
+const ValidationError = ({ message }) => {
+  const theme = useTheme()
+  return (
+    <div
+      css={`
+        display: flex;
+        align-items: center;
+        margin-top: ${2 * GU}px;
+      `}
+    >
+      <IconCross
+        size="tiny"
+        css={`
+          color: ${theme.negative};
+          margin-right: ${1 * GU}px;
+        `}
+      />
+      <span
+        css={`
+          ${textStyle('body3')}
+        `}
+      >
+        {message}
+      </span>
     </div>
   )
 }
