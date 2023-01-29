@@ -9,7 +9,6 @@ function InfoBox({ depositedToken, wrappedToken }) {
   const theme = useTheme()
   const depositedTokenAddress = depositedToken.address ?? depositedToken.id
   const wrappedTokenAddress = wrappedToken.address ?? wrappedToken.id
-
   const totalSupply = wrappedToken.totalSupply
     ? fromDecimals(
         wrappedToken.totalSupply.toString(),
@@ -30,7 +29,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
           <TokenBadge
             compact
             address={depositedTokenAddress}
-            network={network && network.type}
+            networkType={network?.type}
             symbol={depositedToken.symbol}
           />
           <span>
@@ -39,7 +38,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
           <TokenBadge
             compact
             address={wrappedTokenAddress}
-            network={network && network.type}
+            networkType={network?.type}
             symbol={wrappedToken.symbol}
           />
         </h2>
@@ -53,7 +52,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
             compact
             badgeOnly
             address={depositedTokenAddress}
-            network={network && network.type}
+            networkType={network?.type}
             symbol={depositedToken.symbol}
           />{' '}
           tokens for{' '}
@@ -61,7 +60,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
             compact
             badgeOnly
             address={wrappedTokenAddress}
-            network={network && network.type}
+            networkType={network?.type}
             symbol={wrappedToken.symbol}
           />{' '}
           tokens used in this organization for governance.
@@ -76,7 +75,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
             compact
             badgeOnly
             address={wrappedToken.address}
-            network={network && network.type}
+            networkType={network?.type}
             symbol={wrappedToken.symbol}
           />{' '}
           at any time to return your original tokens.
@@ -99,7 +98,7 @@ function InfoBox({ depositedToken, wrappedToken }) {
               <TokenBadge
                 address={wrappedTokenAddress}
                 name={wrappedToken.name}
-                network={network && network.type}
+                networkType={network?.type}
                 symbol={wrappedToken.symbol}
               />,
             ],
