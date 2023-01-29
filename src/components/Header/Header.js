@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useRouteMatch, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import {
   GU,
   Link,
@@ -27,7 +27,6 @@ function Header({ showMenu, onMenuClick, ...props }) {
   return (
     <header
       css={`
-        box-shadow: 0px 0px 10px rgba(160, 168, 194, 0.3);
         background-color: ${theme.surface};
       `}
       {...props}
@@ -50,7 +49,6 @@ function Header({ showMenu, onMenuClick, ...props }) {
           >
             <div
               css={`
-                margin-left: ${1 * GU}px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -99,8 +97,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
               display: flex;
               justify-content: center;
               align-items: center;
-              gap: ${2 * GU}px;
-              margin-right: ${1 * GU}px;
+              gap: ${0.5 * GU}px;
             `}
           >
             <AccountModule />
@@ -116,33 +113,6 @@ function Header({ showMenu, onMenuClick, ...props }) {
   )
 }
 
-/* eslint-disable react/prop-types */
-function InteralLink({ to, children }) {
-  const history = useHistory()
-  const theme = useTheme()
-  const active = useRouteMatch(to) !== null
-
-  const handlePageRequest = useCallback(() => {
-    history.push(to)
-  }, [history, to])
-
-  return (
-    <Link
-      onClick={handlePageRequest}
-      css={`
-        ${unselectable};
-        padding: ${0.5 * GU}px 0;
-        text-decoration: none;
-        color: ${theme.contentSecondary};
-
-        ${active ? `color: ${theme.content}` : ''};
-      `}
-    >
-      {children}
-    </Link>
-  )
-}
-
 function NavItem({ children }) {
   return (
     <div
@@ -155,6 +125,5 @@ function NavItem({ children }) {
     </div>
   )
 }
-/* eslint-enable react/prop-types */
 
 export default Header
