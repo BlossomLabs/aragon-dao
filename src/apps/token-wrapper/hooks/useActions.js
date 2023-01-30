@@ -56,7 +56,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedApp, mounted]
+    [account, connectedApp, mounted, GAS_LIMIT]
   )
 
   const unwrap = useCallback(
@@ -73,7 +73,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedApp, mounted]
+    [account, connectedApp, mounted, GAS_LIMIT]
   )
 
   const approve = useCallback(
@@ -81,22 +81,21 @@ export default function useActions() {
       if (!tokenContract || !appAddress) {
         return
       }
+
       const approveData = encodeFunctionData(tokenContract, 'approve', [
         appAddress,
         amount.toString(10),
       ])
-      const intent = [
-        {
-          data: approveData,
-          from: account,
-          to: tokenContract.address,
-          gasLimit: APPROVE_GAS_LIMIT,
-        },
-      ]
+      const intent = {
+        data: approveData,
+        from: account,
+        to: tokenContract.address,
+        gasLimit: APPROVE_GAS_LIMIT,
+      }
 
       return intent
     },
-    [account]
+    [account, APPROVE_GAS_LIMIT]
   )
 
   const approveTokenAmount = useCallback(

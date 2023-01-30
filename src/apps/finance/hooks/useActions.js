@@ -69,7 +69,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted]
+    [account, connectedFinanceApp, mounted, GAS_LIMIT]
   )
 
   const withdraw = useCallback(
@@ -90,7 +90,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted]
+    [account, connectedFinanceApp, mounted, GAS_LIMIT]
   )
 
   const approve = useCallback(
@@ -102,18 +102,18 @@ export default function useActions() {
         appAddress,
         amount.toString(10),
       ])
-      const intent = [
-        {
-          data: approveData,
-          from: account,
-          to: tokenContract.address,
-          gasLimit: APPROVE_GAS_LIMIT,
-        },
-      ]
+      const intent = {
+        data: approveData,
+        from: account,
+        to: tokenContract.address,
+        gasLimit: APPROVE_GAS_LIMIT,
+      }
 
-      return intent
+      if (mounted()) {
+        return intent
+      }
     },
-    [account]
+    [account, APPROVE_GAS_LIMIT, mounted]
   )
 
   const approveTokenAmount = useCallback(

@@ -8,8 +8,10 @@ import { useGuardianState } from '@/providers/Guardian'
 import { useANDelaySettings } from '../providers/ANDelaySettingsProvider'
 import { useGasLimit } from '@/hooks/shared/useGasLimit'
 import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
+import { useMounted } from '@/hooks/shared/useMounted'
 
 export default function useActions() {
+  const mounted = useMounted()
   const { account } = useWallet()
   const { callAsGuardian } = useGuardianState()
   const { connectedApp: connectedANDelayApp } = useConnectedApp()
@@ -30,9 +32,11 @@ export default function useActions() {
 
       intent = describeIntent(intent, radspec[anDelayActions.EXECUTE](script))
 
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, connectedANDelayApp]
+    [account, connectedANDelayApp, GAS_LIMIT, mounted]
   )
 
   const delayExecution = useCallback(
@@ -55,9 +59,11 @@ export default function useActions() {
         })
       )
 
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, connectedANDelayApp, executionDelay]
+    [account, connectedANDelayApp, executionDelay, GAS_LIMIT, mounted]
   )
 
   const pauseExecution = useCallback(
@@ -77,9 +83,11 @@ export default function useActions() {
         radspec[anDelayActions.PAUSE_EXECUTION](script)
       )
 
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, connectedANDelayApp]
+    [account, connectedANDelayApp, GAS_LIMIT, mounted]
   )
 
   const resumeExecution = useCallback(
@@ -99,9 +107,11 @@ export default function useActions() {
         radspec[anDelayActions.RESUME_EXECUTION](script)
       )
 
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, connectedANDelayApp]
+    [account, connectedANDelayApp, GAS_LIMIT, mounted]
   )
 
   const cancelExecution = useCallback(
@@ -119,9 +129,11 @@ export default function useActions() {
         radspec[anDelayActions.CANCEL_EXECUTION](script)
       )
 
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [connectedANDelayApp, callAsGuardian]
+    [connectedANDelayApp, callAsGuardian, GAS_LIMIT, mounted]
   )
 
   return useMemo(

@@ -17,7 +17,7 @@ export function describeIntent(intent, description) {
       const knownDescription = KNOWN_DESCRIPTIONS[signature]
       return {
         ...tx,
-        description: knownDescription ? knownDescription : description,
+        description: knownDescription ?? description,
       }
     }),
   }

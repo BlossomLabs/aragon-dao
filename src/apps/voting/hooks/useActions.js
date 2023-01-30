@@ -10,8 +10,10 @@ import { useGasLimit } from '@/hooks/shared/useGasLimit'
 import votingActions from '../actions/voting-action-types'
 
 import { EMPTY_CALLSCRIPT } from '../evmscript-utils'
+import { useMounted } from '@/hooks/shared/useMounted'
 
 export default function useActions() {
+  const mounted = useMounted()
   const { account, ethers } = useWallet()
   const { connectedApp: votingApp } = useConnectedApp()
   const [GAS_LIMIT] = useGasLimit()
@@ -33,10 +35,11 @@ export default function useActions() {
           representative,
         })
       )
-
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const vote = useCallback(
@@ -55,9 +58,11 @@ export default function useActions() {
         })
       )
 
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const newVote = useCallback(
@@ -74,9 +79,11 @@ export default function useActions() {
 
       intent = describeIntent(intent, radspec[votingActions.NEW_VOTE]())
 
-      onDone(intent.transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const voteOnBehalfOf = useCallback(
@@ -96,9 +103,11 @@ export default function useActions() {
         radspec[votingActions.VOTE_ON_BEHALF_OF](voteId, supports)
       )
 
-      onDone(transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const executeVote = useCallback(

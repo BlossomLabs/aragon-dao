@@ -45,7 +45,7 @@ function DelayActionScreens({ action, delayedScript }) {
   const getTransactions = useCallback(
     async onComplete => {
       await anDelayActions[fnMethod](delayedScript, intent => {
-        if (!intent) {
+        if (!intent || !intent.length) {
           setDisplayErrorScreen(true)
           return
         }
