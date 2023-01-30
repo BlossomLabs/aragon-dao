@@ -1,8 +1,28 @@
 import React from 'react'
-import { unselectable, GU } from '@aragon/ui'
-import headerLogoSvg from '../../assets/aragonDAOLogo.svg'
+import { unselectable, GU, useViewport } from '@aragon/ui'
+import headerLogoSvg from '@/assets/aragonDAOLogo.svg'
+import headerDarkLogoSvg from '@/assets/aragonDAODarkLogo.svg'
+import headerCompactLogoSvg from '@/assets/aragonDAOCompactLogo.svg'
+import headerDarkCompactLogoSvg from '@/assets/aragonDAOCompactDarkLogo.svg'
+import { useAppTheme } from '@/providers/AppTheme'
+
+function getLogo(appearance, compactMode) {
+  if (compactMode && appearance === 'dark') {
+    return headerDarkCompactLogoSvg
+  } else if (compactMode && appearance === 'light') {
+    return headerCompactLogoSvg
+  } else if (!compactMode && appearance === 'dark') {
+    return headerDarkLogoSvg
+  } else {
+    return headerLogoSvg
+  }
+}
 
 function HeaderLogo() {
+  const { appearance } = useAppTheme()
+  const { below } = useViewport()
+  const compactMode = below('medium')
+
   return (
     <div
       css={`
@@ -11,7 +31,11 @@ function HeaderLogo() {
         align-items: center;
       `}
     >
-      <img alt="" src={headerLogoSvg} width={23 * GU} />
+      <img
+        alt=""
+        src={getLogo(appearance, compactMode)}
+        width={compactMode ? 12 * GU : 23 * GU}
+      />
     </div>
   )
 }
