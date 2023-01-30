@@ -32,7 +32,7 @@ function getAttributes(status, theme) {
     },
     [VOTE_ACCEPTED]: {
       background: theme.surface,
-      label: 'Passed',
+      label: 'Passed (pending)',
       Icon: IconCheck,
       color: theme.positive,
     },
@@ -57,8 +57,8 @@ function getAttributes(status, theme) {
     [VOTE_EXECUTED]: {
       background: '#CADFAB',
       label: 'Passed (enacted)',
-      Icon: IconInfo,
-      color: '#749C47',
+      Icon: IconCheck,
+      color: theme.positive,
     },
     [VOTE_CHALLENGED]: {
       background: theme.warningSurface,
