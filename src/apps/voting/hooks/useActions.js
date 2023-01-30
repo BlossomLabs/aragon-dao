@@ -4,15 +4,17 @@ import { utils } from 'ethers'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
 import radspec from '@/radspec'
+import { attachTrxMetadata, imposeGasLimit } from '@/utils/tx-utils'
+import { useGasLimit } from '@/hooks/shared/useGasLimit'
+
 import votingActions from '../actions/voting-action-types'
 
 import { EMPTY_CALLSCRIPT } from '../evmscript-utils'
 
-const GAS_LIMIT = 550000
-
 export default function useActions() {
   const { account, ethers } = useWallet()
   const { connectedApp: votingApp } = useConnectedApp()
+  const [GAS_LIMIT] = useGasLimit()
 
   const delegateVoting = useCallback(
     async (representative, onDone = noop) => {
@@ -28,7 +30,6 @@ export default function useActions() {
       const description = radspec[votingActions.DELEGATE_VOTING]({
         representative,
       })
-      // const type = actions.DELEGATE_VOTING
 
       const transactions = attachTrxMetadata(
         intent.transactions,
@@ -53,7 +54,6 @@ export default function useActions() {
         voteId,
         supports,
       })
-      // const type = actions.VOTE_ON_DECISION
 
       const transactions = attachTrxMetadata(
         intent.transactions,
@@ -79,7 +79,6 @@ export default function useActions() {
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
       const description = radspec[votingActions.NEW_VOTE]()
-      // const type = actions.VOTE_ON_DECISION
 
       const transactions = attachTrxMetadata(
         intent.transactions,
@@ -108,7 +107,6 @@ export default function useActions() {
         voteId,
         supports,
       })
-      // const type = votingActions.VOTE_ON_BEHALF_OF
 
       const transactions = attachTrxMetadata(
         intent.transactions,
@@ -145,33 +143,10 @@ export default function useActions() {
   )
 }
 
-function imposeGasLimit(intent, gasLimit) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => ({
-      ...tx,
-      gasLimit,
-    })),
-  }
-}
-
-function attachTrxMetadata(transactions, description, type) {
-  return transactions.map(tx => ({
-    ...tx,
-    description,
-    type,
-  }))
-}
-
-async function sendIntent(
-  app,
-  fn,
-  params,
-  { ethers, from, gasLimit = GAS_LIMIT }
-) {
+export async function sendIntent(app, fn, params, { ethers, from, gasLimit }) {
   try {
     const intent = await app.intent(fn, params, { actAs: from })
-    const { to, data } = intent.transactions[0] // TODO: Handle errors when no tx path is found
+    const { to, data } = intent.transactions[0]
 
     ethers.getSigner().sendTransaction({ data, to, gasLimit })
   } catch (err) {

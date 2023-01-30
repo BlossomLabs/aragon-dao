@@ -11,14 +11,14 @@ import financeActions from '../actions/finance-action-types'
 
 import tokenAbi from '@/abi/minimeToken.json'
 import { constants } from 'ethers'
-
-const APPROVE_GAS_LIMIT = 250000
-const DEPOSIT_GAS_LIMIT = 2000000
+import { useGasLimit } from '@/hooks/shared/useGasLimit'
+import { attachTrxMetadata, imposeGasLimit } from '@/utils/tx-utils'
 
 export default function useActions() {
   const { account, chainId } = useWallet()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const mounted = useMounted()
+  const [GAS_LIMIT, APPROVE_GAS_LIMIT] = useGasLimit(2000000)
 
   const getAllowance = useCallback(
     async tokenAddress => {
@@ -50,7 +50,7 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, DEPOSIT_GAS_LIMIT)
+      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       /**
        * We need to add the amount as tx value when depositting
@@ -88,7 +88,8 @@ export default function useActions() {
         }
       )
 
-      // intent = imposeGasLimit(intent, WRAP_GAS_LIMIT)
+      intent = imposeGasLimit(intent, GAS_LIMIT)
+
       const description = radspec[financeActions.WITHDRAW]()
 
       const transactions = attachTrxMetadata(
@@ -145,7 +146,6 @@ export default function useActions() {
       const description = radspec[financeActions.APPROVE_TOKEN]({
         tokenSymbol,
       })
-      // const type = actions.APPROVE_TOKEN
 
       const transactions = attachTrxMetadata(trxs, description, '')
 
@@ -167,22 +167,4 @@ export default function useActions() {
     }),
     [getAllowance, approveTokenAmount, deposit, withdraw]
   )
-}
-
-function attachTrxMetadata(transactions, description, type) {
-  return transactions.map(tx => ({
-    ...tx,
-    description,
-    type,
-  }))
-}
-
-function imposeGasLimit(intent, gasLimit) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => ({
-      ...tx,
-      gasLimit,
-    })),
-  }
 }

@@ -6,14 +6,15 @@ import anDelayActions from '../actions/an-delay-action.types'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useGuardianState } from '@/providers/Guardian'
 import { useANDelaySettings } from '../providers/ANDelaySettingsProvider'
-
-const GAS_LIMIT = 550000
+import { useGasLimit } from '@/hooks/shared/useGasLimit'
+import { attachTrxMetadata, imposeGasLimit } from '@/utils/tx-utils'
 
 export default function useActions() {
   const { account } = useWallet()
   const { callAsGuardian } = useGuardianState()
   const { connectedApp: connectedANDelayApp } = useConnectedApp()
   const { executionDelay } = useANDelaySettings()
+  const [GAS_LIMIT] = useGasLimit()
 
   const execute = useCallback(
     async (script, onDone = noop) => {
@@ -152,22 +153,4 @@ export default function useActions() {
     }),
     [execute, delayExecution, pauseExecution, resumeExecution, cancelExecution]
   )
-}
-
-function imposeGasLimit(intent, gasLimit) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => ({
-      ...tx,
-      gasLimit,
-    })),
-  }
-}
-
-function attachTrxMetadata(transactions, description, type) {
-  return transactions.map(tx => ({
-    ...tx,
-    description,
-    type,
-  }))
 }
