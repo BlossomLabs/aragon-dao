@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react'
 import { Subject } from 'rxjs'
-import { useApi } from '../hooks/shared'
 
 const updates$ = new Subject()
 
@@ -16,17 +15,14 @@ const IdentityContext = createContext({
 
 // Resolve a local identity address
 function useResolveLocalIdentity() {
-  const api = useApi()
-  return useCallback(address => api.resolveAddressIdentity(address), [api])
+  // TODO: implement resolve local identity
+  return useCallback(address => {}, [])
 }
 
 // Request a modification of the local identity
 function useModifyLocalIdentity() {
-  const api = useApi()
-  return useCallback(
-    address => api.requestAddressIdentityModification(address),
-    [api]
-  )
+  // TODO: implement modify local identity
+  return useCallback(address => {}, [])
 }
 
 // The main identity hook, exposing `name`

@@ -11,14 +11,14 @@ import financeActions from '../actions/finance-action-types'
 
 import tokenAbi from '@/abi/minimeToken.json'
 import { constants } from 'ethers'
-
-const APPROVE_GAS_LIMIT = 250000
-const DEPOSIT_GAS_LIMIT = 2000000
+import { useGasLimit } from '@/hooks/shared/useGasLimit'
+import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
 
 export default function useActions() {
   const { account, chainId } = useWallet()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const mounted = useMounted()
+  const [GAS_LIMIT, APPROVE_GAS_LIMIT] = useGasLimit(2000000)
 
   const getAllowance = useCallback(
     async tokenAddress => {
@@ -50,7 +50,7 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, DEPOSIT_GAS_LIMIT)
+      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       /**
        * We need to add the amount as tx value when depositting
@@ -63,19 +63,13 @@ export default function useActions() {
         intent.transactions[intent.transactions.length - 1].value = amount
       }
 
-      const description = radspec[financeActions.DEPOSIT]()
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[financeActions.DEPOSIT]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted]
+    [account, connectedFinanceApp, mounted, GAS_LIMIT]
   )
 
   const withdraw = useCallback(
@@ -88,20 +82,15 @@ export default function useActions() {
         }
       )
 
-      // intent = imposeGasLimit(intent, WRAP_GAS_LIMIT)
-      const description = radspec[financeActions.WITHDRAW]()
+      intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[financeActions.WITHDRAW]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted]
+    [account, connectedFinanceApp, mounted, GAS_LIMIT]
   )
 
   const approve = useCallback(
@@ -113,18 +102,18 @@ export default function useActions() {
         appAddress,
         amount.toString(10),
       ])
-      const intent = [
-        {
-          data: approveData,
-          from: account,
-          to: tokenContract.address,
-          gasLimit: APPROVE_GAS_LIMIT,
-        },
-      ]
+      const intent = {
+        data: approveData,
+        from: account,
+        to: tokenContract.address,
+        gasLimit: APPROVE_GAS_LIMIT,
+      }
 
-      return intent
+      if (mounted()) {
+        return intent
+      }
     },
-    [account]
+    [account, APPROVE_GAS_LIMIT, mounted]
   )
 
   const approveTokenAmount = useCallback(
@@ -145,9 +134,11 @@ export default function useActions() {
       const description = radspec[financeActions.APPROVE_TOKEN]({
         tokenSymbol,
       })
-      // const type = actions.APPROVE_TOKEN
 
-      const transactions = attachTrxMetadata(trxs, description, '')
+      const transactions = {
+        ...trxs,
+        description,
+      }
 
       if (mounted()) {
         onDone(transactions)
@@ -167,22 +158,4 @@ export default function useActions() {
     }),
     [getAllowance, approveTokenAmount, deposit, withdraw]
   )
-}
-
-function attachTrxMetadata(transactions, description, type) {
-  return transactions.map(tx => ({
-    ...tx,
-    description,
-    type,
-  }))
-}
-
-function imposeGasLimit(intent, gasLimit) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => ({
-      ...tx,
-      gasLimit,
-    })),
-  }
 }
