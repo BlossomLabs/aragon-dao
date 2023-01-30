@@ -4,15 +4,19 @@ import { utils } from 'ethers'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
 import radspec from '@/radspec'
+import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
+import { useGasLimit } from '@/hooks/shared/useGasLimit'
+
 import votingActions from '../actions/voting-action-types'
 
 import { EMPTY_CALLSCRIPT } from '../evmscript-utils'
-
-const GAS_LIMIT = 550000
+import { useMounted } from '@/hooks/shared/useMounted'
 
 export default function useActions() {
+  const mounted = useMounted()
   const { account, ethers } = useWallet()
   const { connectedApp: votingApp } = useConnectedApp()
+  const [GAS_LIMIT] = useGasLimit()
 
   const delegateVoting = useCallback(
     async (representative, onDone = noop) => {
@@ -25,20 +29,17 @@ export default function useActions() {
       )
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.DELEGATE_VOTING]({
-        representative,
-      })
-      // const type = actions.DELEGATE_VOTING
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[votingActions.DELEGATE_VOTING]({
+          representative,
+        })
       )
-
-      onDone(transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const vote = useCallback(
@@ -49,21 +50,19 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.VOTE_ON_PROPOSAL]({
-        voteId,
-        supports,
-      })
-      // const type = actions.VOTE_ON_DECISION
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[votingActions.VOTE_ON_PROPOSAL]({
+          voteId,
+          supports,
+        })
       )
 
-      onDone(transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const newVote = useCallback(
@@ -78,18 +77,13 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.NEW_VOTE]()
-      // const type = actions.VOTE_ON_DECISION
+      intent = describeIntent(intent, radspec[votingActions.NEW_VOTE]())
 
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
-
-      onDone(transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const voteOnBehalfOf = useCallback(
@@ -104,21 +98,16 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.VOTE_ON_BEHALF_OF]({
-        voteId,
-        supports,
-      })
-      // const type = votingActions.VOTE_ON_BEHALF_OF
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[votingActions.VOTE_ON_BEHALF_OF](voteId, supports)
       )
 
-      onDone(transactions)
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   const executeVote = useCallback(
@@ -145,33 +134,10 @@ export default function useActions() {
   )
 }
 
-function imposeGasLimit(intent, gasLimit) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => ({
-      ...tx,
-      gasLimit,
-    })),
-  }
-}
-
-function attachTrxMetadata(transactions, description, type) {
-  return transactions.map(tx => ({
-    ...tx,
-    description,
-    type,
-  }))
-}
-
-async function sendIntent(
-  app,
-  fn,
-  params,
-  { ethers, from, gasLimit = GAS_LIMIT }
-) {
+export async function sendIntent(app, fn, params, { ethers, from, gasLimit }) {
   try {
     const intent = await app.intent(fn, params, { actAs: from })
-    const { to, data } = intent.transactions[0] // TODO: Handle errors when no tx path is found
+    const { to, data } = intent.transactions[0]
 
     ethers.getSigner().sendTransaction({ data, to, gasLimit })
   } catch (err) {

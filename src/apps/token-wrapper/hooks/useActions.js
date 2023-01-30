@@ -4,23 +4,23 @@ import { BN } from 'bn.js'
 import { useWallet } from '@/providers/Wallet'
 import { getContract } from '@/hooks/shared/useContract'
 import { useMounted } from '@/hooks/shared/useMounted'
-import { getDefaultProvider, encodeFunctionData } from '@/utils/web3-utils'
+import { encodeFunctionData } from '@/utils/web3-utils'
 import radspec from '@/radspec'
 import tokenActions from '../actions/token-action-types'
 
 import tokenAllowanceAbi from '../abi/token-allowance.json'
 import tokenSymbolAbi from '../abi/token-symbol.json'
 import { useConnectedApp } from '@/providers/ConnectedApp'
+import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
+import { useGasLimit } from '@/hooks/shared/useGasLimit'
 
 const tokenAbi = [].concat(tokenAllowanceAbi, tokenSymbolAbi)
-
-const APPROVE_GAS_LIMIT = 250000
-const WRAP_GAS_LIMIT = 1000000
 
 export default function useActions() {
   const { account, chainId } = useWallet()
   const { connectedApp } = useConnectedApp()
   const mounted = useMounted()
+  const [GAS_LIMIT, APPROVE_GAS_LIMIT] = useGasLimit(1000000)
 
   const getAllowance = useCallback(
     async tokenAddress => {
@@ -48,21 +48,15 @@ export default function useActions() {
         actAs: account,
       })
 
-      intent = imposeGasLimit(intent, WRAP_GAS_LIMIT)
+      intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[tokenActions.WRAP]()
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[tokenActions.WRAP]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
-    [account, connectedApp, mounted]
+    [account, connectedApp, mounted, GAS_LIMIT]
   )
 
   const unwrap = useCallback(
@@ -71,21 +65,15 @@ export default function useActions() {
         actAs: account,
       })
 
-      intent = imposeGasLimit(intent, WRAP_GAS_LIMIT)
+      intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[tokenActions.UNWRAP]()
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[tokenActions.UNWRAP]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
-    [account, connectedApp, mounted]
+    [account, connectedApp, mounted, GAS_LIMIT]
   )
 
   const approve = useCallback(
@@ -93,22 +81,21 @@ export default function useActions() {
       if (!tokenContract || !appAddress) {
         return
       }
+
       const approveData = encodeFunctionData(tokenContract, 'approve', [
         appAddress,
         amount.toString(10),
       ])
-      const intent = [
-        {
-          data: approveData,
-          from: account,
-          to: tokenContract.address,
-          gasLimit: APPROVE_GAS_LIMIT,
-        },
-      ]
+      const intent = {
+        data: approveData,
+        from: account,
+        to: tokenContract.address,
+        gasLimit: APPROVE_GAS_LIMIT,
+      }
 
       return intent
     },
-    [account]
+    [account, APPROVE_GAS_LIMIT]
   )
 
   const approveTokenAmount = useCallback(
@@ -125,9 +112,11 @@ export default function useActions() {
       const description = radspec[tokenActions.APPROVE_TOKEN]({
         tokenSymbol,
       })
-      // const type = actions.APPROVE_TOKEN
 
-      const transactions = attachTrxMetadata(trxs, description, '')
+      const transactions = {
+        ...trxs,
+        description,
+      }
 
       if (mounted()) {
         onDone(transactions)
@@ -147,22 +136,4 @@ export default function useActions() {
     }),
     [getAllowance, approveTokenAmount, wrap, unwrap]
   )
-}
-
-function attachTrxMetadata(transactions, description, type) {
-  return transactions.map(tx => ({
-    ...tx,
-    description,
-    type,
-  }))
-}
-
-function imposeGasLimit(intent, gasLimit) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => ({
-      ...tx,
-      gasLimit,
-    })),
-  }
 }

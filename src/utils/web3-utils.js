@@ -27,7 +27,7 @@ const networks = {
     chainId: 1,
     ensRegistry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     name: 'Mainnet',
-    type: 'mainnet',
+    type: 'main',
     defaultEthNode: 'https://eth-rpc.gateway.pokt.network',
     explorer: 'etherscan',
     nativeToken: 'ETH',
@@ -42,7 +42,7 @@ export const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
 export function getNetworkType(chainId = getPreferredChain()) {
   chainId = String(chainId)
 
-  if (chainId === '1') return 'mainnet'
+  if (chainId === '1') return 'main'
   if (chainId === '4') return 'rinkeby'
   if (chainId === '100') return 'xdai'
   if (chainId === '137') return 'polygon'
