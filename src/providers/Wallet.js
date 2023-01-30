@@ -3,7 +3,7 @@ import { providers as EthersProviders } from 'ethers'
 import { UseWalletProvider, useWallet } from 'use-wallet'
 import { getDefaultProvider, getEthersNetwork } from '@/utils/web3-utils'
 import { useWalletConnectors } from '../ethereum-providers'
-import { DEFAULT_CHAIN_ID } from '@/constants'
+import { env } from '@/environment'
 
 /* eslint-disable react/prop-types */
 const WalletAugmentedContext = React.createContext()
@@ -19,7 +19,7 @@ function WalletAugmented({ children }) {
 
   const connected = isConnected()
 
-  const chain = connected ? chainId : DEFAULT_CHAIN_ID
+  const chain = connected ? chainId : env('CHAIN_ID')
 
   const ethers = useMemo(() => {
     return ethereum

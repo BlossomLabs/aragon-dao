@@ -1,4 +1,5 @@
 import { APPS_ROUTING, APP_CUSTOM_NAME } from '@/constants'
+import { env } from '@/environment'
 import { getIpfsUrlFromUri } from '../utils/ipfs-utils'
 
 export function getAppPresentationByAddress(apps, appAddress) {
@@ -27,6 +28,17 @@ export function getAppPresentation(app) {
 
 export function getAppByName(apps, appName) {
   return apps.find(({ name }) => name === appName) || null
+}
+
+export function getAppLabel(appAddress) {
+  const appAddress_ = appAddress.toLowerCase()
+  if (env('BUDGET_APP_ADDRESSES').includes(appAddress_)) {
+    return 'Budget'
+  } else if (env('GOVERNANCE_APP_ADDRESSES').includes(appAddress_)) {
+    return 'Governance'
+  } else {
+    return appAddress
+  }
 }
 
 export function buildAppRoute(appName, appAddress) {

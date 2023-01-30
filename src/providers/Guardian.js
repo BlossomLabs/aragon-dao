@@ -1,11 +1,12 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { utils } from 'ethers'
 import { encodeCallScript } from '@1hive/connect-react'
 import { useContract } from '@/hooks/shared/useContract'
 import tokenManagerAbi from '@/abi/tokenManager.json'
+import { env } from '@/environment'
 import { useWallet } from './Wallet'
-import { utils } from 'ethers'
 
-let GUARDIANS_TOKEN_MANAGER = process.env.GUARDIANS_TOKEN_MANAGER
+let GUARDIANS_TOKEN_MANAGER = env('GUARDIANS_TOKEN_MANAGER')
 
 if (!GUARDIANS_TOKEN_MANAGER) {
   throw new Error('Missing GUARDIANS_TOKEN_MANAGER env variable')
