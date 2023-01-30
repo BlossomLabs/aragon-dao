@@ -5,9 +5,9 @@ import becomeDelegate from '../../../assets/becomeDelegate.svg'
 import voteDelegate from '../../../assets/voteDelegate.svg'
 
 function DelegateInitialScreen({ onChooseAction }) {
-  const { above } = useViewport()
+  const { below } = useViewport()
   const { next } = useMultiModal()
-  const multiColumnsMode = above('small')
+  const compactMode = below('medium')
 
   const handleOnChooseAction = useCallback(
     option => {
@@ -38,7 +38,7 @@ function DelegateInitialScreen({ onChooseAction }) {
       <div
         css={`
           display: grid;
-          grid-auto-flow: ${multiColumnsMode ? 'column' : 'row'};
+          grid-auto-flow: ${compactMode ? 'row' : 'column'};
           grid-gap: ${1 * GU}px;
           margin-top: ${4 * GU}px;
           justify-content: center;

@@ -14,11 +14,13 @@ import { TRANSACTION_SIGNING_DESC } from './stepper-descriptions'
 import { useDisableAnimation } from '../../hooks/shared/useDisableAnimation'
 import { useMounted } from '../../hooks/shared/useMounted'
 import useStepperLayout from './useStepperLayout'
+import { useMultiModal } from '../MultiModal/MultiModalProvider'
 
 const AnimatedDiv = animated.div
 
 const INITIAL_STATUS = STEP_PROMPTING
 const DEFAULT_DESCRIPTIONS = TRANSACTION_SIGNING_DESC
+const AUTO_CLOSING_TIMEOUT = 2500
 
 function initialStepState(steps) {
   return steps.map((_, i) => {
@@ -41,7 +43,7 @@ function reduceSteps(steps, [action, stepIndex, value]) {
   return steps
 }
 
-function Stepper({ steps, onComplete, ...props }) {
+function Stepper({ steps, autoClosing, onComplete, onError, ...props }) {
   const theme = useTheme()
   const mounted = useMounted()
   const [animationDisabled, enableAnimation] = useDisableAnimation()
@@ -50,9 +52,20 @@ function Stepper({ steps, onComplete, ...props }) {
     reduceSteps,
     initialStepState(steps)
   )
+  const { close } = useMultiModal()
   const { outerBoundsRef, innerBoundsRef, layout } = useStepperLayout()
 
   const stepsCount = steps.length - 1
+
+  const runAutoClosing = useCallback(() => {
+    if (autoClosing) {
+      setTimeout(() => {
+        if (mounted()) {
+          close()
+        }
+      }, AUTO_CLOSING_TIMEOUT)
+    }
+  }, [autoClosing, close, mounted])
 
   const renderStep = useCallback(
     (stepIndex, showDivider) => {
@@ -119,6 +132,7 @@ function Stepper({ steps, onComplete, ...props }) {
       setWorking: () => updateStepStatus(STEP_WORKING),
       setError: () => {
         updateStepStatus(STEP_ERROR)
+        runAutoClosing()
       },
       setSuccess: () => {
         updateStepStatus(STEP_SUCCESS)
@@ -127,6 +141,7 @@ function Stepper({ steps, onComplete, ...props }) {
         if (mounted()) {
           if (stepperStage === stepsCount) {
             onComplete()
+            runAutoClosing()
           } else {
             setStepperStage(stepperStage + 1)
           }
@@ -135,6 +150,7 @@ function Stepper({ steps, onComplete, ...props }) {
       setHash: hash => updateHash(hash),
     })
   }, [
+    runAutoClosing,
     steps,
     stepperStage,
     updateStepStatus,
@@ -240,11 +256,13 @@ Stepper.propTypes = {
       }),
     })
   ).isRequired,
+  autoClosing: PropTypes.bool,
   onComplete: PropTypes.func,
 }
 
 Stepper.defaultProps = {
   onComplete: noop,
+  autoClosing: true,
 }
 
 export default Stepper
