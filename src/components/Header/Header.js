@@ -15,9 +15,9 @@ import HeaderLogo from './HeaderLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
 import AccountModule from '../Account/AccountModule'
 import { MAIN_HEADER_HEIGHT } from '@/constants'
-import darkModeIconLight from '@/assets/icon-dark-mode-light.svg'
-import darkModeIconDark from '@/assets/icon-dark-mode-dark.svg'
 import { useAppTheme } from '@/providers/AppTheme'
+import { ICON_DARK_MODE } from '@/utils/assets-utils'
+import { useAsset } from '@/hooks/shared/useAsset'
 
 const GET_ANT_LINK =
   'https://v2.info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae'
@@ -26,7 +26,9 @@ function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
   const history = useHistory()
   const { below } = useViewport()
-  const { appearance, toggleAppearance } = useAppTheme()
+  const { toggleAppearance } = useAppTheme()
+  const darkModeIcon = useAsset(ICON_DARK_MODE)
+
   const compactMode = below('medium')
 
   const handleLogoClick = useCallback(() => {
@@ -118,12 +120,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
               `}
               onClick={toggleAppearance}
             >
-              <img
-                css="width: 100%"
-                src={
-                  appearance === 'light' ? darkModeIconLight : darkModeIconDark
-                }
-              />
+              <img css="width: 100%" src={darkModeIcon} />
             </ButtonBase>
             {showMenu && (
               <ButtonIcon label="Open menu" onClick={onMenuClick}>

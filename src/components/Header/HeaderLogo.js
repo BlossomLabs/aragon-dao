@@ -1,27 +1,15 @@
 import React from 'react'
 import { unselectable, GU, useViewport } from '@aragon/ui'
-import headerLogoSvg from '@/assets/aragonDAOLogo.svg'
-import headerDarkLogoSvg from '@/assets/aragonDAODarkLogo.svg'
-import headerCompactLogoSvg from '@/assets/aragonDAOCompactLogo.svg'
-import headerDarkCompactLogoSvg from '@/assets/aragonDAOCompactDarkLogo.svg'
-import { useAppTheme } from '@/providers/AppTheme'
-
-function getLogo(appearance, compactMode) {
-  if (compactMode && appearance === 'dark') {
-    return headerDarkCompactLogoSvg
-  } else if (compactMode && appearance === 'light') {
-    return headerCompactLogoSvg
-  } else if (!compactMode && appearance === 'dark') {
-    return headerDarkLogoSvg
-  } else {
-    return headerLogoSvg
-  }
-}
+import { LOGO_TYPE, LOGO_TYPE_COMPACT } from '@/utils/assets-utils'
+import { useAsset } from '@/hooks/shared/useAsset'
 
 function HeaderLogo() {
-  const { appearance } = useAppTheme()
   const { below } = useViewport()
   const compactMode = below('medium')
+  const logoType = useAsset(LOGO_TYPE)
+  const logoTypeCompact = useAsset(LOGO_TYPE_COMPACT)
+
+  const logo = compactMode ? logoTypeCompact : logoType
 
   return (
     <div
@@ -31,11 +19,7 @@ function HeaderLogo() {
         align-items: center;
       `}
     >
-      <img
-        alt=""
-        src={getLogo(appearance, compactMode)}
-        width={compactMode ? 12 * GU : 23 * GU}
-      />
+      <img alt="" src={logo} width={compactMode ? 12 * GU : 23 * GU} />
     </div>
   )
 }
