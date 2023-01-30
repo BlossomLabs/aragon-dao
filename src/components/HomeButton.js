@@ -2,10 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ButtonBase, GU, RADIUS, useTheme } from '@aragon/ui'
 
-import logo from '../assets/aragonDAOLogo.svg'
+import { LOGO_TYPE } from '@/utils/assets-utils'
+import { useAsset } from '@/hooks/shared/useAsset'
 
 function HomeButton({ onClick, ...props }) {
   const theme = useTheme()
+  const logo = useAsset(LOGO_TYPE)
   return (
     <ButtonBase
       onClick={onClick}

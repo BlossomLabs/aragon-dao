@@ -9,11 +9,15 @@ import {
   useViewport,
   IconMenu,
   ButtonIcon,
+  ButtonBase,
 } from '@aragon/ui'
 import HeaderLogo from './HeaderLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
 import AccountModule from '../Account/AccountModule'
 import { MAIN_HEADER_HEIGHT } from '@/constants'
+import { useAppTheme } from '@/providers/AppTheme'
+import { ICON_DARK_MODE } from '@/utils/assets-utils'
+import { useAsset } from '@/hooks/shared/useAsset'
 
 const GET_ANT_LINK =
   'https://v2.info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae'
@@ -22,6 +26,9 @@ function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
   const history = useHistory()
   const { below } = useViewport()
+  const { toggleAppearance } = useAppTheme()
+  const darkModeIcon = useAsset(ICON_DARK_MODE)
+
   const compactMode = below('medium')
 
   const handleLogoClick = useCallback(() => {
@@ -105,6 +112,16 @@ function Header({ showMenu, onMenuClick, ...props }) {
             `}
           >
             <AccountModule />
+            <ButtonBase
+              css={`
+                width: ${3 * GU}px;
+                height: ${3 * GU}px;
+                margin-left: ${compactMode ? 0.5 * GU : 1 * GU}px;
+              `}
+              onClick={toggleAppearance}
+            >
+              <img css="width: 100%" src={darkModeIcon} />
+            </ButtonBase>
             {showMenu && (
               <ButtonIcon label="Open menu" onClick={onMenuClick}>
                 <IconMenu />

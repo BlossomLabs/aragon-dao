@@ -3,7 +3,6 @@ import { HashRouter } from 'react-router-dom'
 import { GU, Main, ScrollView, useViewport } from '@aragon/ui'
 import { ConnectProvider as Connect } from './providers/Connect'
 import { OrganizationProvider } from './providers/OrganizationProvider'
-import { useGuiStyle } from './hooks/shared'
 import MainView from './components/MainView'
 import Router from './routes/Router'
 import MenuPanel from './components/MenuPanel/MenuPanel'
@@ -14,6 +13,7 @@ import { IdentityProvider } from './providers/Identity'
 import { ConnectedAppProvider } from './providers/ConnectedApp'
 import { GuardianProvider } from './providers/Guardian'
 import { ErrorHandler } from './components/Error/ErrorHandler'
+import { useAppTheme } from './providers/AppTheme'
 
 function App() {
   const { below } = useViewport()
@@ -95,7 +95,7 @@ function App() {
 }
 
 function AppWrapper() {
-  const { appearance } = useGuiStyle()
+  const { appearance } = useAppTheme()
 
   return (
     <HashRouter>

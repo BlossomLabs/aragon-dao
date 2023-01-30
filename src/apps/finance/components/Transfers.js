@@ -34,6 +34,7 @@ const TransfersWrapper = ({ tokens }) => {
     <div
       css={`
         margin-top: ${2 * GU}px;
+        margin-bottom: ${3 * GU}px;
       `}
     >
       <Transfers
@@ -150,7 +151,8 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
       entries={sortedTransfers}
       renderEntry={({ amount, date, entity, isIncoming, reference, token }) => {
         const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-        const { symbol, decimals } = tokenDetails[toChecksumAddress(token)]
+        const { symbol = 'Unkown', decimals = '18' } =
+          tokenDetails[toChecksumAddress(token)] ?? {}
 
         const formattedAmount = formatTokenAmount(
           isIncoming ? amount : amount.neg(),
