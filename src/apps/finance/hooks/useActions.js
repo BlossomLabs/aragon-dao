@@ -12,7 +12,7 @@ import financeActions from '../actions/finance-action-types'
 import tokenAbi from '@/abi/minimeToken.json'
 import { constants } from 'ethers'
 import { useGasLimit } from '@/hooks/shared/useGasLimit'
-import { attachTrxMetadata, imposeGasLimit } from '@/utils/tx-utils'
+import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
 
 export default function useActions() {
   const { account, chainId } = useWallet()
@@ -63,16 +63,10 @@ export default function useActions() {
         intent.transactions[intent.transactions.length - 1].value = amount
       }
 
-      const description = radspec[financeActions.DEPOSIT]()
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[financeActions.DEPOSIT]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
     [account, connectedFinanceApp, mounted]
@@ -90,16 +84,10 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[financeActions.WITHDRAW]()
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[financeActions.WITHDRAW]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
     [account, connectedFinanceApp, mounted]
@@ -147,7 +135,10 @@ export default function useActions() {
         tokenSymbol,
       })
 
-      const transactions = attachTrxMetadata(trxs, description, '')
+      const transactions = {
+        ...trxs,
+        description,
+      }
 
       if (mounted()) {
         onDone(transactions)

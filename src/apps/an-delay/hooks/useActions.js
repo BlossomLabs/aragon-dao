@@ -7,7 +7,7 @@ import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useGuardianState } from '@/providers/Guardian'
 import { useANDelaySettings } from '../providers/ANDelaySettingsProvider'
 import { useGasLimit } from '@/hooks/shared/useGasLimit'
-import { attachTrxMetadata, imposeGasLimit } from '@/utils/tx-utils'
+import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
 
 export default function useActions() {
   const { account } = useWallet()
@@ -28,15 +28,9 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[anDelayActions.EXECUTE](script)
+      intent = describeIntent(intent, radspec[anDelayActions.EXECUTE](script))
 
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
-
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [account, connectedANDelayApp]
   )
@@ -53,18 +47,15 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[anDelayActions.DELAY_EXECUTION]({
-        id: script.id,
-        executionDelay,
-      })
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[anDelayActions.DELAY_EXECUTION]({
+          id: script.id,
+          executionDelay,
+        })
       )
 
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [account, connectedANDelayApp, executionDelay]
   )
@@ -81,15 +72,12 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[anDelayActions.PAUSE_EXECUTION](script)
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[anDelayActions.PAUSE_EXECUTION](script)
       )
 
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [account, connectedANDelayApp]
   )
@@ -106,15 +94,12 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[anDelayActions.RESUME_EXECUTION](script)
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[anDelayActions.RESUME_EXECUTION](script)
       )
 
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [account, connectedANDelayApp]
   )
@@ -128,15 +113,13 @@ export default function useActions() {
       }
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
-      const description = radspec[anDelayActions.CANCEL_EXECUTION](script)
 
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[anDelayActions.CANCEL_EXECUTION](script)
       )
 
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [connectedANDelayApp, callAsGuardian]
   )

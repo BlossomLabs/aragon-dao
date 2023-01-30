@@ -4,7 +4,7 @@ import { utils } from 'ethers'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
 import radspec from '@/radspec'
-import { attachTrxMetadata, imposeGasLimit } from '@/utils/tx-utils'
+import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
 import { useGasLimit } from '@/hooks/shared/useGasLimit'
 
 import votingActions from '../actions/voting-action-types'
@@ -27,17 +27,14 @@ export default function useActions() {
       )
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.DELEGATE_VOTING]({
-        representative,
-      })
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[votingActions.DELEGATE_VOTING]({
+          representative,
+        })
       )
 
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [account, votingApp]
   )
@@ -50,18 +47,15 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.VOTE_ON_PROPOSAL]({
-        voteId,
-        supports,
-      })
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[votingActions.VOTE_ON_PROPOSAL]({
+          voteId,
+          supports,
+        })
       )
 
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [account, votingApp]
   )
@@ -78,15 +72,9 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.NEW_VOTE]()
+      intent = describeIntent(intent, radspec[votingActions.NEW_VOTE]())
 
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
-
-      onDone(transactions)
+      onDone(intent.transactions)
     },
     [account, votingApp]
   )
@@ -103,15 +91,9 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[votingActions.VOTE_ON_BEHALF_OF]({
-        voteId,
-        supports,
-      })
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
+      intent = describeIntent(
+        intent,
+        radspec[votingActions.VOTE_ON_BEHALF_OF](voteId, supports)
       )
 
       onDone(transactions)

@@ -11,7 +11,7 @@ import tokenActions from '../actions/token-action-types'
 import tokenAllowanceAbi from '../abi/token-allowance.json'
 import tokenSymbolAbi from '../abi/token-symbol.json'
 import { useConnectedApp } from '@/providers/ConnectedApp'
-import { attachTrxMetadata, imposeGasLimit } from '@/utils/tx-utils'
+import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
 import { useGasLimit } from '@/hooks/shared/useGasLimit'
 
 const tokenAbi = [].concat(tokenAllowanceAbi, tokenSymbolAbi)
@@ -50,16 +50,10 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[tokenActions.WRAP]()
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[tokenActions.WRAP]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
     [account, connectedApp, mounted]
@@ -73,16 +67,10 @@ export default function useActions() {
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
-      const description = radspec[tokenActions.UNWRAP]()
-
-      const transactions = attachTrxMetadata(
-        intent.transactions,
-        description,
-        ''
-      )
+      intent = describeIntent(intent, radspec[tokenActions.UNWRAP]())
 
       if (mounted()) {
-        onDone(transactions)
+        onDone(intent.transactions)
       }
     },
     [account, connectedApp, mounted]
@@ -126,7 +114,10 @@ export default function useActions() {
         tokenSymbol,
       })
 
-      const transactions = attachTrxMetadata(trxs, description, '')
+      const transactions = {
+        ...trxs,
+        description,
+      }
 
       if (mounted()) {
         onDone(transactions)
