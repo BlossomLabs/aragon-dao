@@ -50,6 +50,10 @@ function VoteActions({ vote, onVote, onExecute }) {
     [voterInfo, onVote]
   )
 
+  const handleVoteExecution = useCallback(() => {
+    onExecute()
+  }, [onExecute])
+
   if (!voterInfo.account) {
     return (
       <div
@@ -96,7 +100,7 @@ function VoteActions({ vote, onVote, onExecute }) {
       <>
         {voterInfo.canExecute && (
           <>
-            <Button mode="strong" onClick={onExecute} wide>
+            <Button mode="strong" onClick={handleVoteExecution} wide>
               Enact this vote
             </Button>
             <Info>

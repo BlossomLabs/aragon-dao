@@ -5,7 +5,7 @@ import emptyStateImg from '../assets/empty-state.png'
 
 const NoWrappedTokens = React.memo(function NoWrappedTokens({
   isSyncing,
-  onWrapTokens,
+  onConvertTokens,
 }) {
   return (
     <React.Fragment>
@@ -30,7 +30,7 @@ const NoWrappedTokens = React.memo(function NoWrappedTokens({
               `}
             >
               <LoadingRing />
-              <span>Syncing…</span>
+              <span>Loading…</span>
             </div>
           ) : (
             <div
@@ -43,9 +43,9 @@ const NoWrappedTokens = React.memo(function NoWrappedTokens({
           )
         }
         action={
-          onWrapTokens && (
-            <Button wide mode="strong" onClick={onWrapTokens}>
-              Wrap tokens
+          onConvertTokens && (
+            <Button wide mode="strong" onClick={onConvertTokens}>
+              Convert tokens
             </Button>
           )
         }
@@ -65,7 +65,7 @@ const NoWrappedTokens = React.memo(function NoWrappedTokens({
 })
 NoWrappedTokens.propTypes = {
   isSyncing: PropTypes.bool,
-  onWrapTokens: PropTypes.func,
+  onConvertTokens: PropTypes.func,
 }
 
 export default NoWrappedTokens

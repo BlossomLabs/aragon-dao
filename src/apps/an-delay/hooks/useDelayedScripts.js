@@ -1,13 +1,10 @@
 import { useConnect } from '@1hive/connect-react'
 import { useMemo } from 'react'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
-import {
-  buildExecutionTarget,
-  formatDelayedScript,
-  getStatus,
-} from '../lib/delay-utils'
+import { formatDelayedScript, getStatus } from '../lib/delay-utils'
 import useNow from '@/hooks/shared/useNow'
 import { useConnectedApp } from '@/providers/ConnectedApp'
+import { buildExecutionTarget } from '@/utils/evmscript'
 
 export const useDelayedScripts = () => {
   const { apps } = useOrganizationState()

@@ -23,7 +23,6 @@ const reduceVotes = (votes = []) => {
       data: {
         status: DisputableStatusType[vote.status],
         context: vote.context,
-        // description: JSON.stringify(decodeTransactionPath(vote.script)),
         executed: vote.status === 'Executed',
         executionDate: vote.executedAt && new Date(vote.executedAt),
         creator: vote.creator,

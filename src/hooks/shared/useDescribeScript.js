@@ -2,9 +2,12 @@ import { decodeForwardingPath, describePath } from '@1hive/connect-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
-import { addressesEqual } from '@/utils/web3-utils'
-import { getAppPresentationByAddress } from '@/utils/app-utils'
 import { toUtf8String } from 'ethers/lib/utils'
+import {
+  EMPTY_CALLSCRIPT,
+  EMPTY_CALLSCRIPT_UTF8,
+  targetDataFromTransactionRequest,
+} from '@/utils/evmscript'
 
 const cachedDescriptions = new Map([])
 
@@ -61,7 +64,10 @@ const patchSteps = steps => {
 }
 
 const isEmptyScript = evmCallScript =>
-  evmCallScript === '0x00000001' || evmCallScript === '0x00'
+  evmCallScript === EMPTY_CALLSCRIPT ||
+  evmCallScript === '0x00' ||
+  // Signaling votes contains an utf8-encoded empty callscript
+  evmCallScript === EMPTY_CALLSCRIPT_UTF8
 
 const useDecribeScript = (evmCallScript, scriptId) => {
   const mounted = useMounted()
@@ -75,7 +81,7 @@ const useDecribeScript = (evmCallScript, scriptId) => {
   const targetApp = useMemo(
     () =>
       describedSteps.length
-        ? targetDataFromTransactionRequest(apps, describedSteps[0])
+        ? targetDataFromTransactionRequest(apps, describedSteps)
         : null,
     [apps, describedSteps]
   )
@@ -125,28 +131,6 @@ const useDecribeScript = (evmCallScript, scriptId) => {
   }, [apps, connection, evmCallScript, mounted, scriptId, emptyScript])
 
   return { describedSteps, targetApp, emptyScript, loading, error }
-}
-
-function targetDataFromTransactionRequest(apps, transactionRequest) {
-  const { to: targetAppAddress, name, identifier } = transactionRequest
-
-  // Populate details via our apps list if it's available
-  if (apps.some(({ address }) => addressesEqual(address, targetAppAddress))) {
-    const appPresentation = getAppPresentationByAddress(apps, targetAppAddress)
-
-    return {
-      address: targetAppAddress,
-      name: appPresentation !== null ? appPresentation.humanName : '',
-      icon: appPresentation !== null ? appPresentation.iconSrc : '',
-    }
-  }
-
-  // Otherwise provide some fallback values
-  return {
-    address: targetAppAddress,
-    name: name || identifier,
-    icon: '',
-  }
 }
 
 export default useDecribeScript

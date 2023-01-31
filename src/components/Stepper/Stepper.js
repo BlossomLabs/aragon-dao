@@ -20,7 +20,7 @@ const AnimatedDiv = animated.div
 
 const INITIAL_STATUS = STEP_PROMPTING
 const DEFAULT_DESCRIPTIONS = TRANSACTION_SIGNING_DESC
-const AUTO_CLOSING_TIMEOUT = 2500
+const AUTO_CLOSING_TIMEOUT = 1500
 
 function initialStepState(steps) {
   return steps.map((_, i) => {

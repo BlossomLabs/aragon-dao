@@ -9,29 +9,32 @@ import HomeScreen from '../components/HomeScreen'
 import LayoutGutter from '@/components/Layout/LayoutGutter'
 import LayoutLimiter from '@/components/Layout/LayoutLimiter'
 import NotFoundScreen from '@/components/NotFoundScreen'
+import AppLayout from '@/components/Layout/AppLayout'
 
 function Router() {
   return (
     <LayoutGutter>
       <LayoutLimiter>
-        <Switch>
-          <Route exact path="/" component={HomeScreen} />
-          <Route path="/delay" component={ANDelayRouter} />
-          <Route path="/finance" component={FinanceRouter} />
-          <Route path="/voting" component={VotingRouter} />
-          <Route path="/wrapper" component={TokenWrapperRouter} />
-          <Route
-            path="*"
-            render={props => {
-              return (
-                <NotFoundScreen
-                  {...props}
-                  text="Oops, the current app is not installed on this DAO."
-                />
-              )
-            }}
-          />
-        </Switch>
+        <AppLayout>
+          <Switch>
+            <Route exact path="/" component={HomeScreen} />
+            <Route path="/delay" component={ANDelayRouter} />
+            <Route path="/finance" component={FinanceRouter} />
+            <Route path="/voting" component={VotingRouter} />
+            <Route path="/wrapper" component={TokenWrapperRouter} />
+            <Route
+              path="*"
+              render={props => {
+                return (
+                  <NotFoundScreen
+                    {...props}
+                    text="Oops, the current app is not installed on this DAO."
+                  />
+                )
+              }}
+            />
+          </Switch>
+        </AppLayout>
       </LayoutLimiter>
     </LayoutGutter>
   )

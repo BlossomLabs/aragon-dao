@@ -33,6 +33,7 @@ import AmountInput from '../AmountInput'
 import ToggleContent from '../ToggleContent'
 import TokenSelector from '../TokenSelector'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
+import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -167,7 +168,16 @@ class Deposit extends React.Component {
     // Tokens
 
     const token = getContract(address, tokenAbi)
-    const userBalance = await token.balanceOf(connectedAccount)
+    let userBalance
+    try {
+      userBalance = await token.balanceOf(connectedAccount)
+    } catch (err) {
+      console.error(err)
+      return {
+        loading: false,
+        userBalance: '-1',
+      }
+    }
 
     const fetchSymbol = async () => {
       const override = tokenDataOverride(address, 'symbol', network?.type)
@@ -254,13 +264,13 @@ class Deposit extends React.Component {
   setMaxUserBalance = () => {
     const { selectedToken, amount } = this.state
     const { userBalance, decimals } = selectedToken.data
-    const adjustedAmount = fromDecimals(userBalance, decimals)
+    const adjustedAmount = fromDecimals(userBalance.toString(), decimals)
     this.setState({
       amount: { ...amount, value: adjustedAmount },
     })
   }
   render() {
-    const { appAddress, network, title, tokens, onComplete } = this.props
+    const { appAddress, network, title, tokens } = this.props
     const { amount, reference, selectedToken } = this.state
 
     let errorMessage
@@ -308,13 +318,12 @@ class Deposit extends React.Component {
             wide
           />
         </Field>
-        <Button wide mode="strong" type="submit" disabled={disabled}>
-          Submit deposit
-        </Button>
-        {errorMessage && <ValidationError message={errorMessage} />}
 
-        <VSpace size={3} />
-        <Info>
+        <Info
+          css={`
+            margin-bottom: ${2 * GU}px;
+          `}
+        >
           {isMainnet && (
             <p>
               Remember, Mainnet organizations use <strong>real funds</strong>.
@@ -341,6 +350,13 @@ class Deposit extends React.Component {
             </React.Fragment>
           )}
         </Info>
+
+        <Button wide mode="strong" type="submit" disabled={disabled}>
+          Submit deposit
+        </Button>
+        {errorMessage && <ValidationError message={errorMessage} />}
+
+        <VSpace size={2} />
 
         {appAddress && ethSelected && (
           <div>
@@ -395,7 +411,7 @@ const SelectedTokenBalance = ({ network, selectedToken }) => {
     value: address,
   } = selectedToken
 
-  if (loading || !isAddress(address) || !userBalance) {
+  if (!isAddress(address)) {
     return ''
   }
 
@@ -408,36 +424,41 @@ const SelectedTokenBalance = ({ network, selectedToken }) => {
         margin: -${2 * GU}px 0 ${3 * GU}px;
       `}
     >
-      {userBalance === '-1' ? (
-        `Your balance could not be found for ${symbol}`
-      ) : (
+      {loading ? (
+        <LoadingSkeleton
+          css={`
+            width: 30%;
+          `}
+        />
+      ) : userBalance === '-1' ? (
         <div
           css={`
+            ${textStyle('body3')};
+            color: ${theme.negative};
             display: flex;
+            gap: ${0.5 * GU}px;
             align-items: center;
           `}
         >
-          You have{' '}
-          {userBalance === '0'
-            ? 'no'
-            : fromDecimals(userBalance.toString(), decimals)}{' '}
-          {addressesEqual(address, ETHER_TOKEN_FAKE_ADDRESS) ? (
-            `${symbol}`
-          ) : (
-            <span
-              css={`
-                margin: 0 ${0.5 * GU}px;
-              `}
-            >
-              <TokenBadge
-                address={address}
-                symbol={symbol}
-                networkType={network?.type}
-              />
-            </span>
-          )}{' '}
-          available
+          <IconCross size="tiny" /> Your {symbol} balance could not be found.
         </div>
+      ) : (
+        <span
+          css={`
+            ${textStyle('body3')};
+            color: ${theme.contentSecondary};
+          `}
+        >
+          {'Your have '}
+          <span
+            css={`
+              font-weight: 600;
+            `}
+          >
+            {fromDecimals(userBalance.toString(), decimals)}{' '}
+            <TokenBadge address={address} symbol={symbol} />
+          </span>
+        </span>
       )}
     </div>
   )

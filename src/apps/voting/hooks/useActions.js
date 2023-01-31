@@ -9,12 +9,12 @@ import { useGasLimit } from '@/hooks/shared/useGasLimit'
 
 import votingActions from '../actions/voting-action-types'
 
-import { EMPTY_CALLSCRIPT } from '../evmscript-utils'
 import { useMounted } from '@/hooks/shared/useMounted'
+import { EMPTY_CALLSCRIPT } from '@/utils/evmscript'
 
 export default function useActions() {
   const mounted = useMounted()
-  const { account, ethers } = useWallet()
+  const { account } = useWallet()
   const { connectedApp: votingApp } = useConnectedApp()
   const [GAS_LIMIT] = useGasLimit()
 
@@ -100,7 +100,7 @@ export default function useActions() {
 
       intent = describeIntent(
         intent,
-        radspec[votingActions.VOTE_ON_BEHALF_OF](voteId, supports)
+        radspec[votingActions.VOTE_ON_BEHALF_OF]({ voteId, supports })
       )
 
       if (mounted()) {
@@ -111,13 +111,23 @@ export default function useActions() {
   )
 
   const executeVote = useCallback(
-    (voteId, script) => {
-      sendIntent(votingApp, 'executeVote', [voteId, script], {
-        ethers,
-        from: account,
+    async (voteId, script, onDone = noop) => {
+      let intent = await votingApp.intent('executeVote', [voteId, script], {
+        actAs: account,
       })
+
+      intent = imposeGasLimit(intent, GAS_LIMIT)
+
+      intent = describeIntent(
+        intent,
+        radspec[votingActions.ENACT_VOTE]({ voteId })
+      )
+
+      if (mounted()) {
+        onDone(intent.transactions)
+      }
     },
-    [account, ethers, votingApp]
+    [account, votingApp, GAS_LIMIT, mounted]
   )
 
   return useMemo(
@@ -132,15 +142,4 @@ export default function useActions() {
     }),
     [delegateVoting, executeVote, newVote, vote, voteOnBehalfOf]
   )
-}
-
-export async function sendIntent(app, fn, params, { ethers, from, gasLimit }) {
-  try {
-    const intent = await app.intent(fn, params, { actAs: from })
-    const { to, data } = intent.transactions[0]
-
-    ethers.getSigner().sendTransaction({ data, to, gasLimit })
-  } catch (err) {
-    console.error('Could not create tx:', err)
-  }
 }

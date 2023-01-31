@@ -18,7 +18,8 @@ function VoteSingle({ match }) {
 
 function VoteSingleContent() {
   const [, navigate] = usePath()
-  const [vote, loading] = useSingleVote()
+  const [vote, loading, error] = useSingleVote()
+  const title = error ? "Couldn't load vote." : 'Loading vote.'
 
   return (
     <>
@@ -26,8 +27,12 @@ function VoteSingleContent() {
       <Bar>
         <BackButton onClick={() => navigate('../')} />
       </Bar>
-      <LoadingSection show={loading} title="Loading vote">
-        <VoteDetails vote={vote} />
+      <LoadingSection
+        show={loading || !!error}
+        title={title}
+        showSpinner={!error && loading}
+      >
+        {vote && <VoteDetails vote={vote} />}
       </LoadingSection>
     </>
   )

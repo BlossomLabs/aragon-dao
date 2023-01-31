@@ -13,7 +13,6 @@ import { ErrorNotFound } from '@1hive/connect-react'
 import DelayActions from '../components/DelayActions'
 import DelayStatus from '../components/DelayStatus'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
-import LocalLabelAppBadge from '@/components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
 import { usePath } from '@/hooks/shared'
@@ -28,6 +27,7 @@ import LoadingSection from '@/components/Loading/LoadingSection'
 import { formatTime } from '@/utils/time-utils'
 import DelayHeader from '../components/DelayHeader'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
+import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
@@ -39,6 +39,7 @@ const DelayDetailWrapper = ({ match }) => {
   ] = useDelayedScript(match.params.id)
   const {
     describedSteps,
+    targetApp,
     loading: describeLoading,
     error: describeError,
   } = useDescribeScript(delay?.evmCallScript, delay?.id)
@@ -46,8 +47,8 @@ const DelayDetailWrapper = ({ match }) => {
   const error = scriptError || describeError
   const description =
     error instanceof ErrorNotFound
-      ? 'Delayed script not found'
-      : 'Loading delayed script'
+      ? "Couldn't load delayed script."
+      : 'Loading delayed script.'
 
   return (
     <LayoutLimiter>
@@ -60,12 +61,18 @@ const DelayDetailWrapper = ({ match }) => {
         title={description}
         showSpinner={loading}
       >
-        {delay && <DelayDetail delay={delay} path={describedSteps} />}
+        {delay && (
+          <DelayDetail
+            delay={delay}
+            targetApp={targetApp}
+            path={describedSteps}
+          />
+        )}
       </LoadingSection>
     </LayoutLimiter>
   )
 }
-const DelayDetail = React.memo(({ delay, path }) => {
+const DelayDetail = React.memo(({ delay, path, targetApp }) => {
   const { account } = useWallet()
   const [modalVisible, setModalVisible] = useState(false)
   const [, setModalMode] = useState(null)
@@ -74,7 +81,7 @@ const DelayDetail = React.memo(({ delay, path }) => {
   const { below } = useViewport()
   const compactMode = below('large')
 
-  const { id, creator, executionTargetData } = delay
+  const { id, creator } = delay
 
   const handleModalClose = useCallback(() => {
     setModalVisible(false)
@@ -85,13 +92,7 @@ const DelayDetail = React.memo(({ delay, path }) => {
       <LayoutColumns
         primary={
           <Box>
-            <LocalLabelAppBadge
-              appAddress={executionTargetData.address}
-              iconSrc={executionTargetData.iconSrc}
-              // TODO: find proper identifier
-              // identifier={executionTargetData.identifier}
-              label={executionTargetData.name}
-            />
+            <AppBadgeWithSkeleton targetApp={targetApp} />
             <section
               css={`
                 display: grid;

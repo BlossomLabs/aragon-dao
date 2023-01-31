@@ -4,7 +4,7 @@ import { getAppTheme, setAppTheme } from '../local-settings'
 const SETTINGS_THEME = getAppTheme()
 const AppThemeContext = React.createContext(SETTINGS_THEME)
 
-function AppThemeProvider(props) {
+function AppThemeProvider({ children }) {
   const [appearance, setAppearance] = useState(SETTINGS_THEME.appearance)
   const [theme, setTheme] = useState(SETTINGS_THEME.theme)
 
@@ -24,7 +24,11 @@ function AppThemeProvider(props) {
     [appearance, theme, toggleAppearance]
   )
 
-  return <AppThemeContext.Provider value={appTheme} {...props} />
+  return (
+    <AppThemeContext.Provider value={appTheme}>
+      {children}
+    </AppThemeContext.Provider>
+  )
 }
 
 function useAppTheme() {

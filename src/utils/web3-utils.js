@@ -1,5 +1,5 @@
 import { ethers, providers as Providers } from 'ethers'
-import { getPreferredChain } from '../local-settings'
+import { env } from '@/environment'
 import {
   ARBISCAN_NETWORK_TYPES,
   ARBISCAN_TYPES,
@@ -23,7 +23,7 @@ const networks = {
     explorer: 'blockscout',
     nativeToken: 'Xdai',
   },
-  mainnet: {
+  main: {
     chainId: 1,
     ensRegistry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     name: 'Mainnet',
@@ -39,7 +39,9 @@ const ETH_ADDRESS_TEST_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 
 export const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export function getNetworkType(chainId = getPreferredChain()) {
+const CHAIN_ID = env('CHAIN_ID')
+
+export function getNetworkType(chainId = CHAIN_ID) {
   chainId = String(chainId)
 
   if (chainId === '1') return 'main'
@@ -50,19 +52,19 @@ export function getNetworkType(chainId = getPreferredChain()) {
   return DEFAULT_LOCAL_CHAIN
 }
 
-export function isLocalOrUnknownNetwork(chainId = getPreferredChain()) {
+export function isLocalOrUnknownNetwork(chainId = CHAIN_ID) {
   return getNetworkType(chainId) === DEFAULT_LOCAL_CHAIN
 }
 
-function getNetworkInternalName(chainId = getPreferredChain()) {
+function getNetworkInternalName(chainId = CHAIN_ID) {
   return isLocalOrUnknownNetwork(chainId) ? 'local' : getNetworkType(chainId)
 }
 
-export function getNetwork(chainId = getPreferredChain()) {
+export function getNetwork(chainId = CHAIN_ID) {
   return networks[getNetworkInternalName(chainId)]
 }
 
-export function getNetworkName(chainId = getPreferredChain()) {
+export function getNetworkName(chainId = CHAIN_ID) {
   chainId = String(chainId)
 
   if (chainId === '1') return 'Mainnet'
@@ -110,7 +112,7 @@ export function shortenAddress(address, charsLength = 4) {
   )
 }
 
-export function getDefaultProvider(chainId = getPreferredChain()) {
+export function getDefaultProvider(chainId = CHAIN_ID) {
   const { defaultEthNode, type } = getNetwork(chainId)
 
   return defaultEthNode

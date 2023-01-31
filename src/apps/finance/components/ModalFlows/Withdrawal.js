@@ -15,6 +15,8 @@ import {
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
 import AmountInput from '../AmountInput'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
+import RequiredTokensInfo from '@/components/RequiredTokensInfo'
+import { useFee } from '@/providers/Fee'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const RECEIPIENT_NOT_ADDRESS_ERROR = Symbol('RECEIPIENT_NOT_ADDRESS_ERROR')
@@ -136,7 +138,7 @@ class Withdrawal extends React.Component {
   }
 
   render() {
-    const { title } = this.props
+    const { title, hasFeeTokens } = this.props
     const { amount, recipient, reference, selectedToken } = this.state
 
     const tokens = this.nonZeroTokens()
@@ -155,7 +157,8 @@ class Withdrawal extends React.Component {
       errorMessage ||
         !recipient.value ||
         !amount.value ||
-        selectedToken === NULL_SELECTED_TOKEN
+        selectedToken === NULL_SELECTED_TOKEN ||
+        !hasFeeTokens
     )
 
     const isVisibleMaxButton = Boolean(selectedToken !== NULL_SELECTED_TOKEN)
@@ -204,9 +207,17 @@ class Withdrawal extends React.Component {
             wide
           />
         </Field>
+
         <Button disabled={disabled} mode="strong" type="submit" wide>
           Submit withdrawal
         </Button>
+        {!hasFeeTokens && (
+          <RequiredTokensInfo
+            css={`
+              margin-top: ${2 * GU}px;
+            `}
+          />
+        )}
         {errorMessage && <ValidationError message={errorMessage} />}
       </form>
     ) : (
@@ -250,10 +261,20 @@ const ValidationError = ({ message }) => {
 }
 
 export default props => {
+  const { hasFeeTokens } = useFee()
   const { next } = useMultiModal()
   const [readyToFocus, setReadyToFocus] = useState(false)
+
   useLayoutEffect(() => {
     setReadyToFocus(true)
   }, [])
-  return <Withdrawal readyToFocus={readyToFocus} next={next} {...props} />
+
+  return (
+    <Withdrawal
+      readyToFocus={readyToFocus}
+      next={next}
+      hasFeeTokens={hasFeeTokens}
+      {...props}
+    />
+  )
 }

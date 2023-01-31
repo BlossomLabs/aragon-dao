@@ -22,6 +22,9 @@ export default {
         : `Remove delegate`
     }`
   },
+  [organizationActions.ENACT_VOTE]: ({ voteId }) => {
+    return `Enact vote: #${voteId}`
+  },
   [organizationActions.VOTE_ON_PROPOSAL]: ({ voteId, supports }) => {
     return `Vote ${supports ? 'Yes' : 'No'} on proposal: #${voteId}`
   },

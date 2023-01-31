@@ -3,29 +3,24 @@ import BN from 'bn.js'
 import { useContractReadOnly } from './useContract'
 import minimeTokenAbi from '../../abi/minimeToken.json'
 import { useWallet } from '@/providers/Wallet'
+import { useConnect } from '@1hive/connect-react'
 
 export function useTokenBalanceOf(tokenAddress, account, chainId) {
-  const [balance, setBalance] = useState(new BN(-1))
   const tokenContract = useContractReadOnly(
     tokenAddress,
     minimeTokenAbi,
     chainId
   )
 
-  useEffect(() => {
+  return useConnect(async () => {
     if (!tokenContract || !account) {
       return
     }
-    const fetchTokenBalanceOf = async () => {
-      const result = await tokenContract.balanceOf(account)
 
-      setBalance(new BN(result.toString()))
-    }
+    const result = await tokenContract.balanceOf(account)
 
-    fetchTokenBalanceOf()
-  }, [account, tokenContract])
-
-  return balance
+    return new BN(result.toString())
+  }, [tokenContract, account])
 }
 
 export function useTokenBalances(account, token) {

@@ -1,11 +1,14 @@
 import React, { useCallback, useState } from 'react'
 import { Button, Field, GU, Info, TextInput, textStyle } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
+import RequiredTokensInfo from '@/components/RequiredTokensInfo'
+import { useFee } from '@/providers/Fee'
 
 function CreateNewVote({ getTransactions }) {
+  const { hasFeeTokens } = useFee()
   const [question, setQuestion] = useState('')
   const { next } = useMultiModal()
-  const disableButton = !question.length
+  const disableButton = !question.length || !hasFeeTokens
 
   const handleQuestionChange = useCallback(event => {
     const updatedQuestion = event.target.value
@@ -48,23 +51,31 @@ function CreateNewVote({ getTransactions }) {
 
       <Info
         css={`
-          margin-top: ${3 * GU}px;
+          margin-top: ${1 * GU}px;
         `}
       >
         These proposals are informative and used for signaling. They don’t have
         any direct repercussions on the organization.
       </Info>
+
       <Button
         mode="strong"
         wide
         css={`
-          margin-top: ${2 * GU}px;
+          margin-top: ${3 * GU}px;
         `}
         onClick={handleOnCreateVote}
         disabled={disableButton}
       >
         Create new proposal
       </Button>
+      {!hasFeeTokens && (
+        <RequiredTokensInfo
+          css={`
+            margin-top: ${2 * GU}px;
+          `}
+        />
+      )}
     </div>
   )
 }

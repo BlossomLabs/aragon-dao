@@ -5,6 +5,7 @@ import { getAppPresentation } from '@/utils/app-utils'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { shortenAddress } from '@/utils/web3-utils'
+import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 
 function TargetAppBadge({ useDefaultBadge, targetApp, loading }) {
   return (
@@ -50,33 +51,6 @@ function DefaultAppBadge() {
   )
 }
 
-function AppBadgeWithSkeleton({ targetApp, loading }) {
-  if (loading) {
-    return (
-      <LoadingSkeleton
-        css={`
-          height: ${3 * GU}px;
-          width: ${12 * GU}px;
-        `}
-      />
-    )
-  }
-
-  if (!targetApp) {
-    return <></>
-  }
-
-  const { address, name, icon } = targetApp
-
-  return (
-    <AppBadge
-      label={name || shortenAddress(address)}
-      appAddress={address}
-      iconSrc={icon}
-      badgeOnly
-    />
-  )
-}
 /* eslint-disable react/prop-types */
 
 TargetAppBadge.propTypes = {

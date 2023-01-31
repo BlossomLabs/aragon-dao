@@ -8,13 +8,13 @@ import {
 } from '../vote-utils'
 
 export function useSingleVote() {
-  const [voteInfo, loading] = useSingleVoteSubscription()
+  const [voteInfo, loading, error] = useSingleVoteSubscription()
 
   const processedVote = useMemo(() => {
-    return voteInfo && !loading ? processVote(voteInfo) : {}
+    return voteInfo && !loading ? processVote(voteInfo) : undefined
   }, [voteInfo, loading])
 
-  return [processedVote, loading]
+  return [processedVote, loading, error]
 }
 
 // Get and format values

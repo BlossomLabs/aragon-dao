@@ -4,35 +4,36 @@ import { Card, GU, textStyle } from '@aragon/ui'
 
 import CustomProgressBar from './CustomProgressBar'
 import DelayStatus from '../components/DelayStatus'
-import LocalLabelAppBadge from '@/components/LocalIdentityBadge/LocalLabelAppBadge'
 
 import STATUS from '../delay-status-types'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
 import { usePath } from '@/hooks/shared'
 import useDecribeScript from '@/hooks/shared/useDescribeScript'
+import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 
 const DelayCard = React.memo(({ delay }) => {
   const [, navigate] = usePath()
   const {
     id,
     evmCallScript,
-    executionTargetData,
     status,
     timeSubmitted,
     totalTimePaused,
     executionTime,
     pausedAt,
   } = delay
-  const { describedSteps, loading } = useDecribeScript(evmCallScript, id)
+  const { describedSteps, targetApp, loading } = useDecribeScript(
+    evmCallScript,
+    id
+  )
 
   return (
     <CardItem onClick={() => navigate(`scripts/${id}`)}>
       <div>
-        <LocalLabelAppBadge
-          appAddress={executionTargetData.address}
-          iconSrc={executionTargetData.iconSrc}
-          identifier={executionTargetData.identifier}
-          label={executionTargetData.name}
+        <AppBadgeWithSkeleton
+          targetApp={targetApp}
+          loading={loading}
+          badgeOnly
         />
       </div>
       <div

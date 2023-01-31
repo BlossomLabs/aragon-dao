@@ -20,6 +20,10 @@ import { getUserBalanceAt } from '../token-utils'
 import { getCanUserVoteOnBehalfOf, getCanUserVote } from '../vote-utils'
 import votingAbi from '../abi/voting.json'
 
+function buildVoteId(connectedApp, voteId) {
+  return `${connectedApp.address}-vote-${voteId}`
+}
+
 const emptyPromise = defaultValue =>
   new Promise(resolve => resolve(defaultValue))
 
@@ -30,7 +34,7 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
   const { connectedApp } = useConnectedApp()
 
   const [vote, voteStatus] = useConnect(() => {
-    return connectedApp?.onVote(`${connectedApp.address}-vote-${voteId}`)
+    return connectedApp?.onVote(buildVoteId(connectedApp, voteId))
   }, [connectedApp, voteId])
 
   const voteUpdateValue = JSON.stringify(vote)
@@ -66,11 +70,6 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
   //   }
   // }, [vote])
 
-  if (error) {
-    // captureErrorWithSentry(error)
-    console.error(error)
-  }
-
   const SingleVoteSubscriptionState = useMemo(() => {
     return [
       {
@@ -81,8 +80,9 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
         },
       },
       extendedVoteLoading,
+      error,
     ]
-  }, [extendedVote, extendedVoteLoading, castVote])
+  }, [extendedVote, extendedVoteLoading, castVote, error])
 
   return (
     <SingleVoteSubscriptionContext.Provider value={SingleVoteSubscriptionState}>

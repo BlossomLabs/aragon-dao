@@ -19,6 +19,7 @@ import { useOrganizationState } from '@/providers/OrganizationProvider'
 import DelayHeader from '../components/DelayHeader'
 import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
 import { useWait } from '@/hooks/shared/useWait'
+import { getAppPresentation } from '@/utils/app-utils'
 
 const classifyDelays = delays => {
   const ongoingDelays = delays.filter(delay => delay.status === STATUS.ONGOING)
@@ -42,11 +43,10 @@ const DelaysWrapper = () => {
             delay.executionTargets.includes(app.address.toLowerCase())
           )
         )
-        .map(({ address, name }) => ({
-          appAddress: address,
-          name,
-          // TODO: find proper identifier
-          // identifier:
+        .map(app => ({
+          appAddress: app.address,
+          ...getAppPresentation(app),
+          identifier: app.name,
         }))
         .sort((a, b) => a.name.localeCompare(b.name)),
     [apps, delays]
@@ -84,8 +84,8 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
     filteredDelays
   )
 
-  const multipleOfTarget = executionTargetApps.reduce((map, { name }) => {
-    map.set(name, map.has(name))
+  const multipleOfTarget = executionTargetApps.reduce((map, { humanName }) => {
+    map.set(humanName, map.has(humanName))
     return map
   }, new Map())
 
@@ -140,9 +140,9 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
               'All',
               <ThisApp showTag={multipleOfTarget.get('Delay')} />,
               ...executionTargetApps.map(
-                ({ name, identifier }) =>
-                  `${name}${
-                    multipleOfTarget.get(name) && identifier
+                ({ humanName, identifier }) =>
+                  `${humanName}${
+                    multipleOfTarget.get(humanName) && identifier
                       ? ` (${identifier})`
                       : ''
                   }`

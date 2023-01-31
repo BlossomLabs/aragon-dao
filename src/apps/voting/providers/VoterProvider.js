@@ -13,7 +13,7 @@ function VoterProvider({ children }) {
     if (!account) {
       return
     }
-    return connectedApp?.voter(account)
+    return connectedApp?.onVoter(account)
   }, [connectedApp, account])
 
   return (

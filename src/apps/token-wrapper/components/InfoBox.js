@@ -15,6 +15,8 @@ function InfoBox({ depositedToken, wrappedToken }) {
         wrappedToken.numDecimals
       )
     : '0'
+  const depositedTokenSymbol = depositedToken.symbol
+  const wrappedTokenSymbol = wrappedToken.symbol
 
   return (
     <React.Fragment>
@@ -27,7 +29,6 @@ function InfoBox({ depositedToken, wrappedToken }) {
           `}
         >
           <TokenBadge
-            compact
             address={depositedTokenAddress}
             networkType={network?.type}
             symbol={depositedToken.symbol}
@@ -36,7 +37,6 @@ function InfoBox({ depositedToken, wrappedToken }) {
             <img src={wrap} />
           </span>
           <TokenBadge
-            compact
             address={wrappedTokenAddress}
             networkType={network?.type}
             symbol={wrappedToken.symbol}
@@ -47,45 +47,25 @@ function InfoBox({ depositedToken, wrappedToken }) {
             margin-top: ${1 * GU}px;
           `}
         >
-          You can wrap{' '}
-          <TokenBadge
-            compact
-            badgeOnly
-            address={depositedTokenAddress}
-            networkType={network?.type}
-            symbol={depositedToken.symbol}
-          />{' '}
-          tokens for{' '}
-          <TokenBadge
-            compact
-            badgeOnly
-            address={wrappedTokenAddress}
-            networkType={network?.type}
-            symbol={wrappedToken.symbol}
-          />{' '}
-          tokens used in this organization for governance.
+          You can wrap <strong>{depositedTokenSymbol}</strong> tokens and get{' '}
+          <strong>{wrappedTokenSymbol}</strong> in exchange to use in this DAO
+          for governance.
         </div>
         <div
           css={`
             margin-top: ${1 * GU}px;
           `}
         >
-          You can unwrap{' '}
-          <TokenBadge
-            compact
-            badgeOnly
-            address={wrappedToken.address}
-            networkType={network?.type}
-            symbol={wrappedToken.symbol}
-          />{' '}
-          at any time to return your original tokens.
+          You can unwrap <strong>{wrappedTokenSymbol}</strong> at any time and
+          get your original tokens back.
         </div>
         <div
           css={`
             margin-top: ${1 * GU}px;
           `}
         >
-          1 {depositedToken.symbol} = 1 {wrappedToken.symbol}
+          1 <strong>{depositedTokenSymbol}</strong> = 1{' '}
+          <strong>{wrappedTokenSymbol}</strong>
         </div>
       </Box>
       <Box heading="Token Info">

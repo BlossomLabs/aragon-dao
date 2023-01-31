@@ -1,33 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import BN from 'bn.js'
 import {
   Button,
-  IconPlus,
-  IconMinus,
   Tag,
   textStyle,
   useTheme,
   GU,
   useViewport,
+  IconSwap,
 } from '@aragon/ui'
 import InnerAppHeader from '@/components/AppHeader'
 import { useWallet } from '@/providers/Wallet'
-import { useAppState } from '../providers/TokenWrapperProvider'
 
 const AppHeader = React.memo(function AppHeader({
   tokenSymbol,
-  onWrapHolder,
-  onUnwrapTokens,
+  onConvertTokens,
 }) {
   const { account } = useWallet()
-  const { wrappedToken } = useAppState()
-  const { accountBalance } = wrappedToken
   const theme = useTheme()
   const { below } = useViewport()
   const compactMode = below('medium')
-
-  const canUnwrap = accountBalance && accountBalance.gt(new BN(0))
 
   return (
     <InnerAppHeader
@@ -67,23 +59,11 @@ const AppHeader = React.memo(function AppHeader({
           >
             <Button
               mode="strong"
-              label="Wrap tokens"
-              icon={<IconPlus />}
-              onClick={onWrapHolder}
+              label="Convert tokens"
+              icon={<IconSwap />}
+              onClick={onConvertTokens}
               display={compactMode ? 'icon' : 'label'}
             />
-            {canUnwrap && (
-              <Button
-                mode="strong"
-                label="Unwrap tokens"
-                icon={<IconMinus />}
-                onClick={onUnwrapTokens}
-                display={compactMode ? 'icon' : 'label'}
-                css={`
-                  margin-left: ${1 * GU}px;
-                `}
-              />
-            )}
           </div>
         )
       }
@@ -91,7 +71,7 @@ const AppHeader = React.memo(function AppHeader({
   )
 })
 AppHeader.propTypes = {
-  onWrapHolder: PropTypes.func,
+  onConvertTokens: PropTypes.func,
   tokenSymbol: PropTypes.string,
 }
 
