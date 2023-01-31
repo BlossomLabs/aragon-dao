@@ -145,6 +145,11 @@
     isomorphic-ws "^4.0.1"
     subscriptions-transport-ws "^0.9.16"
 
+"@1hive/connect-types@^0.9.13":
+  version "0.9.13"
+  resolved "https://registry.yarnpkg.com/@1hive/connect-types/-/connect-types-0.9.13.tgz#5ebc68f944c86b9eedc6758442debb67054e9502"
+  integrity sha512-K5qGjILOCAOboR1WjP5+wKSTYxDLo1TL6sHwWPFV9y5jJxWNbZNsYh6x97QBY/264VXsSXxn/+YMHveoUyQU4A==
+
 "@1hive/connect@^0.9.13":
   version "0.9.13"
   resolved "https://registry.yarnpkg.com/@1hive/connect/-/connect-0.9.13.tgz#8c28492320a3e429fff75f5fc475b50fe0393396"
@@ -1215,6 +1220,36 @@
     "@1hive/connect-thegraph" "^0.9.13"
     graphql-tag "^2.10.3"
 
+"@blossom-labs/connect-bl-tao-voting@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.1.0.tgz#fda83d77dc13997a4802d26332dad160114e4ed4"
+  integrity sha512-Z9gGE8/xMEr6/glggh5bxuVpEoU3X8ejqv8uAd7A1TcsVVJe/3K8nAPvQj1wYly37c0+iXqQqDpJPofcyzI+3w==
+  dependencies:
+    "@1hive/connect-core" "^0.9.13"
+    "@1hive/connect-thegraph" "^0.9.13"
+    "@1hive/connect-types" "^0.9.13"
+    graphql-tag "^2.10.3"
+
+"@blossom-labs/connect-finance@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-finance/-/connect-finance-0.1.0.tgz#8c8d3956a30cd5e8ddc3ae3bf2765c29b4ca17d3"
+  integrity sha512-tK6WWA69px3uA7/3iJKXT8js+3wZZbQPN4p8cgzbsZYflDc+o29szX1wtX3rEprUkV/IxZnJf7Sn4XqHaJRNSQ==
+  dependencies:
+    "@1hive/connect-core" "^0.9.13"
+    "@1hive/connect-thegraph" "^0.9.13"
+    "@1hive/connect-types" "^0.9.13"
+    graphql-tag "^2.10.3"
+
+"@blossom-labs/connect-token-wrapper@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-token-wrapper/-/connect-token-wrapper-0.1.0.tgz#3b5836e29e9a27d9ca174b44dec34fe1d0bc69d2"
+  integrity sha512-NyEjOFfg4wgbw/Tr4wigTKgQFl4dINJgZZXz/IKXI/Z3DlsjLlG8CENBj1tSgp9/zj/fWwpHBpeMXY/HU7Mhiw==
+  dependencies:
+    "@1hive/connect-core" "^0.9.13"
+    "@1hive/connect-thegraph" "^0.9.13"
+    "@1hive/connect-types" "^0.9.13"
+    graphql-tag "^2.10.3"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -1977,60 +2012,6 @@
     ethereumjs-util "5.2.0"
     penpal "3.0.7"
     pocket-js-core "0.0.3"
-
-"@rperez89/connect-core@^0.8.0-alpha.6", "@rperez89/connect-core@^0.8.5":
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-core/-/connect-core-0.8.5.tgz#6b175bc36cedfbaebfb7f6f8385a8e0597ae8658"
-  integrity sha512-u0lf4SvsH8lph4h+wQ7h6HtS9YaSoONmxn2jlXP5SrJdP572nZMoQkX9bp+JGyG6pEGkG3TyAgfigJq8bkxZyA==
-  dependencies:
-    "@1hive/radspec" "^2.0.0"
-    "@rperez89/connect-types" "^0.8.0-alpha.6"
-    ethers "^5.0.7"
-
-"@rperez89/connect-finance@^0.8.4":
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-finance/-/connect-finance-0.8.4.tgz#0bfb0220ad3f465c1163a4c7c75180acb7c279d6"
-  integrity sha512-dm9ZUJS/FOkIiJqVaBidZMpHaGf1EljTLq+0rJO+Kt4hNi7TCMiQv+FOqHwPmKEiR5PUH/Dau6Mgsy4hv2rUPg==
-  dependencies:
-    "@rperez89/connect-core" "^0.8.0-alpha.6"
-    "@rperez89/connect-thegraph" "^0.8.0-alpha.6"
-    graphql-tag "^2.10.3"
-
-"@rperez89/connect-tao-voting@^0.8.7":
-  version "0.8.8"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-tao-voting/-/connect-tao-voting-0.8.8.tgz#2ab5ea53b7dbba78bd49aa761f196ce530b71030"
-  integrity sha512-nfSw6VPRoZikDf8mVb/59BofY9nelH8CFMdAEfAlYGdMrS+4Uc2M+Rg+3mdrWzZPrZD499wpytMYIF/v5UCrnw==
-  dependencies:
-    "@1hive/connect-core" "^0.9.13"
-    "@1hive/connect-thegraph" "^0.9.13"
-    graphql-tag "^2.10.3"
-
-"@rperez89/connect-thegraph@^0.8.0-alpha.6":
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-thegraph/-/connect-thegraph-0.8.5.tgz#d2a42f76af8fb7021c503f70a84d28f45d367d80"
-  integrity sha512-TprffdXm7Pi21Jgn8LhiDgjoUB6CwUU2LqPaVk7IsR2p4Vb/rWt/aqlMqnz6XAUVuSqLjtu1lQRzz0AQ2fj3cw==
-  dependencies:
-    "@rperez89/connect-core" "^0.8.5"
-    "@urql/core" "^1.11.7"
-    graphql "^15.0.0"
-    graphql-tag "^2.10.3"
-    isomorphic-unfetch "^3.0.0"
-    isomorphic-ws "^4.0.1"
-    subscriptions-transport-ws "^0.9.16"
-
-"@rperez89/connect-token-wrapper@^0.8.7":
-  version "0.8.7"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-token-wrapper/-/connect-token-wrapper-0.8.7.tgz#bfb0c6fc66a7d3b4fe4d209167ef059a592b3c57"
-  integrity sha512-BklZdmxzb7uxY1rCLO1a6wRtlFag/IJ3LoT1+9QWwTVnRT+FDKK+f5IoHv7qkqAgUNG8UogA0DQEv8fu6OiaNQ==
-  dependencies:
-    "@1hive/connect-core" "^0.9.13"
-    "@1hive/connect-thegraph" "^0.9.13"
-    graphql-tag "^2.10.3"
-
-"@rperez89/connect-types@^0.8.0-alpha.6":
-  version "0.8.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@rperez89/connect-types/-/connect-types-0.8.0-alpha.6.tgz#5482c2816df8e9aab666d43fbb37f1f7550ff33b"
-  integrity sha512-DqDJE76Pgh9Wh+xzxUU8/Lj35gvqmekcaCLkv3sPkGGCf4srZAj5acjSI0PIBocnPOjI0eM0nivImWRUxjRyLw==
 
 "@sentry/core@5.30.0":
   version "5.30.0"
@@ -6834,7 +6815,7 @@ ethereumjs-wallet@0.6.5:
     utf8 "^3.0.0"
     uuid "^3.3.2"
 
-ethers@^5.0.0, ethers@^5.0.7, ethers@^5.6.8:
+ethers@^5.0.0, ethers@^5.6.8:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
