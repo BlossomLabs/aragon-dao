@@ -36,8 +36,8 @@ import VoteActions from './VoteActions'
 import VoteCast from './VoteCast'
 import TargetAppBadge from '../TargetAppBadge'
 import useDescribeScript from '@/hooks/shared/useDescribeScript'
+import EnactVoteScreens from '../../components/ModalFlows/EnactVote/EnactVoteScreens'
 import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
-import useActions from '../../hooks/useActions'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 
 function getPresentation(disputableStatus) {
@@ -66,9 +66,8 @@ function getPresentation(disputableStatus) {
 function VoteDetails({ vote }) {
   const [modalVisible, setModalVisible] = useState(false)
   const [modalData, setModalData] = useState({})
-  const [, setModalMode] = useState(null)
+  const [modalMode, setModalMode] = useState(null)
   const { voteId, id, script, voterInfo, disputableStatus } = vote
-  const { votingActions } = useActions()
 
   const { describedSteps, targetApp, loading, emptyScript } = useDescribeScript(
     script,
@@ -83,11 +82,13 @@ function VoteDetails({ vote }) {
   const handleVote = useCallback(data => {
     setModalVisible(true)
     setModalData(data)
+    setModalMode('vote')
   }, [])
 
   const handleExecute = useCallback(() => {
-    votingActions.executeVote(voteId, script)
-  }, [votingActions, voteId, script])
+    setModalVisible(true)
+    setModalMode('enact')
+  }, [])
 
   const accountHasVoted = voterInfo && voterInfo.hasVoted
 
@@ -166,7 +167,11 @@ function VoteDetails({ vote }) {
         onClose={() => setModalVisible(false)}
         onClosed={() => setModalMode(null)}
       >
-        <VoteScreens vote={vote} {...modalData} />
+        {modalMode === 'vote' ? (
+          <VoteScreens vote={vote} {...modalData} />
+        ) : modalMode === 'enact' ? (
+          <EnactVoteScreens vote={vote} {...modalData} />
+        ) : null}
       </MultiModal>
     </>
   )
