@@ -5,6 +5,7 @@ import BalanceToken from './BalanceToken'
 // import { getConvertedAmount } from '../lib/conversion-utils'
 // import { useConvertRates } from './useConvertRates'
 import useBalances from '../hooks/useBalances'
+import { BN } from 'bn.js'
 
 // Prepare the balances for the BalanceToken component
 // function useBalanceItems(balances) {
@@ -112,9 +113,8 @@ function Balances({ tokenBalances, loading }) {
                         amount={balance}
                         compact={compact}
                         // convertedAmount={convertedAmount}
-                        decimals={decimals}
+                        decimals={new BN(decimals)}
                         symbol={symbol}
-                        verified={verified}
                       />
                     </li>
                   )

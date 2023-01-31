@@ -26,8 +26,6 @@ function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
   const history = useHistory()
   const { below } = useViewport()
-  const { toggleAppearance } = useAppTheme()
-  const darkModeIcon = useAsset(ICON_DARK_MODE)
 
   const compactMode = below('medium')
 
@@ -111,17 +109,26 @@ function Header({ showMenu, onMenuClick, ...props }) {
               gap: ${0.5 * GU}px;
             `}
           >
-            <AccountModule />
-            <ButtonBase
-              css={`
-                width: ${3 * GU}px;
-                height: ${3 * GU}px;
-                margin-left: ${compactMode ? 0.5 * GU : 1 * GU}px;
-              `}
-              onClick={toggleAppearance}
-            >
-              <img css="width: 100%" src={darkModeIcon} />
-            </ButtonBase>
+            {compactMode ? (
+              <React.Fragment>
+                <DarkModeButton
+                  css={`
+                    margin-right: ${2 * GU}px;
+                  `}
+                />
+                <AccountModule />
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <AccountModule />
+                <DarkModeButton
+                  css={`
+                    margin-left: ${2 * GU}px;
+                  `}
+                />
+              </React.Fragment>
+            )}
+
             {showMenu && (
               <ButtonIcon label="Open menu" onClick={onMenuClick}>
                 <IconMenu />
@@ -131,6 +138,24 @@ function Header({ showMenu, onMenuClick, ...props }) {
         </div>
       </LayoutGutter>
     </header>
+  )
+}
+
+function DarkModeButton({ ...props }) {
+  const darkModeIcon = useAsset(ICON_DARK_MODE)
+  const { toggleAppearance } = useAppTheme()
+
+  return (
+    <ButtonBase
+      css={`
+        width: ${3 * GU}px;
+        height: ${3 * GU}px;
+      `}
+      onClick={toggleAppearance}
+      {...props}
+    >
+      <img css="width: 100%" src={darkModeIcon} />
+    </ButtonBase>
   )
 }
 

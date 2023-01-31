@@ -260,7 +260,7 @@ class Deposit extends React.Component {
     })
   }
   render() {
-    const { appAddress, network, title, tokens, onComplete } = this.props
+    const { appAddress, network, title, tokens } = this.props
     const { amount, reference, selectedToken } = this.state
 
     let errorMessage
@@ -308,13 +308,12 @@ class Deposit extends React.Component {
             wide
           />
         </Field>
-        <Button wide mode="strong" type="submit" disabled={disabled}>
-          Submit deposit
-        </Button>
-        {errorMessage && <ValidationError message={errorMessage} />}
 
-        <VSpace size={3} />
-        <Info>
+        <Info
+          css={`
+            margin-bottom: ${2 * GU}px;
+          `}
+        >
           {isMainnet && (
             <p>
               Remember, Mainnet organizations use <strong>real funds</strong>.
@@ -341,6 +340,13 @@ class Deposit extends React.Component {
             </React.Fragment>
           )}
         </Info>
+
+        <Button wide mode="strong" type="submit" disabled={disabled}>
+          Submit deposit
+        </Button>
+        {errorMessage && <ValidationError message={errorMessage} />}
+
+        <VSpace size={2} />
 
         {appAddress && ethSelected && (
           <div>
