@@ -46,8 +46,8 @@ const DelayDetailWrapper = ({ match }) => {
   const error = scriptError || describeError
   const description =
     error instanceof ErrorNotFound
-      ? 'Delayed script not found'
-      : 'Loading delayed script'
+      ? "Couldn't load delayed script."
+      : 'Loading delayed script.'
 
   return (
     <LayoutLimiter>
