@@ -20,6 +20,7 @@ export default function RevokeDelegation({ onCreateTransaction }) {
   const { next } = useMultiModal()
 
   const handleOnRevoke = useCallback(() => {
+    next()
     onCreateTransaction(() => {
       next()
     }, constants.AddressZero)
