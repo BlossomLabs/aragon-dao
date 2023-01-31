@@ -158,7 +158,7 @@ class Withdrawal extends React.Component {
         !recipient.value ||
         !amount.value ||
         selectedToken === NULL_SELECTED_TOKEN ||
-        hasFeeTokens
+        !hasFeeTokens
     )
 
     const isVisibleMaxButton = Boolean(selectedToken !== NULL_SELECTED_TOKEN)
@@ -211,11 +211,13 @@ class Withdrawal extends React.Component {
         <Button disabled={disabled} mode="strong" type="submit" wide>
           Submit withdrawal
         </Button>
-        <RequiredTokensInfo
-          css={`
-            margin-top: ${2 * GU}px;
-          `}
-        />
+        {!hasFeeTokens && (
+          <RequiredTokensInfo
+            css={`
+              margin-top: ${2 * GU}px;
+            `}
+          />
+        )}
         {errorMessage && <ValidationError message={errorMessage} />}
       </form>
     ) : (

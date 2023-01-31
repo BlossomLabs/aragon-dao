@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ButtonBase, TextInput, noop, GU, RADIUS } from '@aragon/ui'
+import { ButtonBase, noop, GU, RADIUS } from '@aragon/ui'
+import NumericInput from '@/components/NumericInput'
 
 const MAX_BUTTON_WIDTH = 6 * GU
 
@@ -9,7 +10,7 @@ const AmountInput = React.forwardRef(function AmountInput(
   ref
 ) {
   return (
-    <TextInput
+    <NumericInput
       ref={ref}
       min={0}
       step="any"
