@@ -9,88 +9,98 @@ import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 
 const ZERO_BN = new BN(0)
 
-function WrapTokenScreens({ mode }) {
+function WrapTokenScreens() {
   const [transactions, setTransactions] = useState([])
   const [displayErrorScreen, setDisplayErrorScreen] = useState(false)
-  const { wrappedToken, depositedToken } = useAppState()
+  const { depositedToken } = useAppState()
 
   const { tokenWrapperActions } = useActions()
 
   const temporatyTrx = useRef([])
 
-  const getTransactions = useCallback(
+  const getWrapTransactions = useCallback(
     async (onComplete, amount) => {
       const bnAmount = new BN(amount)
-      if (mode === 'wrap') {
-        const allowance = await tokenWrapperActions.getAllowance(
-          depositedToken.id
-        )
-        if (allowance.lt(bnAmount)) {
-          if (!allowance.eq(new BN(0))) {
-            await tokenWrapperActions.approveTokenAmount(
-              depositedToken.id,
-              ZERO_BN,
-              intent => {
-                temporatyTrx.current = temporatyTrx.current.concat(intent)
-              }
-            )
-          }
+
+      const allowance = await tokenWrapperActions.getAllowance(
+        depositedToken.id
+      )
+
+      if (allowance.lt(bnAmount)) {
+        if (!allowance.eq(new BN(0))) {
           await tokenWrapperActions.approveTokenAmount(
             depositedToken.id,
-            amount,
+            ZERO_BN,
             intent => {
               temporatyTrx.current = temporatyTrx.current.concat(intent)
             }
           )
         }
-        await tokenWrapperActions.wrap({ amount }, intent => {
-          temporatyTrx.current = temporatyTrx.current.concat(intent)
-        })
-        if (!temporatyTrx.current.length) {
+        await tokenWrapperActions.approveTokenAmount(
+          depositedToken.id,
+          amount,
+          intent => {
+            temporatyTrx.current = temporatyTrx.current.concat(intent)
+          }
+        )
+      }
+      await tokenWrapperActions.wrap({ amount }, intent => {
+        temporatyTrx.current = temporatyTrx.current.concat(intent)
+      })
+      if (!temporatyTrx.current.length) {
+        setDisplayErrorScreen(true)
+        return
+      }
+      setTransactions(temporatyTrx.current)
+      onComplete()
+    },
+    [depositedToken.id, tokenWrapperActions]
+  )
+
+  const getUnwrapTransactions = useCallback(
+    async (onComplete, amount) => {
+      await tokenWrapperActions.unwrap({ amount }, intent => {
+        if (!intent || !intent.length) {
           setDisplayErrorScreen(true)
           return
         }
-        setTransactions(temporatyTrx.current)
-        onComplete()
-      }
-      if (mode === 'unwrap') {
-        await tokenWrapperActions.unwrap({ amount }, intent => {
-          if (!intent || !intent.length) {
-            setDisplayErrorScreen(true)
-            return
-          }
 
-          setTransactions(intent)
-          onComplete()
-        })
-      }
+        setTransactions(intent)
+        onComplete()
+      })
     },
-    [depositedToken.id, mode, tokenWrapperActions]
+    [tokenWrapperActions]
   )
 
-  const title =
-    mode === 'wrap'
-      ? `Wrap ${depositedToken.symbol} to receive ${wrappedToken.symbol}`
-      : `Unwrap ${wrappedToken.symbol} to receive ${depositedToken.symbol}`
+  const getTransactions = useCallback(
+    (mode, onComplete, amount) => {
+      if (mode === 'wrap') {
+        getWrapTransactions(onComplete, amount)
+      } else {
+        getUnwrapTransactions(onComplete, amount)
+      }
+    },
+    [getWrapTransactions, getUnwrapTransactions]
+  )
 
   const screens = useMemo(() => {
     return [
       {
-        title: title,
+        title: 'Convert tokens',
         graphicHeader: false,
-        content: <WrapUnwrap mode={mode} getTransactions={getTransactions} />,
+        content: <WrapUnwrap getTransactions={getTransactions} />,
       },
       {
         content: <LoadingScreen />,
       },
     ]
-  }, [getTransactions, mode, title])
+  }, [getTransactions])
 
   return (
     <ModalFlowBase
       displayErrorScreen={displayErrorScreen}
       transactions={transactions}
-      transactionTitle={mode === 'wrap' ? 'Wrap token' : 'Unwrap token'}
+      transactionTitle={'Convert Tokens'}
       screens={screens}
     />
   )

@@ -14,7 +14,7 @@ const ZERO_BN = new BN(0)
 function FeeProvider({ children }) {
   const { account } = useWallet()
   const { apps } = useOrganizationState()
-  const [feeTokenAddress, status] = useConnect(async () => {
+  const [feeTokenAddress, tokenStatus] = useConnect(async () => {
     const app = apps.find(app => app.name === FORWARDER_FEE_APP_NAME)
 
     if (!app) {
@@ -25,10 +25,13 @@ function FeeProvider({ children }) {
 
     return feeTokenAddress
   }, [apps])
-  const feeTokenBalance = useTokenBalanceOf(feeTokenAddress, account)
-  const hasFeeTokens = feeTokenBalance && feeTokenBalance.gt(ZERO_BN)
-  const loading = status.loading
-  const error = status.error
+  const [feeTokenBalance, balanceStatus] = useTokenBalanceOf(
+    feeTokenAddress,
+    account
+  )
+  const hasFeeTokens = !!feeTokenBalance && feeTokenBalance.gt(ZERO_BN)
+  const loading = tokenStatus.loading || balanceStatus.loading
+  const error = tokenStatus.error || balanceStatus.error
 
   return (
     <FeeContext.Provider

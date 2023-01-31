@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useConnect } from '@1hive/connect-react'
 import BN from 'bn.js'
 import { useMounted } from '@/hooks/shared/useMounted'
-import { useWallet } from '@/providers/Wallet'
-import { useTokenBalanceOf } from '@/hooks/shared/useAccountTokenBalance'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 
 const TokenWrapperContext = React.createContext()
@@ -38,7 +36,6 @@ const reduceToken = token => {
 }
 
 function TokenWrapperProvider({ children }) {
-  const { account, chainId } = useWallet()
   const [holders, setHolders] = useState([])
   const [wrappedToken, setWrappedToken] = useState()
   const [depositedToken, setDepositedToken] = useState()
@@ -59,18 +56,6 @@ function TokenWrapperProvider({ children }) {
   ] = useConnect(() => {
     return connectedApp?.token()
   }, [connectedApp])
-
-  const wrappedTokenBalance = useTokenBalanceOf(
-    wrappedToken?.id,
-    account,
-    chainId
-  )
-
-  const depositedTokenBalance = useTokenBalanceOf(
-    depositedToken?.id,
-    account,
-    chainId
-  )
 
   useEffect(() => {
     const reducedVotes = reduceHolders(connectHolders)
@@ -109,11 +94,8 @@ function TokenWrapperProvider({ children }) {
         isSyncing: loading || error,
         error,
         holders,
-        wrappedToken: { ...wrappedToken, accountBalance: wrappedTokenBalance },
-        depositedToken: {
-          ...depositedToken,
-          accountBalance: depositedTokenBalance,
-        },
+        wrappedToken,
+        depositedToken,
       }}
     >
       {children}

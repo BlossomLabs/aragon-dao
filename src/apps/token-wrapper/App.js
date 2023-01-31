@@ -14,26 +14,20 @@ import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
 import { useWait } from '@/hooks/shared/useWait'
 
 function App() {
-  const [modalMode, setModalMode] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
   const { depositedToken, holders, isSyncing, wrappedToken } = useAppState()
   const isWaiting = useWait()
 
-  const appStateReady = depositedToken.id && wrappedToken.id
+  const appStateReady = depositedToken?.id && wrappedToken?.id
   const showHolders = appStateReady && holders && holders.length > 0
   const isLoading = isSyncing || isWaiting
 
-  const handleShowModal = useCallback(mode => {
+  const handleShowModal = useCallback(() => {
     setModalVisible(true)
-    setModalMode(mode)
   }, [])
 
-  const handleWrapToken = useCallback(() => {
-    handleShowModal('wrap')
-  }, [handleShowModal])
-
-  const handleUnwrapToken = useCallback(() => {
-    handleShowModal('unwrap')
+  const handleConvertTokens = useCallback(() => {
+    handleShowModal()
   }, [handleShowModal])
 
   const handleHideModal = useCallback(() => {
@@ -47,22 +41,17 @@ function App() {
       ) : (
         <React.Fragment>
           <AppHeader
-            onWrapHolder={showHolders ? handleWrapToken : null}
-            onUnwrapTokens={handleUnwrapToken}
+            onConvertTokens={handleConvertTokens}
             tokenSymbol={wrappedToken && wrappedToken.symbol}
           />
           <LayoutColumns
             primary={
               showHolders ? (
-                <Holders
-                  holders={holders}
-                  onUnwrapTokens={handleUnwrapToken}
-                  wrappedToken={wrappedToken}
-                />
+                <Holders holders={holders} wrappedToken={wrappedToken} />
               ) : (
                 <NoWrappedTokens
                   isSyncing={isSyncing}
-                  onWrapTokens={appStateReady ? handleWrapToken : null}
+                  onConvertTokens={appStateReady ? handleConvertTokens : null}
                 />
               )
             }
@@ -78,12 +67,8 @@ function App() {
         </React.Fragment>
       )}
 
-      <MultiModal
-        visible={modalVisible}
-        onClose={handleHideModal}
-        onClosed={() => setModalMode(null)}
-      >
-        <WrapTokenScreens mode={modalMode} />
+      <MultiModal visible={modalVisible} onClose={handleHideModal}>
+        <WrapTokenScreens />
       </MultiModal>
     </>
   )

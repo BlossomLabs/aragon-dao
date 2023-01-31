@@ -7,11 +7,7 @@ import You from '../components/You'
 import { addressesEqual } from '@/utils/web3-utils'
 import { formatBalance } from '../utils'
 
-const Holders = React.memo(function Holders({
-  holders,
-  onUnwrapTokens,
-  wrappedToken,
-}) {
+const Holders = React.memo(function Holders({ holders, wrappedToken }) {
   const { account: connectedAccount } = useWallet()
   const holderEntries = holders
     .map(holder => ({
