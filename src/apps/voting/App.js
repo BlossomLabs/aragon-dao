@@ -22,7 +22,8 @@ import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
 import { useWait } from '@/hooks/shared/useWait'
 import noVotesPng from './assets/no-votes.png'
 
-const TAB_ITEMS = account => (account ? ['Votes', 'Delegated'] : ['Votes'])
+const getTabItems = (account, isGovernanceVoting) =>
+  account && isGovernanceVoting ? ['Votes', 'Your Delegators'] : ['Votes']
 
 const App = React.memo(function App() {
   const [selectedTab, setSelectedTab] = useState(0)
@@ -39,11 +40,11 @@ const App = React.memo(function App() {
   } = useAppLogic()
   const { voter, voterStatus } = useVoterState()
   const { representativeManager } = useAppState()
-  const showDelegateButton =
-    account &&
-    !voterStatus.loading &&
+  const isGovernanceVoting =
     !!representativeManager &&
     addressesEqual(representativeManager, constants.AddressZero)
+  const showDelegateButton =
+    account && !voterStatus.loading && isGovernanceVoting
 
   const { below } = useViewport()
   const isWaiting = useWait()
@@ -156,7 +157,7 @@ const App = React.memo(function App() {
               }
             />
             <Tabs
-              items={TAB_ITEMS(account)}
+              items={getTabItems(account, isGovernanceVoting)}
               onChange={setSelectedTab}
               selected={selectedTab}
             />

@@ -10,24 +10,19 @@ import {
 } from '@aragon/ui'
 import { useVoterState } from '../../../providers/VoterProvider'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
-import { ZERO_ADDR } from '@/constants'
+import { constants } from 'ethers'
 
 export default function RevokeDelegation({ onCreateTransaction }) {
   const { voter } = useVoterState()
   const { above } = useViewport()
   const multiColumnsMode = above('small')
 
-  const { prev, next } = useMultiModal()
-
-  const handleOnBack = useCallback(() => {
-    prev()
-  }, [prev])
+  const { next } = useMultiModal()
 
   const handleOnRevoke = useCallback(() => {
-    next()
     onCreateTransaction(() => {
       next()
-    }, ZERO_ADDR)
+    }, constants.AddressZero)
   }, [next, onCreateTransaction])
 
   return (
@@ -66,8 +61,7 @@ export default function RevokeDelegation({ onCreateTransaction }) {
           margin-top: ${2 * GU}px;
         `}
       >
-        <Button onClick={handleOnBack}> Cancel </Button>
-        <Button mode="negative" onClick={handleOnRevoke}>
+        <Button mode="negative" onClick={handleOnRevoke} wide>
           Revoke delegation
         </Button>
       </div>

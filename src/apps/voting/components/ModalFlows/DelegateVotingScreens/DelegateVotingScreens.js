@@ -18,7 +18,6 @@ function DelegateVotingScreens() {
 
   const getTransactions = useCallback(
     async (representative, onComplete) => {
-      // const choosenDelegate = delegate.current
       await votingActions.delegateVoting(representative, intent => {
         if (!intent || !intent.length) {
           setDisplayErrorScreen(true)

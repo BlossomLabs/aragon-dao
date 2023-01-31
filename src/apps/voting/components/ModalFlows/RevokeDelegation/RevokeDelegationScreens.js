@@ -40,7 +40,6 @@ function RevokeDelegationScreens() {
       transactions={transactions}
       transactionTitle="Revoke your delegate"
       screens={screens}
-      // onCompleteActions={<GoToProposal />}
     />
   )
 }

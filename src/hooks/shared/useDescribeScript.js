@@ -8,6 +8,9 @@ import { toUtf8String } from 'ethers/lib/utils'
 
 const cachedDescriptions = new Map([])
 
+const EMPTY_CALLSCRIPT = '0x00000001'
+const EMPTY_CALLSCRIPT_UTF8 = '0x30783030303030303031'
+
 const formatNewVoteStep = step => {
   const formattedDescription = formatDescription(step.description ?? '')
   const formattedAnnotatedDescription = step.annotatedDescription?.length
@@ -61,7 +64,10 @@ const patchSteps = steps => {
 }
 
 const isEmptyScript = evmCallScript =>
-  evmCallScript === '0x00000001' || evmCallScript === '0x00'
+  evmCallScript === EMPTY_CALLSCRIPT ||
+  evmCallScript === '0x00' ||
+  // Signaling votes contains an utf8-encoded empty callscript
+  evmCallScript === EMPTY_CALLSCRIPT_UTF8
 
 const useDecribeScript = (evmCallScript, scriptId) => {
   const mounted = useMounted()
