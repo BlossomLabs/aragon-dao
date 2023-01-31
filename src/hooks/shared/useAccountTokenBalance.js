@@ -3,8 +3,10 @@ import BN from 'bn.js'
 import { useContractReadOnly } from './useContract'
 import minimeTokenAbi from '../../abi/minimeToken.json'
 import { useWallet } from '@/providers/Wallet'
+import { useMounted } from './useMounted'
 
 export function useTokenBalanceOf(tokenAddress, account, chainId) {
+  const mounted = useMounted()
   const [balance, setBalance] = useState(new BN(-1))
   const tokenContract = useContractReadOnly(
     tokenAddress,
@@ -16,14 +18,17 @@ export function useTokenBalanceOf(tokenAddress, account, chainId) {
     if (!tokenContract || !account) {
       return
     }
+
     const fetchTokenBalanceOf = async () => {
       const result = await tokenContract.balanceOf(account)
 
-      setBalance(new BN(result.toString()))
+      if (mounted()) {
+        setBalance(new BN(result.toString()))
+      }
     }
 
     fetchTokenBalanceOf()
-  }, [account, tokenContract])
+  }, [mounted, account, tokenContract])
 
   return balance
 }

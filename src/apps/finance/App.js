@@ -8,6 +8,7 @@ import NewTransferScreens from './components/ModalFlows/NewTransferScreens'
 import AppHeader from '@/components/AppHeader'
 import { useWallet } from '@/providers/Wallet'
 import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
+import { FeeProvider } from '@/providers/Fee'
 
 const App = () => {
   const { account } = useWallet()
@@ -57,4 +58,12 @@ const App = () => {
   )
 }
 
-export default App
+function AppWrapper() {
+  return (
+    <FeeProvider>
+      <App />
+    </FeeProvider>
+  )
+}
+
+export default AppWrapper
