@@ -31,7 +31,7 @@ export default {
   [organizationActions.VOTE_ON_BEHALF_OF]: ({ voteId, supports }) => {
     return `Vote ${
       supports ? 'Yes' : 'No'
-    } on behalf of principals on decision: #${voteId}`
+    } on behalf of delegators on decision: #${voteId}`
   },
   [organizationActions.NEW_VOTE]: () => {
     return `New signaling proposal`

@@ -228,7 +228,6 @@ function useCanUserVoteOnBehalfOf(vote) {
     [],
     false
   )
-
   return { canUserVoteOnBehalfOf, canUserVoteOnBehalfOfPromise }
 }
 
@@ -284,6 +283,7 @@ function useUserPrincipals(vote) {
     if (voterStatus.loading || voterStatus.error || !vote) {
       return []
     }
+
     return (
       voter?.representativeFor
         .filter(

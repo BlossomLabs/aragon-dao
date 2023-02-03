@@ -1220,10 +1220,10 @@
     "@1hive/connect-thegraph" "^0.9.13"
     graphql-tag "^2.10.3"
 
-"@blossom-labs/connect-bl-tao-voting@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.1.0.tgz#fda83d77dc13997a4802d26332dad160114e4ed4"
-  integrity sha512-Z9gGE8/xMEr6/glggh5bxuVpEoU3X8ejqv8uAd7A1TcsVVJe/3K8nAPvQj1wYly37c0+iXqQqDpJPofcyzI+3w==
+"@blossom-labs/connect-bl-tao-voting@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.2.0.tgz#daacd1af7346e1e10161e1d5d523d31c15dbbfb3"
+  integrity sha512-NfnIugEfIF7akoFYShKtfT12M0BgQ42/Q4Sz8FlnGSC4SCbLsRjhf3qBvKcAzfHFbPTU+a/9AGNibyLREK8M5w==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
@@ -10754,10 +10754,17 @@ node-fetch@^1.0.1, node-fetch@~1.7.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.7:
+node-fetch@^2.6.0, node-fetch@^2.6.7:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.8.tgz#a68d30b162bc1d8fd71a367e81b997e1f4d4937e"
   integrity sha512-RZ6dBYuj8dRSfxpUSu+NsdF1dpPpluJxwOp+6IoDp/sH2QNDSvurYsAa+F1WxY2RjA1iP93xhcsUoYbF2XBqVg==
+  dependencies:
+    whatwg-url "^5.0.0"
+
+node-fetch@^2.6.1:
+  version "2.6.9"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.9.tgz#7c7f744b5cc6eb5fd404e0c7a9fec630a55657e6"
+  integrity sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==
   dependencies:
     whatwg-url "^5.0.0"
 

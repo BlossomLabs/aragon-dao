@@ -127,7 +127,13 @@ export async function getCanUserVoteOnBehalfOf(
     return false
   }
 
-  return votingContract.canVoteOnBehalfOf(voteId, voters, representative)
+  const canVote = await votingContract.canVoteOnBehalfOf(
+    voteId,
+    voters,
+    representative
+  )
+
+  return canVote
 }
 
 export function getDelegatedVotingEndDate(vote) {
