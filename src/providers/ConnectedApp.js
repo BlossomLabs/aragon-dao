@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useCallback, useContext } from 'react'
 import { useOrganizationState } from './OrganizationProvider'
 import connectVoting from '@blossom-labs/connect-bl-tao-voting'
 import connectTokenWrapper from '@blossom-labs/connect-token-wrapper'
@@ -25,23 +25,22 @@ const getConnector = appName => {
   }
 }
 
-const CONNECTED_APPS = {}
+const CONNECTED_APPS_CACHE = {}
 
-async function createConnectedApp(apps, path) {
+async function loadOrCreateConnectedApp(appAddress, apps) {
   if (!apps) {
     return
   }
 
-  const [, , currentAppAddress] = path.split('/')
-  if (currentAppAddress && CONNECTED_APPS[currentAppAddress]) {
-    return CONNECTED_APPS[currentAppAddress]
+  if (appAddress && CONNECTED_APPS_CACHE[appAddress]) {
+    return CONNECTED_APPS_CACHE[appAddress]
   }
 
-  if (!isAddress(currentAppAddress)) {
+  if (!isAddress(appAddress)) {
     return
   }
 
-  const app = apps.find(app => addressesEqual(app.address, currentAppAddress))
+  const app = apps.find(app => addressesEqual(app.address, appAddress))
   const connect = getConnector(app.name)
 
   if (!app || !connect) {
@@ -50,7 +49,7 @@ async function createConnectedApp(apps, path) {
 
   const connectedApp = await connect(app)
 
-  CONNECTED_APPS[currentAppAddress] = connectedApp
+  CONNECTED_APPS_CACHE[appAddress] = connectedApp
 
   return connectedApp
 }
@@ -59,13 +58,22 @@ function ConnectedAppProvider({ children }) {
   const [path] = usePath()
 
   const { apps } = useOrganizationState()
-  const [connectedApp, connectedAppStatus] = useConnect(
-    () => createConnectedApp(apps, path),
-    [apps, path]
+  const [connectedApp, connectedAppStatus] = useConnect(() => {
+    const [, , currentAppAddress] = path.split('/')
+    return loadOrCreateConnectedApp(currentAppAddress, apps)
+  }, [apps, path])
+
+  const getConnectedApp = useCallback(
+    appAddress => {
+      return loadOrCreateConnectedApp(appAddress, apps)
+    },
+    [apps]
   )
 
   return (
-    <AppConnectorContext.Provider value={{ connectedApp, connectedAppStatus }}>
+    <AppConnectorContext.Provider
+      value={{ connectedApp, connectedAppStatus, getConnectedApp }}
+    >
       {children}
     </AppConnectorContext.Provider>
   )
