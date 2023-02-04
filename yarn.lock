@@ -1211,19 +1211,19 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@blossom-labs/connect-an-delay@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.0.tgz#5501c9d36d6c9c186421ed1f6658ff951b483440"
-  integrity sha512-1NyBien9KHzJWofVtSIgSf5hb7YbBcU/Nuqj3tztbpVhY+rdwCa1AOY8qDX/ujPaypZ34KI8V+swETxQ2Lhpyw==
+"@blossom-labs/connect-an-delay@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.1.tgz#a12f67cc66728b94c420e21434646047eeadc2d3"
+  integrity sha512-aET7jLwXi0H/0m1msNMmZV/YWpbOVs8Raq5HzFEezSyFgc6PIVewdeQetzRcA8AOiiYfWwjcRDCwHitX0iTUqQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
     graphql-tag "^2.10.3"
 
-"@blossom-labs/connect-bl-tao-voting@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.2.0.tgz#daacd1af7346e1e10161e1d5d523d31c15dbbfb3"
-  integrity sha512-NfnIugEfIF7akoFYShKtfT12M0BgQ42/Q4Sz8FlnGSC4SCbLsRjhf3qBvKcAzfHFbPTU+a/9AGNibyLREK8M5w==
+"@blossom-labs/connect-bl-tao-voting@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.2.1.tgz#2b828829cba5149843d2e8bb71964bc211173888"
+  integrity sha512-sxMnvx1d6XbFoHDOOg9mu4UNUe4umH3lfWyawmrFqJp67Xb058yDlws4Nrs0zGR6afPcXSX9E9UtDLXwUFSsVQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
