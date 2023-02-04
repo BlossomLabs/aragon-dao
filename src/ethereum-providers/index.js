@@ -1,3 +1,5 @@
+import { env } from '@/environment'
+
 export const connectors = [
   {
     id: 'injected',
@@ -8,7 +10,7 @@ export const connectors = [
   {
     id: 'frame',
     properties: {
-      chainId: [1, 100],
+      chainId: env('CHAIN_ID'),
     },
   },
   {
