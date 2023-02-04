@@ -1,6 +1,8 @@
 import React from 'react'
 import { PropTypes } from 'prop-types'
-import { GU, IdentityBadge, useTheme } from '@aragon/ui'
+import { GU, IdentityBadge, Tag, useTheme } from '@aragon/ui'
+import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
+import { getAppPresentation } from '@/utils/app-utils'
 
 function Description({ disableBadgeInteraction, path }) {
   return (
@@ -51,6 +53,35 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
           )
         }
 
+        if (type === 'app') {
+          const appPresentation = getAppPresentation(value)
+
+          const targetApp = {
+            name: appPresentation.humanName,
+            address: value.address,
+            icon: appPresentation.iconSrc,
+          }
+
+          return (
+            <span
+              key={key}
+              css={`
+                margin: 0 ${0.5 * GU}px;
+              `}
+            >
+              <AppBadgeWithSkeleton targetApp={targetApp} loading={false} />
+            </span>
+          )
+        }
+
+        if (type === 'role' || type === 'kernelNamespace') {
+          return (
+            <Tag key={key} color="#000">
+              {value.name}
+            </Tag>
+          )
+        }
+
         if (type === 'role' || type === 'kernelNamespace' || type === 'app') {
           return <span key={key}> “{value.name}”</span>
         }
@@ -59,7 +90,17 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
           return <span key={key}> “{value.artifact.appName}”</span>
         }
 
-        return <span key={key}> {value.description || value}</span>
+        return (
+          <span
+            key={key}
+            css={`
+              margin-right: ${0.5 * GU}px;
+            `}
+          >
+            {' '}
+            {value.description || value}
+          </span>
+        )
       })
     )
   } else {
