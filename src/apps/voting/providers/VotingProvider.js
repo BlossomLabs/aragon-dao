@@ -1,9 +1,13 @@
+import BN from 'bn.js'
 import React, { useContext, useEffect, useState } from 'react'
 import { useConnect } from '@1hive/connect-react'
+
 import { useMounted } from '@/hooks/shared/useMounted'
 import { DisputableStatusType } from '../types/disputable-statuses'
-import BN from 'bn.js'
+import minimeTokenAbi from '@/abi/minimeToken.json'
 import { useConnectedApp } from '@/providers/ConnectedApp'
+import { useContractReadOnly } from '@/hooks/shared/useContract'
+import { useWallet } from '@/providers/Wallet'
 
 const VotingContext = React.createContext()
 
@@ -65,6 +69,7 @@ const formatSettings = (settings = {}) => {
 }
 
 function VotingProvider({ children }) {
+  const { chainId } = useWallet()
   const { connectedApp } = useConnectedApp()
   const [votes, setVotes] = useState([])
   const [currentSettings, setCurrentSettings] = useState({})
@@ -75,9 +80,23 @@ function VotingProvider({ children }) {
   const [rawSettings, rawSettingsStatus] = useConnect(() => {
     return connectedApp?.currentSetting()
   }, [connectedApp])
-  const [token, tokenStatus] = useConnect(() => {
-    return connectedApp?.token()
+  const [token, tokenStatus] = useConnect(async () => {
+    if (!connectedApp) {
+      return
+    }
+    const rawToken = await connectedApp.token()
+
+    return {
+      address: rawToken.id,
+      decimals: parseInt(rawToken.decimals),
+      symbol: rawToken.symbol,
+    }
   }, [connectedApp])
+  const tokenContract = useContractReadOnly(
+    token?.address,
+    minimeTokenAbi,
+    chainId
+  )
   const [connectVotes] = useConnect(() => {
     return connectedApp?.onVotes()
   }, [connectedApp])
@@ -104,16 +123,10 @@ function VotingProvider({ children }) {
     <VotingContext.Provider
       value={{
         isSyncing: loading,
-        tokenAddress: token?.id,
-        tokenDecimals: new BN(token?.decimals),
-        tokenSymbol: token?.symbol,
+        token,
+        tokenContract,
         pctBase: pctBase,
-        currentSettings: currentSettings,
-        connectedAccountVotes: [],
-        numData: {
-          pctBase: pctBaseNum,
-          tokenDecimals: tokenDecimalsNum,
-        },
+        currentSettings,
         votes,
         representativeManager,
       }}

@@ -39,6 +39,7 @@ import useDescribeScript from '@/hooks/shared/useDescribeScript'
 import EnactVoteScreens from '../../components/ModalFlows/EnactVote/EnactVoteScreens'
 import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
+import { useVoterState } from '../../providers/Voter'
 
 function getPresentation(disputableStatus) {
   const disputablePresentation = {
@@ -64,11 +65,11 @@ function getPresentation(disputableStatus) {
 }
 
 function VoteDetails({ vote }) {
+  const [voter] = useVoterState()
   const [modalVisible, setModalVisible] = useState(false)
   const [modalData, setModalData] = useState({})
   const [modalMode, setModalMode] = useState(null)
-  const { voteId, id, script, voterInfo, disputableStatus } = vote
-
+  const { voteId, id, script, disputableStatus } = vote
   const { describedSteps, targetApp, loading, emptyScript } = useDescribeScript(
     script,
     id
@@ -90,7 +91,7 @@ function VoteDetails({ vote }) {
     setModalMode('enact')
   }, [])
 
-  const accountHasVoted = voterInfo && voterInfo.hasVoted
+  const accountHasVoted = voter?.hasVoted
 
   return (
     <>
@@ -140,15 +141,14 @@ function VoteDetails({ vote }) {
                 disabledProgressBars={disabledProgressBars}
               />
               {accountHasVoted && (
-                <VoteCast voteSupported={voterInfo.supports} vote={vote} />
+                <VoteCast voteSupported={voter.supports} vote={vote} />
               )}
-              {
-                <VoteActions
-                  vote={vote}
-                  onVote={handleVote}
-                  onExecute={handleExecute}
-                />
-              }
+              <VoteActions
+                vote={vote}
+                voter={voter}
+                onVote={handleVote}
+                onExecute={handleExecute}
+              />
             </div>
           </LayoutBox>
         }
@@ -332,7 +332,7 @@ function SummaryInfo({ vote, disabledProgressBars }) {
           <SummaryRow
             color={disabledProgressBars ? theme.surfaceOpened : theme.positive}
             label="Yes"
-            pct={yeasPct * 100}
+            pct={(yeasPct * 100).toFixed(2)}
             token={{
               amount: yeas,
               symbol: vote.votingToken.symbol,
@@ -342,7 +342,7 @@ function SummaryInfo({ vote, disabledProgressBars }) {
           <SummaryRow
             color={disabledProgressBars ? theme.controlUnder : theme.negative}
             label="No"
-            pct={naysPct * 100}
+            pct={(naysPct * 100).toFixed(2)}
             token={{
               amount: nays,
               symbol: vote.votingToken.symbol,

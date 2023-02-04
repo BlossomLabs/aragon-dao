@@ -8,18 +8,20 @@ import {
 } from '../vote-utils'
 
 export function useSingleVote() {
-  const [voteInfo, loading, error] = useSingleVoteSubscription()
+  const [vote, voteStatus] = useSingleVoteSubscription()
 
   const processedVote = useMemo(() => {
-    return voteInfo && !loading ? processVote(voteInfo) : undefined
-  }, [voteInfo, loading])
+    return !voteStatus.loading && !voteStatus.error
+      ? processVote(vote)
+      : undefined
+  }, [voteStatus, vote])
 
-  return [processedVote, loading, error]
+  return [processedVote, voteStatus]
 }
 
 // Get and format values
 function processVote(voteInfo) {
-  const { baseVote, settings, voterInfo, votingToken } = voteInfo
+  const { baseVote, settings, votingToken } = voteInfo
   const endDate = baseVote.endDate
   const delegatedVotingEndDate = getDelegatedVotingEndDate(baseVote)
   const executionDelayEndDate = getExecutionDelayEndDate(baseVote, endDate)
@@ -34,11 +36,10 @@ function processVote(voteInfo) {
     naysPct: baseVote.naysPct,
     pausedAt: toMs(baseVote.pausedAt),
     quietEndingPeriod: toMs(settings.quietEndingPeriod),
-    settings: settings,
+    settings,
     settledAt: toMs(baseVote.settledAt),
     startDate: toMs(baseVote.startDate),
-    voterInfo: voterInfo,
-    votingToken: votingToken,
+    votingToken,
     yeasPct: baseVote.yeasPct,
     delegatedVotingEndDate: toMs(delegatedVotingEndDate),
     executionDelayEndDate: toMs(executionDelayEndDate),

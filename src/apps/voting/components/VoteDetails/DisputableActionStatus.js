@@ -87,7 +87,7 @@ function usePeriod(proposal, periodEndDate) {
         </span>
       </span>
     ) : (
-      <Timer end={periodEndDate} />
+      <Timer end={new Date(periodEndDate)} />
     )
   }, [periodEndDate, theme])
 }

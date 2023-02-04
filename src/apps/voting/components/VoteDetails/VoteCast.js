@@ -7,15 +7,16 @@ import {
   getAccountCastStake,
 } from '../../vote-utils'
 import { formatTokenAmount } from '../../token-utils'
+import { useAppState } from '../../providers/VotingProvider'
 
 function VoteCast({ voteSupported, vote }) {
+  const { token } = useAppState()
   const theme = useTheme()
   const { account } = useWallet()
   const accountStake = getAccountCastStake(vote, account)
 
   const accountDelegatedStake = getAccountCastDelegatedStake(vote, account)
   const totalStake = accountStake.add(accountDelegatedStake)
-  const { votingToken } = vote
 
   return (
     <div
@@ -87,8 +88,8 @@ function VoteCast({ voteSupported, vote }) {
             >
               {totalStake.eq(0)
                 ? '…'
-                : formatTokenAmount(totalStake, votingToken.decimals)}{' '}
-              {votingToken.symbol}
+                : formatTokenAmount(totalStake, token.decimals)}{' '}
+              {token.symbol}
             </span>
             .
           </p>

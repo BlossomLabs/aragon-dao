@@ -3,7 +3,7 @@ import { Button, GU, IconPlus, IconToken, Tabs, useViewport } from '@aragon/ui'
 import { constants } from 'ethers'
 
 import { FeeProvider } from '@/providers/Fee'
-import { useVoterState } from './providers/VoterProvider'
+import { useUserState } from './providers/User'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelegateVotingScreens from './components/ModalFlows/DelegateVotingScreens/DelegateVotingScreens'
 import useFilterVotes from './hooks/useFilterVotes'
@@ -11,7 +11,6 @@ import useScrollTop from './hooks/useScrollTop'
 import Votes from './screens/Votes'
 import DelegatedBy from './components/DelegatedBy'
 import { useAppLogic } from './app-logic'
-import { SettingsProvider } from './vote-settings-manager'
 import { useWallet } from '../../providers/Wallet'
 import RevokeDelegationScreens from './components/ModalFlows/RevokeDelegation/RevokeDelegationScreens'
 import CreateVoteScreens from './components/ModalFlows/NewVote/CreateVoteScreens'
@@ -38,13 +37,13 @@ const App = React.memo(function App() {
     selectedVote,
     votes,
   } = useAppLogic()
-  const { voter, voterStatus } = useVoterState()
+  const { user, userStatus } = useUserState()
   const { representativeManager } = useAppState()
   const isGovernanceVoting =
     !!representativeManager &&
     addressesEqual(representativeManager, constants.AddressZero)
   const showDelegateButton =
-    account && !voterStatus.loading && isGovernanceVoting
+    account && !userStatus.loading && isGovernanceVoting
 
   const { below } = useViewport()
   const isWaiting = useWait()
@@ -126,13 +125,13 @@ const App = React.memo(function App() {
                         mode="normal"
                         onClick={() =>
                           setModalMode(
-                            voter?.representative
+                            user?.representative
                               ? handleRevokeDelegation
                               : handleDelegate
                           )
                         }
                         label={
-                          voter?.representative
+                          user?.representative
                             ? 'Revoke Delegation'
                             : 'Vote Delegation'
                         }
@@ -202,8 +201,6 @@ const App = React.memo(function App() {
 
 export default () => (
   <FeeProvider>
-    <SettingsProvider>
-      <App />
-    </SettingsProvider>
+    <App />
   </FeeProvider>
 )

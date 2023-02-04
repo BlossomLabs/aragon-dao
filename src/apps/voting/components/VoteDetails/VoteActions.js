@@ -16,14 +16,15 @@ import { useWallet } from '@/providers/Wallet'
 import { dateFormat } from '../../utils/date-utils'
 import { getConnectedAccountCast } from '../../vote-utils'
 import { VOTE_YEA, VOTE_NAY } from '../../vote-types'
+import { useAppState } from '../../providers/VotingProvider'
 
-function VoteActions({ vote, onVote, onExecute }) {
+function VoteActions({ vote, voter: voter_, onVote, onExecute }) {
+  const { token } = useAppState()
   const theme = useTheme()
-  const { snapshotBlock, startDate, hasEnded, voterInfo, votingToken } = vote
+  const { snapshotBlock, startDate, hasEnded } = vote
   const { account: connectedAccount } = useWallet()
-
+  const voter = voter_ ?? {}
   const connectedAccountCast = getConnectedAccountCast(vote, connectedAccount)
-
   const isAccountVoteCasted = [VOTE_YEA, VOTE_NAY].includes(
     connectedAccountCast.vote
   )
@@ -31,30 +32,38 @@ function VoteActions({ vote, onVote, onExecute }) {
   const handleVoteYes = useCallback(
     () =>
       onVote({
-        canUserVote: voterInfo.canVote,
-        canUserVoteOnBehalfOf: voterInfo.canUserVoteOnBehalfOf,
+        canUserVote: voter.canVote,
+        canUserVoteOnBehalfOf: voter.canVoteOnBehalfOf,
+        principals: voter.principals,
         supports: true,
-        principals: voterInfo.principals,
       }),
-    [voterInfo, onVote]
+    [voter, onVote]
   )
 
   const handleVoteNo = useCallback(
     () =>
       onVote({
-        canUserVote: voterInfo.canVote,
-        canUserVoteOnBehalfOf: voterInfo.canUserVoteOnBehalfOf,
+        canUserVote: voter.canVote,
+        canUserVoteOnBehalfOf: voter.canVoteOnBehalfOf,
+        principals: voter.principals,
         supports: false,
-        principals: voterInfo.principals,
       }),
-    [voterInfo, onVote]
+    [voter, onVote]
   )
 
   const handleVoteExecution = useCallback(() => {
     onExecute()
   }, [onExecute])
 
-  if (!voterInfo.account) {
+  if (!voter_) {
+    return (
+      <div>
+        <Buttons disabled />
+      </div>
+    )
+  }
+
+  if (!connectedAccount) {
     return (
       <div
         css={`
@@ -98,7 +107,7 @@ function VoteActions({ vote, onVote, onExecute }) {
   if (hasEnded) {
     return (
       <>
-        {voterInfo.canExecute && (
+        {voter.canExecute && (
           <>
             <Button mode="strong" onClick={handleVoteExecution} wide>
               Enact this vote
@@ -114,20 +123,20 @@ function VoteActions({ vote, onVote, onExecute }) {
     )
   }
 
-  if (voterInfo.canVote || voterInfo.canUserVoteOnBehalfOf) {
+  if (voter.canVote || voter.canVoteOnBehalfOf) {
     return (
       <>
         <Buttons onVoteYes={handleVoteYes} onVoteNo={handleVoteNo} />
         <TokenReference
           snapshotBlock={snapshotBlock}
           startDate={startDate}
-          tokenSymbol={votingToken.symbol}
-          accountBalance={voterInfo.accountBalance}
-          accountBalanceNow={voterInfo.accountBalanceNow}
-          canUserVoteOnBehalfOf={voterInfo.canUserVoteOnBehalfOf}
-          principalsBalance={voterInfo.principalsBalance}
+          tokenSymbol={token.symbol}
+          accountBalance={voter.accountBalance}
+          accountBalanceNow={voter.accountBalanceNow}
+          canUserVoteOnBehalfOf={voter.canVoteOnBehalfOf}
+          principalsTotalBalance={voter.principalsTotalBalance}
         />
-        {voterInfo.canVote && isAccountVoteCasted && (
+        {voter.canVote && isAccountVoteCasted && (
           <Info mode="warning">
             <strong>
               Although your delegate has voted on your behalf, you can always
@@ -153,14 +162,14 @@ function VoteActions({ vote, onVote, onExecute }) {
     <div>
       <Buttons disabled />
       <Info mode="warning">
-        {voterInfo.accountBalanceNow > 0
+        {voter.accountBalanceNow > 0
           ? 'Although the currently connected account holds tokens, it'
           : 'The currently connected account'}{' '}
-        did not hold any <strong>{votingToken.symbol}</strong> tokens when this
-        vote began ({dateFormat(startDate)}) and therefore cannot participate in
-        this vote. Make sure your accounts are holding{' '}
-        <strong>{votingToken.symbol}</strong> at the time a vote begins if you'd
-        like to vote using this Voting app.
+        did not hold any <strong>{token.symbol}</strong> tokens when this vote
+        began ({dateFormat(startDate)}) and therefore cannot participate in this
+        vote. Make sure your accounts are holding{' '}
+        <strong>{token.symbol}</strong> at the time a vote begins if you'd like
+        to vote using this Voting app.
       </Info>
     </div>
   )
@@ -226,7 +235,7 @@ const TokenReference = ({
   accountBalance,
   accountBalanceNow,
   canUserVoteOnBehalfOf,
-  principalsBalance,
+  principalsTotalBalance,
 }) => {
   return (
     <Info>
@@ -249,11 +258,11 @@ const TokenReference = ({
           ''
         )}
       </div>
-      {canUserVoteOnBehalfOf && principalsBalance > 0 && (
+      {canUserVoteOnBehalfOf && principalsTotalBalance > 0 && (
         <div>
           Delegated voting power:{' '}
           <strong>
-            {principalsBalance} {tokenSymbol}
+            {principalsTotalBalance} {tokenSymbol}
           </strong>
         </div>
       )}

@@ -3,13 +3,13 @@ import { useConnect } from '@1hive/connect-react'
 import { useWallet } from '@/providers/Wallet'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 
-const VoterContext = React.createContext()
+const UserContext = React.createContext()
 
-function VoterProvider({ children }) {
+function VotingUserProvider({ children }) {
   const { connectedApp } = useConnectedApp()
   const { account } = useWallet()
 
-  const [voter, voterStatus] = useConnect(() => {
+  const [user, userStatus] = useConnect(() => {
     if (!account) {
       return
     }
@@ -17,19 +17,19 @@ function VoterProvider({ children }) {
   }, [connectedApp, account])
 
   return (
-    <VoterContext.Provider
+    <UserContext.Provider
       value={{
-        voter,
-        voterStatus,
+        user,
+        userStatus,
       }}
     >
       {children}
-    </VoterContext.Provider>
+    </UserContext.Provider>
   )
 }
 
-function useVoterState() {
-  return useContext(VoterContext)
+function useUserState() {
+  return useContext(UserContext)
 }
 
-export { VoterProvider, useVoterState }
+export { VotingUserProvider, useUserState }

@@ -6,20 +6,23 @@ import VoteDetails from './VoteDetails/VoteDetails'
 import { useSingleVote } from '../hooks/useSingleVote'
 import { usePath } from '@/hooks/shared'
 import AppHeader from '@/components/AppHeader'
+import { VoterProvider } from '../providers/Voter'
 
 function VoteSingle({ match }) {
   const { id } = match.params
   return (
     <SingleVoteSubscriptionProvider voteId={id}>
-      <VoteSingleContent />
+      <VoterProvider>
+        <VoteSingleContent />
+      </VoterProvider>
     </SingleVoteSubscriptionProvider>
   )
 }
 
 function VoteSingleContent() {
   const [, navigate] = usePath()
-  const [vote, loading, error] = useSingleVote()
-  const title = error ? "Couldn't load vote." : 'Loading vote.'
+  const [vote, voteStatus] = useSingleVote()
+  const title = voteStatus.error ? "Couldn't load vote." : 'Loading vote.'
 
   return (
     <>
@@ -27,11 +30,7 @@ function VoteSingleContent() {
       <Bar>
         <BackButton onClick={() => navigate('../')} />
       </Bar>
-      <LoadingSection
-        show={loading || !!error}
-        title={title}
-        showSpinner={!error && loading}
-      >
+      <LoadingSection show={!vote} title={title} showSpinner={!vote}>
         {vote && <VoteDetails vote={vote} />}
       </LoadingSection>
     </>
