@@ -118,7 +118,7 @@ function ScreenConnected({ wallet }) {
             margin-left: ${0.5 * GU}px;
           `}
         >
-          {`Connected to Ethereum ${walletNetworkName} Network`}
+          {`Connected to ${walletNetworkName} Network`}
         </span>
       </div>
 

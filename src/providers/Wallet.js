@@ -33,11 +33,12 @@ function WalletAugmented({ children }) {
     () => ({
       ...wallet,
       account: isSafeConnected ? safe.safeAddress : wallet.account,
+      networkName: isSafeConnected ? safe.network : wallet.networkName,
       status: isSafeConnected ? 'connected' : wallet.status,
       ethers,
-      chainId: chain,
+      chainId: isSafeConnected ? safe.chainId : chain,
     }),
-    [wallet, ethers, chain, safe.safeAddress, isSafeConnected]
+    [wallet, ethers, chain, safe, isSafeConnected]
   )
 
   return (
