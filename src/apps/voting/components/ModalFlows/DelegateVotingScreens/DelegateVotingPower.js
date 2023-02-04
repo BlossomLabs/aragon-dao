@@ -15,7 +15,7 @@ import { useAppState } from '../../../providers/VotingProvider'
 import { useTokenBalances } from '@/hooks/shared/useAccountTokenBalance'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import { useWallet } from '@/providers/Wallet'
-import { formatTokenAmount } from '../../../token-utils'
+import { formatTokenAmount } from '@/utils/token'
 
 const INVALID_ADDRESS_ERROR = 'Recipient must be a valid Ethereum address'
 

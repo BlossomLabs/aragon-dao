@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Box, textStyle, useTheme, GU, useViewport } from '@aragon/ui'
 import HelpTip from '../HelpTip'
 
-import { round, safeDiv } from '../../math-utils'
+import { round, safeDiv } from '@/utils/math-utils'
 import SummaryBar from './SummaryBar'
 
 function InfoBoxes({ vote, disabledProgressBars }) {

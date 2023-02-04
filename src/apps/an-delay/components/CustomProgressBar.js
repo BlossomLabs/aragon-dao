@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { ProgressBar, GU, useTheme } from '@aragon/ui'
 import useNow from '@/hooks/shared/useNow'
-import { round } from '../lib/math-utils'
+import { round } from '@/utils/math-utils'
 
 function CustomProgressBar({ start, endDate, pausedAt }) {
   const now = useNow()

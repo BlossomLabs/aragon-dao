@@ -4,7 +4,7 @@ import { useWallet } from '@/providers/Wallet'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useUserState } from './User'
 import { useAppState } from './VotingProvider'
-import { formatTokenAmount, getUserBalanceAt } from '../token-utils'
+import { formatTokenAmount, getUserBalanceAt } from '@/utils/token'
 import { useSingleVoteSubscription } from './SingleVoteSubscription'
 
 const VoterContext = React.createContext()

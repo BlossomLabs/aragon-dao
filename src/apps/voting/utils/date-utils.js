@@ -5,7 +5,7 @@ import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import utc from 'dayjs/plugin/utc'
 
-import { round } from '../math-utils'
+import { round } from '@/utils/math-utils'
 
 export const toMs = seconds => seconds * 1000
 

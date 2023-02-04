@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { GU, ProgressBar, RADIUS, textStyle, useTheme } from '@aragon/ui'
-import { round } from '../math-utils'
+import { round } from '@/utils/math-utils'
 
 function VoteOption({ color, label, percentage }) {
   const theme = useTheme()

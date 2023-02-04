@@ -27,7 +27,7 @@ import {
 } from '../../types/disputable-statuses'
 import InfoField from '../InfoField'
 import InfoBoxes from './InfoBoxes'
-import { safeDiv } from '../../math-utils'
+import { safeDiv } from '@/utils/math-utils'
 import SummaryBar from './SummaryBar'
 import SummaryRow from './SummaryRow'
 import StatusInfo from './StatusInfo'

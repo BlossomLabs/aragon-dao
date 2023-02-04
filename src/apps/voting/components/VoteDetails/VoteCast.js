@@ -6,7 +6,7 @@ import {
   getAccountCastDelegatedStake,
   getAccountCastStake,
 } from '../../vote-utils'
-import { formatTokenAmount } from '../../token-utils'
+import { formatTokenAmount } from '@/utils/token'
 import { useAppState } from '../../providers/VotingProvider'
 
 function VoteCast({ voteSupported, vote }) {

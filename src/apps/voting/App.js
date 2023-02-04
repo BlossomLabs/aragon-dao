@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, GU, IconPlus, IconToken, Tabs, useViewport } from '@aragon/ui'
 import { constants } from 'ethers'
 
@@ -87,6 +87,13 @@ const App = React.memo(function App() {
   } = useFilterVotes(votes, executionTargets)
 
   useScrollTop(selectedVote)
+
+  // Go to available tab when account disconnects
+  useEffect(() => {
+    if (!account) {
+      setSelectedTab(0)
+    }
+  }, [account])
 
   return (
     <>
