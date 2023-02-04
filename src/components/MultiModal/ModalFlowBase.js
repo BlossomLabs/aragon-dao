@@ -91,8 +91,8 @@ function ModalFlowBase({
       allScreens.push(...screens)
     }
 
-    // Add the Safe transaction screen
     if (isSafeConnected) {
+      // Add the Safe transaction screen
       allScreens.push({
         content: <SafeStep transactions={transactions} />,
       })
