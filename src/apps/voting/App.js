@@ -49,6 +49,7 @@ const App = React.memo(function App() {
   const isWaiting = useWait()
   const compactMode = below('medium')
   const isLoading = isAppSyncing || isWaiting
+  const noVotes = votes?.length === 0
 
   const handleShowModal = useCallback(mode => {
     setModalVisible(true)
@@ -98,10 +99,10 @@ const App = React.memo(function App() {
   return (
     <>
       <React.Fragment>
-        {votes?.length === 0 || isLoading ? (
+        {noVotes || isLoading ? (
           <LoadingAppScreen
             isLoading={isLoading}
-            emptyStateLabel="No proposals yet"
+            emptyStateLabel={noVotes ? 'No proposals yet' : 'Loaded'}
             action={
               account ? (
                 <Button wide mode="strong" onClick={handleNewVote}>

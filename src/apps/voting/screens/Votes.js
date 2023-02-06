@@ -189,7 +189,7 @@ const VoteGroups = React.memo(({ openVotes, closedVotes }) => {
   const [, navigate] = usePath()
   const voteGroups = [
     ['Open votes', openVotes, openVotes.length],
-    ['Closed votes', closedVotes.slice(0, 20), closedVotes.length],
+    ['Closed votes', closedVotes, closedVotes.length],
   ]
   const handleVoteClick = useCallback(
     voteId => {
