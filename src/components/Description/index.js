@@ -1,6 +1,12 @@
 import React from 'react'
 import { PropTypes } from 'prop-types'
-import { GU, IdentityBadge, useTheme } from '@aragon/ui'
+import { GU, IdentityBadge, Tag, useTheme } from '@aragon/ui'
+import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
+import {
+  getAppPresentation,
+  getAppPresentationByAddress,
+} from '@/utils/app-utils'
+import { useOrganizationState } from '@/providers/OrganizationProvider'
 
 function Description({ disableBadgeInteraction, path }) {
   return (
@@ -30,8 +36,32 @@ function Description({ disableBadgeInteraction, path }) {
 /* eslint-disable react/prop-types */
 function DescriptionStep({ step, disableBadgeInteraction }) {
   const theme = useTheme()
+  const { apps, loading } = useOrganizationState()
 
   const description = []
+
+  const appPresentation = apps ? getAppPresentationByAddress(apps, step.to) : {}
+
+  const targetApp = {
+    name: appPresentation.humanName,
+    address: step.to,
+    icon: appPresentation.iconSrc,
+  }
+
+  // Add app
+  description.push(
+    <React.Fragment key={0}>
+      <span
+        css={`
+          display: inline-block;
+          transform: translateY(7px);
+        `}
+      >
+        <AppBadgeWithSkeleton targetApp={targetApp} loading={loading} />
+      </span>
+      <span>:</span>
+    </React.Fragment>
+  )
 
   if (step.annotatedDescription) {
     description.push(
@@ -41,7 +71,6 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
         if (type === 'address' || type === 'any-account') {
           return (
             <span key={key}>
-              {' '}
               <IdentityBadge
                 badgeOnly={disableBadgeInteraction}
                 compact
@@ -49,6 +78,33 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
               />
             </span>
           )
+        }
+
+        if (type === 'app') {
+          const appPresentation = getAppPresentation(value)
+
+          const targetApp = {
+            name: appPresentation.humanName,
+            address: value.address,
+            icon: appPresentation.iconSrc,
+          }
+
+          return (
+            <span
+              key={key}
+              css={`
+                margin: 0 ${0.25 * GU}px;
+                display: inline-block;
+                transform: translateY(7px);
+              `}
+            >
+              <AppBadgeWithSkeleton targetApp={targetApp} loading={false} />
+            </span>
+          )
+        }
+
+        if (type === 'role' || type === 'kernelNamespace') {
+          return <Tag key={key}>{value.name}</Tag>
         }
 
         if (type === 'role' || type === 'kernelNamespace' || type === 'app') {
@@ -59,7 +115,17 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
           return <span key={key}> “{value.artifact.appName}”</span>
         }
 
-        return <span key={key}> {value.description || value}</span>
+        return (
+          <span
+            key={key}
+            css={`
+              margin-right: ${0.5 * GU}px;
+            `}
+          >
+            {' '}
+            {value.description || value}
+          </span>
+        )
       })
     )
   } else {
@@ -85,22 +151,20 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
             list-style-type: none;
             margin-left: 0;
             padding-left: ${0.5 * GU}px;
-            text-indent: -${0.5 * GU}px;
+            text-indent: ${1 * GU}px;
           `}
         >
           <li
             css={`
-              padding-left: ${2 * GU}px;
+              padding-left: ${1 * GU}px;
               &:before {
                 content: '';
-                width: ${0.5 * GU}px;
-                height: ${0.5 * GU}px;
+                width: ${0.75 * GU}px;
+                height: ${0.75 * GU}px;
                 background: ${theme.accent};
-                border-radius: 50%;
                 display: inline-block;
               }
               span {
-                display: inline;
                 color: ${theme.surfaceContentSecondary};
               }
             `}
