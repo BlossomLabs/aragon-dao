@@ -21,7 +21,7 @@ function LoadingSkeleton({ ...props }) {
         position: relative;
         overflow: hidden;
         width: 100%;
-        height: ${2 * GU}px;
+        height: 20px;
         &:not(:last-child) {
           margin-bottom: ${1 * GU}px;
         }

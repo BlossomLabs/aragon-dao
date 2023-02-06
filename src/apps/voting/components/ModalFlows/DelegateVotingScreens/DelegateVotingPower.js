@@ -6,7 +6,6 @@ import {
   isAddress,
   IconCross,
   Info,
-  LoadingRing,
   TextInput,
   textStyle,
   useTheme,
@@ -16,6 +15,7 @@ import { useTokenBalances } from '@/hooks/shared/useAccountTokenBalance'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import { useWallet } from '@/providers/Wallet'
 import { formatTokenAmount } from '@/utils/token'
+import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 
 const INVALID_ADDRESS_ERROR = 'Recipient must be a valid Ethereum address'
 
@@ -61,7 +61,11 @@ function DelegateVotingPower({ onCreateTransaction }) {
         label="Voting power (with enabled account)"
       >
         {loadingBalance ? (
-          <LoadingRing />
+          <LoadingSkeleton
+            css={`
+              width: 15%;
+            `}
+          />
         ) : (
           <>{`${formatTokenAmount(balance, token.decimals)} ${
             token.symbol
