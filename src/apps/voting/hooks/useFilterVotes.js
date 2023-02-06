@@ -9,7 +9,7 @@ import {
 } from '../vote-types'
 import { getVoteStatus } from '../vote-utils'
 import { useAppState } from '../providers/VotingProvider'
-import { useConnectedApp } from '@/providers/ConnectedApp'
+import { useOrganizationState } from '@/providers/OrganizationProvider'
 
 const NULL_FILTER_STATE = -1
 const STATUS_FILTER_OPEN = 1
@@ -20,7 +20,6 @@ const OUTCOME_FILTER_PASSED = 1
 const OUTCOME_FILTER_REJECTED = 2
 const OUTCOME_FILTER_ENACTED = 3
 const OUTCOME_FILTER_PENDING = 4
-const APP_FILTER_THIS = 1
 
 function testStatusFilter(filter, voteStatus) {
   return (
@@ -55,20 +54,15 @@ function testOutcomeFilter(filter, voteStatus) {
   )
 }
 
-function testAppFilter(filter, vote, { apps, thisAddress }) {
-  const { executionTargets } = vote.data
+function testAppFilter(filter, vote, { apps }) {
+  const { executionTargets } = vote
 
   if (filter === NULL_FILTER_STATE) {
     return true
   }
-  if (filter === APP_FILTER_THIS) {
-    return (
-      executionTargets.length === 0 || executionTargets.includes(thisAddress)
-    )
-  }
 
-  // Filter order is all, this, ...apps, external so we sub 2 to adjust the index to the apps
-  filter -= 2
+  // Filter order is all, ...apps, external so we sub 1 to adjust the index to the apps
+  filter -= 1
   if (filter === apps.length) {
     // Only return true if there's a difference between the set of execution targets and apps
     const appsSet = new Set(apps.map(({ appAddress }) => appAddress))
@@ -89,10 +83,9 @@ function testDateRangeFilter(filter, vote) {
 }
 
 const useFilterVotes = (votes, executionTargets) => {
-  const { connectedApp } = useConnectedApp()
+  const { loading } = useOrganizationState()
   const state = useAppState()
   const { pctBase } = state
-  const appAddress = connectedApp?.address
 
   const [filteredVotes, setFilteredVotes] = useState(votes)
   const [statusFilter, setStatusFilter] = useState(NULL_FILTER_STATE)
@@ -121,7 +114,8 @@ const useFilterVotes = (votes, executionTargets) => {
   ])
 
   useEffect(() => {
-    if (!appAddress) {
+    if (loading) {
+      setFilteredScripts([])
       return
     }
 
@@ -133,7 +127,6 @@ const useFilterVotes = (votes, executionTargets) => {
         testOutcomeFilter(outcomeFilter, voteStatus) &&
         testAppFilter(appFilter, vote, {
           apps: executionTargets,
-          thisAddress: appAddress,
         }) &&
         testDateRangeFilter(dateRangeFilter, vote)
       )
@@ -145,7 +138,6 @@ const useFilterVotes = (votes, executionTargets) => {
     trendFilter,
     appFilter,
     dateRangeFilter,
-    appAddress,
     pctBase,
     setFilteredVotes,
     votes,

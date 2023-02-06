@@ -1,10 +1,15 @@
 import { useMemo } from 'react'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
-import { EMPTY_ADDRESS, shortenAddress } from '@/utils/web3-utils'
 import { useAppState } from '../providers/VotingProvider'
 import { isVoteOpen } from '../vote-utils'
 import useNow from '@/hooks/shared/useNow'
 import { useConnectedApp } from '@/providers/ConnectedApp'
+import {
+  buildExecutionTarget,
+  buildExecutionTargetApps,
+  isEmptyCallScript,
+} from '@/utils/evmscript'
+import { getAppPresentation } from '@/utils/app-utils'
 
 // Decorate the votes array with more information relevant to the frontend
 function useDecoratedVotes() {
@@ -17,76 +22,33 @@ function useDecoratedVotes() {
     if (!(votes && connectedApp && apps)) {
       return [[], []]
     }
-    const decoratedVotes = votes.map((vote, i) => {
-      const executionTargets = vote.data.executionTargets
 
-      let targetApp
-      if (!executionTargets) {
-        console.warn(
-          `Voting: vote #${vote.voteId} does not list any execution targets. The app's cache is likely corrupted and needs to be reset.`
-        )
-      } else if (!executionTargets.length) {
-        // If there's no execution target, consider it targeting this Voting app
-        targetApp = {
-          appAddress: connectedApp.address,
-          name: connectedApp.name,
-        }
-        // Don't attach an identifier for this Voting app
-        delete targetApp.identifier
-      } else if (executionTargets.length > 1) {
-        // If there's multiple targets, make a "multiple" version
-        targetApp = {
-          appAddress: EMPTY_ADDRESS,
-          name: 'Multiple',
-        }
-      } else {
-        // Otherwise, try to find the target from the installed apps
-        const [targetAddress] = executionTargets
+    const { iconSrc, name } = getAppPresentation(connectedApp)
 
-        targetApp = apps.find(app => app.appAddress === targetAddress)
-        if (!targetApp) {
-          targetApp = {
-            appAddress: targetAddress,
-            name: 'External',
+    const connectedAppData = {
+      address: connectedApp.address,
+      name,
+      iconSrc,
+      identifier: connectedApp.address,
+    }
+
+    const decoratedVotes = votes.map(vote => {
+      const executionTarget = isEmptyCallScript(vote.data.script)
+        ? {
+            executionTargetData: connectedAppData,
+            executionTargets: [connectedApp.address],
           }
-        }
-      }
-
-      let executionTargetData = null
-      if (targetApp) {
-        const { appAddress, icon, identifier, name } = targetApp
-        executionTargetData = {
-          identifier,
-          address: appAddress,
-          // If the app name was not loaded, use the app's address
-          name: name || shortenAddress(appAddress),
-          // Only try to get the icon if it's available
-          iconSrc: typeof icon === 'function' ? icon(24) : null,
-        }
-      }
+        : {
+            ...buildExecutionTarget(vote.data.script, apps),
+          }
 
       return {
         ...vote,
-        executionTargetData,
+        ...executionTarget,
       }
     })
 
-    // Reduce the list of installed apps to just those that have been targetted by apps
-    const executionTargets = apps
-      .filter(app =>
-        votes.some(vote =>
-          (vote.data.executionTargets || []).includes(app.appAddress)
-        )
-      )
-      .map(({ appAddress, identifier, name }) => ({
-        appAddress,
-        identifier,
-        // If the app name was not loaded, use the app's address
-        name: name || shortenAddress(appAddress),
-      }))
-      .sort((a, b) => {
-        return a.name ? a.name.localeCompare(b.name) : 1
-      })
+    const executionTargets = buildExecutionTargetApps(apps, decoratedVotes)
 
     return [decoratedVotes, executionTargets]
   }, [votes, connectedApp, apps])
