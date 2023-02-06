@@ -3,7 +3,7 @@ import React from 'react'
 import VotingApp from '../App'
 import VoteSingle from '../components/VoteSingle'
 import { VotingProvider } from '../providers/VotingProvider'
-import { VoterProvider } from '../providers/VoterProvider'
+import { VotingUserProvider } from '../providers/User'
 import { AppRouting } from '@/components/AppRouting'
 
 function VotingRouter() {
@@ -21,8 +21,8 @@ function VotingRouter() {
 
 export default () => (
   <VotingProvider>
-    <VoterProvider>
+    <VotingUserProvider>
       <VotingRouter />
-    </VoterProvider>
+    </VotingUserProvider>
   </VotingProvider>
 )

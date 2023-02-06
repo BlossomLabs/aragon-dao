@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Box, textStyle, useTheme, GU, useViewport } from '@aragon/ui'
 import HelpTip from '../HelpTip'
 
-import { round, safeDiv } from '../../math-utils'
+import { round, safeDiv } from '@/utils/math-utils'
 import SummaryBar from './SummaryBar'
 
 function InfoBoxes({ vote, disabledProgressBars }) {
@@ -27,7 +27,7 @@ function InfoBoxes({ vote, disabledProgressBars }) {
         <SummaryWithPercentages
           disabledProgressBars={disabledProgressBars}
           size={support}
-          requiredSize={parseFloat(vote.settings.formattedSupportRequiredPct)}
+          requiredSize={parseFloat(vote.setting.formattedSupportRequiredPct)}
         />
       </Box>
       <Box
@@ -43,7 +43,7 @@ function InfoBoxes({ vote, disabledProgressBars }) {
           disabledProgressBars={disabledProgressBars}
           size={quorumProgress}
           requiredSize={parseFloat(
-            vote.settings.formattedMinimumAcceptanceQuorumPct
+            vote.setting.formattedMinimumAcceptanceQuorumPct
           )}
         />
       </Box>

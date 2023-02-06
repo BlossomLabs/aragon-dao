@@ -13,16 +13,18 @@ import {
 } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 
-import { toDecimals } from '../../../utils'
-import { formatTokenAmount } from '../../../utils/token-utils'
+import { formatTokenAmount } from '@/utils/token'
+import { toDecimals } from '@/utils/math-utils'
 import { useAppState } from '../../../providers/TokenWrapperProvider'
 import NumericInput from '@/components/NumericInput'
 import { useTokenBalanceOf } from '@/hooks/shared/useAccountTokenBalance'
 import { useWallet } from '@/providers/Wallet'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
+import { useNetwork } from '@/hooks/shared'
 
 const Convert = React.memo(function({ mode, getTransactions }) {
-  const { account, chainId } = useWallet()
+  const { chainId } = useNetwork()
+  const { account } = useWallet()
   const theme = useTheme()
   const [amount, setAmount] = useState({
     value: '0',

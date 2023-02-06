@@ -15,7 +15,7 @@ import { useAppState } from '../../../providers/VotingProvider'
 import { useTokenBalances } from '@/hooks/shared/useAccountTokenBalance'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import { useWallet } from '@/providers/Wallet'
-import { formatTokenAmount } from '../../../token-utils'
+import { formatTokenAmount } from '@/utils/token'
 
 const INVALID_ADDRESS_ERROR = 'Recipient must be a valid Ethereum address'
 
@@ -23,10 +23,10 @@ function DelegateVotingPower({ onCreateTransaction }) {
   const [delegateAccount, setDelegateAccount] = useState('')
   const { account } = useWallet()
   const { next } = useMultiModal()
-  const { tokenAddress, tokenDecimals, tokenSymbol } = useAppState()
+  const { token } = useAppState()
   const [invalidAddress, setInvalidAddress] = useState(false)
 
-  const [{ balance }, loadingBalance] = useTokenBalances(account, tokenAddress)
+  const [{ balance }, loadingBalance] = useTokenBalances(account, token.address)
 
   const handleDelegateAccountChange = useCallback(event => {
     const updatedDelegateAccount = event.target.value
@@ -63,7 +63,9 @@ function DelegateVotingPower({ onCreateTransaction }) {
         {loadingBalance ? (
           <LoadingRing />
         ) : (
-          <>{`${formatTokenAmount(balance, tokenDecimals)} ${tokenSymbol} `}</>
+          <>{`${formatTokenAmount(balance, token.decimals)} ${
+            token.symbol
+          } `}</>
         )}
       </Field>
       <Field

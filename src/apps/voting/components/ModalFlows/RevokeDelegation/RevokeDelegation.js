@@ -8,12 +8,12 @@ import {
   IdentityBadge,
   useViewport,
 } from '@aragon/ui'
-import { useVoterState } from '../../../providers/VoterProvider'
+import { useUserState } from '../../../providers/User'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import { constants } from 'ethers'
 
 export default function RevokeDelegation({ onCreateTransaction }) {
-  const { voter } = useVoterState()
+  const { user } = useUserState()
   const { above } = useViewport()
   const multiColumnsMode = above('small')
 
@@ -43,7 +43,7 @@ export default function RevokeDelegation({ onCreateTransaction }) {
         `}
         label="Current delegate address"
       >
-        <IdentityBadge entity={voter.representative.address} />
+        <IdentityBadge entity={user.representative.address} />
       </Field>
       <Info
         css={`

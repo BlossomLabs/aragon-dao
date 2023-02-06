@@ -1,7 +1,7 @@
 import React from 'react'
 import { Spring, config as springs } from 'react-spring'
 import VoteOption from './VoteOption'
-import { percentageList } from '../../math-utils'
+import { percentageList } from '@/utils/math-utils'
 
 const ANIM_DELAY_MIN = 100
 const ANIM_DELAY_MAX = 800

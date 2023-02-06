@@ -90,7 +90,8 @@ function testDateRangeFilter(filter, vote) {
 
 const useFilterVotes = (votes, executionTargets) => {
   const { connectedApp } = useConnectedApp()
-  const { pctBase } = useAppState()
+  const state = useAppState()
+  const { pctBase } = state
   const appAddress = connectedApp?.address
 
   const [filteredVotes, setFilteredVotes] = useState(votes)

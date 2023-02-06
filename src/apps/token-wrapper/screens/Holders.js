@@ -5,7 +5,7 @@ import { useWallet } from '@/providers/Wallet'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 import You from '../components/You'
 import { addressesEqual } from '@/utils/web3-utils'
-import { formatBalance } from '../utils'
+import { formatBalance } from '@/utils/math-utils'
 
 const Holders = React.memo(function Holders({ holders, wrappedToken }) {
   const { account: connectedAccount } = useWallet()

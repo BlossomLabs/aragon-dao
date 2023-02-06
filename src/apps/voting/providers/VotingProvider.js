@@ -1,9 +1,14 @@
+import BN from 'bn.js'
 import React, { useContext, useEffect, useState } from 'react'
 import { useConnect } from '@1hive/connect-react'
+
 import { useMounted } from '@/hooks/shared/useMounted'
 import { DisputableStatusType } from '../types/disputable-statuses'
-import BN from 'bn.js'
+import minimeTokenAbi from '@/abi/minimeToken.json'
 import { useConnectedApp } from '@/providers/ConnectedApp'
+import { useContractReadOnly } from '@/hooks/shared/useContract'
+import { constants } from 'ethers'
+import { useNetwork } from '@/hooks/shared'
 
 const VotingContext = React.createContext()
 
@@ -30,8 +35,8 @@ const reduceVotes = (votes = []) => {
         yea: new BN(vote.yeas),
         nay: new BN(vote.nays),
         votingPower: new BN(vote.totalPower),
-        minAcceptQuorum: new BN(vote.minimumAcceptanceQuorumPct),
-        supportRequired: new BN(vote.supportRequiredPct),
+        minAcceptQuorum: new BN(vote.setting.minimumAcceptanceQuorumPct),
+        supportRequired: new BN(vote.setting.supportRequiredPct),
         snapshotBlock: parseInt(vote.snapshotBlock),
         startDate: new Date(parseInt(vote.startDate) * 1000),
         executionTargets: [''],
@@ -39,9 +44,10 @@ const reduceVotes = (votes = []) => {
       },
       numData: {
         minAcceptQuorum:
-          parseInt(vote.minimumAcceptanceQuorumPct, 10) / pctBaseNum,
+          parseInt(vote.setting.minimumAcceptanceQuorumPct, 10) / pctBaseNum,
         nay: parseInt(vote.nays, 10) / tokenDecimalsBaseNum,
-        supportRequired: parseInt(vote.supportRequiredPct, 10) / pctBaseNum,
+        supportRequired:
+          parseInt(vote.setting.supportRequiredPct, 10) / pctBaseNum,
         votingPower: parseInt(vote.totalPower, 10) / tokenDecimalsBaseNum,
         yea: parseInt(vote.yeas, 10) / tokenDecimalsBaseNum,
       },
@@ -64,58 +70,59 @@ const formatSettings = (settings = {}) => {
   }
 }
 
+const formatAppData = rawAppData => {
+  const { token, setting, representativeManager } = rawAppData
+  return {
+    ...rawAppData,
+    representativeManager:
+      representativeManager.address ?? constants.AddressZero,
+    currentSettings: formatSettings(setting),
+    token: {
+      address: token.id,
+      name: token.name,
+      symbol: token.symbol,
+      decimals: token.decimals,
+    },
+  }
+}
+
 function VotingProvider({ children }) {
+  const { chainId } = useNetwork()
   const { connectedApp } = useConnectedApp()
   const [votes, setVotes] = useState([])
-  const [currentSettings, setCurrentSettings] = useState({})
-  const [representativeManager, status] = useConnect(
-    () => connectedApp?._app.ethersContract().representativeManager(),
-    [connectedApp]
+  const [appData, appDataStatus] = useConnect(async () => {
+    if (!connectedApp) {
+      return
+    }
+    const rawAppData = await connectedApp.taoVoting()
+    return formatAppData(rawAppData)
+  }, [connectedApp])
+  const tokenContract = useContractReadOnly(
+    appData?.token.address,
+    minimeTokenAbi,
+    chainId
   )
-  const [rawSettings, rawSettingsStatus] = useConnect(() => {
-    return connectedApp?.currentSetting()
-  }, [connectedApp])
-  const [token, tokenStatus] = useConnect(() => {
-    return connectedApp?.token()
-  }, [connectedApp])
-  const [connectVotes] = useConnect(() => {
-    return connectedApp?.onVotes()
-  }, [connectedApp])
+  const [rawVotes, rawVotesStatus] = useConnect(() => connectedApp?.onVotes(), [
+    connectedApp,
+  ])
   const mounted = useMounted()
-  const loading =
-    status.loading || tokenStatus.loading || rawSettingsStatus.loading
+  const loading = appDataStatus.loading || rawVotesStatus.loading
 
   useEffect(() => {
-    const reducedVotes = reduceVotes(connectVotes)
+    const reducedVotes = reduceVotes(rawVotes)
     if (mounted()) {
       setVotes(reducedVotes)
     }
-  }, [connectVotes, mounted])
-
-  useEffect(() => {
-    const formattedSettings = formatSettings(rawSettings)
-
-    if (mounted()) {
-      setCurrentSettings(formattedSettings)
-    }
-  }, [rawSettings, mounted])
+  }, [rawVotes, mounted])
 
   return (
     <VotingContext.Provider
       value={{
+        ...appData,
         isSyncing: loading,
-        tokenAddress: token?.id,
-        tokenDecimals: new BN(token?.decimals),
-        tokenSymbol: token?.symbol,
-        pctBase: pctBase,
-        currentSettings: currentSettings,
-        connectedAccountVotes: [],
-        numData: {
-          pctBase: pctBaseNum,
-          tokenDecimals: tokenDecimalsNum,
-        },
+        tokenContract,
         votes,
-        representativeManager,
+        pctBase,
       }}
     >
       {children}

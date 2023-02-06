@@ -22,11 +22,11 @@ export const AppRouting = ({ appName, defaultPath, appRoutes, children }) => {
   const isWaiting = useWait(50)
   const { apps } = useOrganizationState()
 
-  const appAddresses = apps
-    .filter(app => app.name === appName)
-    .map(app => app.address)
-  const app = apps.find(app => app.name === appName)
+  const filteredApps = apps.filter(app => app.name === appName)
+  const appAddresses = filteredApps.map(app => app.address)
+  const app = filteredApps[0] || null
   const defaultAppAddress = app?.address ?? ''
+
   const appRoutingName = APPS_ROUTING.get(appName)
   const appInstancePath = buildAppInstanceRoute(appName)
 

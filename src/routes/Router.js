@@ -21,7 +21,7 @@ function Router() {
             <Route path="/delay" component={ANDelayRouter} />
             <Route path="/finance" component={FinanceRouter} />
             <Route path="/voting" component={VotingRouter} />
-            <Route path="/wrapper" component={TokenWrapperRouter} />
+            <Route path="/token-wrapper" component={TokenWrapperRouter} />
             <Route
               path="*"
               render={props => {

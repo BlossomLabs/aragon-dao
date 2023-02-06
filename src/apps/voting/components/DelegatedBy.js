@@ -1,24 +1,25 @@
 import React from 'react'
 import { DataView, IdentityBadge } from '@aragon/ui'
-import { useVoterState } from '../providers/VoterProvider'
+import { useUserState } from '../providers/User'
 import useDelegatorsBalance from '../hooks/useDelegatorsBalance'
-import { formatTokenAmount } from '../token-utils'
+import { formatTokenAmount } from '@/utils/token'
 import { useAppState } from '../providers/VotingProvider'
 import LoadingSection from '@/components/Loading/LoadingSection'
 
 const DelegatedBy = React.memo(function DelegatedBy() {
-  const {
-    tokenSymbol,
-    numData: { tokenDecimals },
-  } = useAppState()
+  const { token } = useAppState()
 
-  const { voter } = useVoterState()
-  const [delegatorsBalances, loading] = useDelegatorsBalance(
-    voter?.representativeFor
+  const { user } = useUserState()
+  const [delegatorsBalances, { loading, error }] = useDelegatorsBalance(
+    user?.representativeFor
   )
 
   return (
-    <LoadingSection show={loading} title="Loading delegators">
+    <LoadingSection
+      show={loading || !!error}
+      title="Loading delegators"
+      showSpinner={loading}
+    >
       <DataView
         emptyState={{
           default: {
@@ -26,12 +27,12 @@ const DelegatedBy = React.memo(function DelegatedBy() {
           },
         }}
         fields={['Delegator', 'Balance']}
-        entries={delegatorsBalances}
+        entries={delegatorsBalances ?? []}
         renderEntry={([address, balance]) => {
           return [
             <IdentityBadge entity={address} />,
             <span>
-              {formatTokenAmount(balance, tokenDecimals)} {tokenSymbol}
+              {formatTokenAmount(balance, token.decimals)} {token.symbol}
             </span>,
           ]
         }}

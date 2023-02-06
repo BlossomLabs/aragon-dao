@@ -65,7 +65,7 @@ function VoteScreens({
   const screens = useMemo(() => {
     return [
       {
-        title: `Vote ${supports ? 'Yes' : 'No'} on decision`,
+        title: `Vote ${supports ? 'Yes' : 'No'} on proposal`,
         graphicHeader: false,
         content: <VoteOnDecision getTransactions={getTransactions} />,
       },
@@ -79,7 +79,7 @@ function VoteScreens({
     <ModalFlowBase
       displayErrorScreen={displayErrorScreen}
       transactions={transactions}
-      transactionTitle="Vote on decision"
+      transactionTitle="Vote on proposal"
       screens={screens}
     />
   )

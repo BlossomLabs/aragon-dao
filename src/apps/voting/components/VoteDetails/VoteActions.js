@@ -17,13 +17,12 @@ import { dateFormat } from '../../utils/date-utils'
 import { getConnectedAccountCast } from '../../vote-utils'
 import { VOTE_YEA, VOTE_NAY } from '../../vote-types'
 
-function VoteActions({ vote, onVote, onExecute }) {
+function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
   const theme = useTheme()
-  const { snapshotBlock, startDate, hasEnded, voterInfo, votingToken } = vote
+  const { snapshotBlock, startDate, hasEnded } = vote
   const { account: connectedAccount } = useWallet()
-
+  const votingToken = vote.votingToken
   const connectedAccountCast = getConnectedAccountCast(vote, connectedAccount)
-
   const isAccountVoteCasted = [VOTE_YEA, VOTE_NAY].includes(
     connectedAccountCast.vote
   )
@@ -31,30 +30,34 @@ function VoteActions({ vote, onVote, onExecute }) {
   const handleVoteYes = useCallback(
     () =>
       onVote({
-        canUserVote: voterInfo.canVote,
-        canUserVoteOnBehalfOf: voterInfo.canUserVoteOnBehalfOf,
+        canUserVote: voter.canVote,
+        canUserVoteOnBehalfOf: voter.canVoteOnBehalfOf,
+        principals: voter.principals,
         supports: true,
-        principals: voterInfo.principals,
       }),
-    [voterInfo, onVote]
+    [voter, onVote]
   )
 
   const handleVoteNo = useCallback(
     () =>
       onVote({
-        canUserVote: voterInfo.canVote,
-        canUserVoteOnBehalfOf: voterInfo.canUserVoteOnBehalfOf,
+        canUserVote: voter.canVote,
+        canUserVoteOnBehalfOf: voter.canVoteOnBehalfOf,
+        principals: voter.principals,
         supports: false,
-        principals: voterInfo.principals,
       }),
-    [voterInfo, onVote]
+    [voter, onVote]
   )
 
   const handleVoteExecution = useCallback(() => {
     onExecute()
   }, [onExecute])
 
-  if (!voterInfo.account) {
+  if (!connectedAccount) {
+    if (hasEnded) {
+      return null
+    }
+
     return (
       <div
         css={`
@@ -98,7 +101,7 @@ function VoteActions({ vote, onVote, onExecute }) {
   if (hasEnded) {
     return (
       <>
-        {voterInfo.canExecute && (
+        {voter.canExecute && (
           <>
             <Button mode="strong" onClick={handleVoteExecution} wide>
               Enact this vote
@@ -114,7 +117,7 @@ function VoteActions({ vote, onVote, onExecute }) {
     )
   }
 
-  if (voterInfo.canVote || voterInfo.canUserVoteOnBehalfOf) {
+  if (voter.canVote || voter.canVoteOnBehalfOf) {
     return (
       <>
         <Buttons onVoteYes={handleVoteYes} onVoteNo={handleVoteNo} />
@@ -122,12 +125,12 @@ function VoteActions({ vote, onVote, onExecute }) {
           snapshotBlock={snapshotBlock}
           startDate={startDate}
           tokenSymbol={votingToken.symbol}
-          accountBalance={voterInfo.accountBalance}
-          accountBalanceNow={voterInfo.accountBalanceNow}
-          canUserVoteOnBehalfOf={voterInfo.canUserVoteOnBehalfOf}
-          principalsBalance={voterInfo.principalsBalance}
+          accountBalance={voter.accountBalance}
+          accountBalanceNow={voter.accountBalanceNow}
+          canUserVoteOnBehalfOf={voter.canVoteOnBehalfOf}
+          principalsTotalBalance={voter.principalsTotalBalance}
         />
-        {voterInfo.canVote && isAccountVoteCasted && (
+        {voter.canVote && isAccountVoteCasted && (
           <Info mode="warning">
             <strong>
               Although your delegate has voted on your behalf, you can always
@@ -138,6 +141,7 @@ function VoteActions({ vote, onVote, onExecute }) {
       </>
     )
   }
+
   if (isAccountVoteCasted) {
     return (
       <div>
@@ -149,11 +153,15 @@ function VoteActions({ vote, onVote, onExecute }) {
     )
   }
 
+  if (loading) {
+    return null
+  }
+
   return (
     <div>
       <Buttons disabled />
       <Info mode="warning">
-        {voterInfo.accountBalanceNow > 0
+        {voter.accountBalanceNow > 0
           ? 'Although the currently connected account holds tokens, it'
           : 'The currently connected account'}{' '}
         did not hold any <strong>{votingToken.symbol}</strong> tokens when this
@@ -226,7 +234,7 @@ const TokenReference = ({
   accountBalance,
   accountBalanceNow,
   canUserVoteOnBehalfOf,
-  principalsBalance,
+  principalsTotalBalance,
 }) => {
   return (
     <Info>
@@ -249,11 +257,11 @@ const TokenReference = ({
           ''
         )}
       </div>
-      {canUserVoteOnBehalfOf && principalsBalance > 0 && (
+      {canUserVoteOnBehalfOf && principalsTotalBalance > 0 && (
         <div>
           Delegated voting power:{' '}
           <strong>
-            {principalsBalance} {tokenSymbol}
+            {principalsTotalBalance} {tokenSymbol}
           </strong>
         </div>
       )}

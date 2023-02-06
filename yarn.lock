@@ -1211,19 +1211,19 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@blossom-labs/connect-an-delay@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.0.tgz#5501c9d36d6c9c186421ed1f6658ff951b483440"
-  integrity sha512-1NyBien9KHzJWofVtSIgSf5hb7YbBcU/Nuqj3tztbpVhY+rdwCa1AOY8qDX/ujPaypZ34KI8V+swETxQ2Lhpyw==
+"@blossom-labs/connect-an-delay@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.1.tgz#a12f67cc66728b94c420e21434646047eeadc2d3"
+  integrity sha512-aET7jLwXi0H/0m1msNMmZV/YWpbOVs8Raq5HzFEezSyFgc6PIVewdeQetzRcA8AOiiYfWwjcRDCwHitX0iTUqQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
     graphql-tag "^2.10.3"
 
-"@blossom-labs/connect-bl-tao-voting@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.1.0.tgz#fda83d77dc13997a4802d26332dad160114e4ed4"
-  integrity sha512-Z9gGE8/xMEr6/glggh5bxuVpEoU3X8ejqv8uAd7A1TcsVVJe/3K8nAPvQj1wYly37c0+iXqQqDpJPofcyzI+3w==
+"@blossom-labs/connect-bl-tao-voting@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.3.0.tgz#3cf71211b5258e50d857606308a0c809985680c0"
+  integrity sha512-Ubgh+/JxEM8uLoAj1jKFBOz8oiTsnQk0auaazc1n11AB8M98yl7X/8n22nwsLfWJ76HZgq1dQCz/V8N3iwNbcw==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
@@ -10790,10 +10790,17 @@ node-fetch@^1.0.1, node-fetch@~1.7.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.7:
+node-fetch@^2.6.0, node-fetch@^2.6.7:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.8.tgz#a68d30b162bc1d8fd71a367e81b997e1f4d4937e"
   integrity sha512-RZ6dBYuj8dRSfxpUSu+NsdF1dpPpluJxwOp+6IoDp/sH2QNDSvurYsAa+F1WxY2RjA1iP93xhcsUoYbF2XBqVg==
+  dependencies:
+    whatwg-url "^5.0.0"
+
+node-fetch@^2.6.1:
+  version "2.6.9"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.9.tgz#7c7f744b5cc6eb5fd404e0c7a9fec630a55657e6"
+  integrity sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==
   dependencies:
     whatwg-url "^5.0.0"
 

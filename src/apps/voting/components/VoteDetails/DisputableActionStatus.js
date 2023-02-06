@@ -6,15 +6,9 @@ import { dateFormat } from '../../utils/date-utils'
 const DATE_FORMAT = 'YYYY/MM/DD , HH:mm'
 
 function DisputableActionStatus({ vote }) {
-  const voteEndPeriodNode = usePeriod(vote, vote.endDate)
-  const delegatedVotingEndPeriodNode = usePeriod(
-    vote,
-    vote.delegatedVotingEndDate
-  )
-  const executionDelayEndPeriodNode = usePeriod(
-    vote,
-    vote.executionDelayEndDate
-  )
+  const voteEndPeriodNode = usePeriod(vote.endDate)
+  const delegatedVotingEndPeriodNode = usePeriod(vote.delegatedVotingEndDate)
+  const executionDelayEndPeriodNode = usePeriod(vote.executionDelayEndDate)
 
   return (
     <Box heading="Status">
@@ -71,7 +65,7 @@ function DataField({ label, value, loading = false }) {
   )
 }
 
-function usePeriod(proposal, periodEndDate) {
+function usePeriod(periodEndDate) {
   const theme = useTheme()
 
   return useMemo(() => {
@@ -87,7 +81,7 @@ function usePeriod(proposal, periodEndDate) {
         </span>
       </span>
     ) : (
-      <Timer end={periodEndDate} />
+      <Timer end={new Date(periodEndDate)} />
     )
   }, [periodEndDate, theme])
 }

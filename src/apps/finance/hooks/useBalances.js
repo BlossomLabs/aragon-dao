@@ -7,7 +7,6 @@ import BN from 'bn.js'
 
 import vaultBalanceAbi from '../abi/vault-balance.json'
 import minimeTokenAbi from '@/abi/minimeToken.json'
-import { useWallet } from '@/providers/Wallet'
 import { useNetwork } from '@/hooks/shared'
 import { constants } from 'ethers'
 
@@ -25,7 +24,7 @@ const getContractInstance = (address, abi, chainId) => {
 }
 
 const useBalances = (timeout = 7000) => {
-  const { chainId } = useWallet()
+  const { chainId } = useNetwork()
   const { nativeToken } = useNetwork()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const [tokenBalances = [], { error }] = useConnect(
