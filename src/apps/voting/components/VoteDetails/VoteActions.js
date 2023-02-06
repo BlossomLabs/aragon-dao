@@ -109,19 +109,11 @@ function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
       <>
         {voter.canExecute && (
           <>
-            <div
-              css={`
-                display: flex;
-                flex-direction: column;
-                gap: ${0.5 * GU}px;
-              `}
-            >
-              <ParticipationDisclaimer>
-                <Button mode="strong" onClick={handleVoteExecution} wide>
-                  Enact this vote
-                </Button>
-              </ParticipationDisclaimer>
-            </div>
+            <ParticipationDisclaimer>
+              <Button mode="strong" onClick={handleVoteExecution} wide>
+                Enact this vote
+              </Button>
+            </ParticipationDisclaimer>
             <Info>
               The voting period is closed and the vote has passed.{' '}
               <strong>Anyone</strong> can now enact this vote to execute its
@@ -197,7 +189,6 @@ const Buttons = ({ onVoteYes, onVoteNo, disabled = false }) => (
   <div
     css={`
       display: flex;
-      margin-bottom: ${2 * GU}px;
     `}
   >
     <Button
