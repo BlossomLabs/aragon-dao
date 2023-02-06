@@ -6,6 +6,14 @@ import { addressesEqual } from './web3-utils'
 export const EMPTY_CALLSCRIPT = '0x00000001'
 export const EMPTY_CALLSCRIPT_UTF8 = '0x30783030303030303031'
 
+export function isEmptyCallScript(script) {
+  return (
+    script === EMPTY_CALLSCRIPT ||
+    script === '0x00' ||
+    // Signaling votes contains an utf8-encoded empty callscript
+    script === EMPTY_CALLSCRIPT_UTF8
+  )
+}
 export function getDeepestForwardingSteps(steps) {
   if (steps.length > 1) {
     return steps

@@ -14,6 +14,7 @@ import {
   VOTE_SCHEDULED,
   VOTE_CANCELLED,
   VOTE_EXECUTED,
+  VOTE_PENDING_EXECUTION,
   VOTE_REJECTED,
 } from '../types/disputable-statuses'
 
@@ -26,7 +27,7 @@ function getAttributes(status, theme) {
     },
     [VOTE_ACCEPTED]: {
       background: theme.surface,
-      label: 'Passed (pending)',
+      label: 'Passed',
       Icon: IconCheck,
       color: theme.positive,
     },
@@ -35,6 +36,12 @@ function getAttributes(status, theme) {
       label: 'Cancelled',
       Icon: IconClose,
       color: theme.disabledContent,
+    },
+    [VOTE_PENDING_EXECUTION]: {
+      background: theme.surface,
+      label: 'Passed (pending)',
+      Icon: IconCheck,
+      color: theme.positive,
     },
     [VOTE_EXECUTED]: {
       background: '#CADFAB',
@@ -86,6 +93,7 @@ StatusLabel.propTypes = {
     VOTE_CANCELLED,
     VOTE_EXECUTED,
     VOTE_REJECTED,
+    VOTE_PENDING_EXECUTION,
   ]),
 }
 

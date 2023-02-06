@@ -4,8 +4,7 @@ import { useMounted } from '@/hooks/shared/useMounted'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { toUtf8String } from 'ethers/lib/utils'
 import {
-  EMPTY_CALLSCRIPT,
-  EMPTY_CALLSCRIPT_UTF8,
+  isEmptyCallScript,
   targetDataFromTransactionRequest,
 } from '@/utils/evmscript'
 
@@ -63,19 +62,13 @@ const patchSteps = steps => {
   })
 }
 
-const isEmptyScript = evmCallScript =>
-  evmCallScript === EMPTY_CALLSCRIPT ||
-  evmCallScript === '0x00' ||
-  // Signaling votes contains an utf8-encoded empty callscript
-  evmCallScript === EMPTY_CALLSCRIPT_UTF8
-
 const useDecribeScript = (evmCallScript, scriptId) => {
   const mounted = useMounted()
   const [describedSteps, setDescribedSteps] = useState([])
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
   const { apps, connection } = useOrganizationState()
-  const emptyScript = isEmptyScript(evmCallScript)
+  const emptyScript = isEmptyCallScript(evmCallScript)
 
   // Populate target app data from transaction request
   const targetApp = useMemo(

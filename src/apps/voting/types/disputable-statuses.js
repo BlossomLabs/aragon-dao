@@ -6,6 +6,7 @@ export const VOTE_EXECUTED = Symbol('VOTE_EXECUTED')
 export const VOTE_REJECTED = Symbol('VOTE_REJECTED')
 export const VOTE_SCHEDULED = Symbol('VOTE_SCHEDULED')
 export const VOTE_SETTLED = Symbol('VOTE_SETTLED')
+export const VOTE_PENDING_EXECUTION = Symbol('VOTE_PENDING_EXECUTION')
 
 export const DisputableStatusType = {
   Accepted: VOTE_ACCEPTED,
@@ -13,6 +14,7 @@ export const DisputableStatusType = {
   Challenged: VOTE_CHALLENGED,
   Disputed: VOTE_DISPUTED,
   Executed: VOTE_EXECUTED,
+  PendingExecution: VOTE_PENDING_EXECUTION,
   Rejected: VOTE_REJECTED,
   Scheduled: VOTE_SCHEDULED,
   Settled: VOTE_SETTLED,

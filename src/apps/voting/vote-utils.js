@@ -11,12 +11,7 @@ import {
   VOTE_STATUS_PENDING_ENACTMENT,
   VOTE_STATUS_ENACTED,
 } from './vote-types'
-
-const EMPTY_SCRIPT = '0x00000001'
-
-export function isVoteAction(vote) {
-  return vote.data && vote.data.script && vote.data.script !== EMPTY_SCRIPT
-}
+import { isEmptyCallScript } from '@/utils/evmscript'
 
 export function isVoteOpen(vote, date) {
   const { executed, endDate } = vote.data
@@ -36,7 +31,7 @@ export function getVoteStatus(vote, pctBase) {
   }
 
   // Only if the vote has an action do we consider it possible for enactment
-  const hasAction = isVoteAction(vote)
+  const hasAction = isEmptyCallScript(vote.data?.script)
   return hasAction
     ? vote.data.executed
       ? VOTE_STATUS_ENACTED

@@ -99,6 +99,11 @@ function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
   }
 
   if (hasEnded) {
+    // Handle signalling votes
+    if (!vote.hasAction) {
+      return null
+    }
+
     return (
       <>
         {voter.canExecute && (
