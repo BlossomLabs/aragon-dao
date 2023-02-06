@@ -10,13 +10,15 @@ import {
   textStyle,
   useTheme,
 } from '@aragon/ui'
-// import { networkEnvironment } from '../../current-environment'
+import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { getProviderFromUseWalletId } from 'use-wallet'
 import { useCopyToClipboard } from '../../hooks/shared/useCopyToClipboard'
+import safeImg from './assets/safe.png'
 
 /* eslint-disable react/prop-types */
 function ScreenConnected({ wallet }) {
   const theme = useTheme()
+  const { connected: isSafeConnected } = useSafeAppsSDK()
   const copy = useCopyToClipboard()
 
   const walletNetworkName = wallet.networkName
@@ -41,20 +43,26 @@ function ScreenConnected({ wallet }) {
             display: flex;
             align-items: center;
             margin-right: ${3 * GU}px;
+            gap: ${0.5 * GU}px;
           `}
         >
           <img
-            src={providerInfo.image}
+            src={isSafeConnected ? safeImg : providerInfo.image}
             alt=""
             css={`
               width: ${2.5 * GU}px;
               height: ${2.5 * GU}px;
+              border-radius: ${RADIUS}px;
               margin-right: ${0.5 * GU}px;
-              transform: translateY(-2px);
+              ${isSafeConnected ? '' : `transform: translateY(-2px)`};
             `}
           />
           <span>
-            {providerInfo.id === 'unknown' ? 'Wallet' : providerInfo.name}
+            {isSafeConnected
+              ? 'Safe'
+              : providerInfo.id === 'unknown'
+              ? 'Wallet'
+              : providerInfo.name}
           </span>
         </div>
         <div
@@ -110,19 +118,21 @@ function ScreenConnected({ wallet }) {
             margin-left: ${0.5 * GU}px;
           `}
         >
-          {`Connected to Ethereum ${walletNetworkName} Network`}
+          {`Connected to ${walletNetworkName} Network`}
         </span>
       </div>
 
-      <Button
-        onClick={() => wallet.reset()}
-        wide
-        css={`
-          margin-top: ${1 * GU}px;
-        `}
-      >
-        Disconnect wallet
-      </Button>
+      {!isSafeConnected && (
+        <Button
+          onClick={() => wallet.reset()}
+          wide
+          css={`
+            margin-top: ${1 * GU}px;
+          `}
+        >
+          Disconnect wallet
+        </Button>
+      )}
     </div>
   )
 }

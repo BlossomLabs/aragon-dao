@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useWallet } from 'use-wallet'
 import { Button, GU, IconConnect, useViewport } from '@aragon/ui'
+import { useWallet } from '@/providers/Wallet'
 import AccountButton from './AccountButton'
 import AccountPopover from './AccountPopover'
 import ScreenConnected from './ScreenConnected'

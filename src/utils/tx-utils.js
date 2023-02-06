@@ -1,3 +1,12 @@
+import { BigNumber } from 'ethers'
+
+export function normalizeTransaction(transactions) {
+  return transactions.map(tx => ({
+    ...tx,
+    value: BigNumber.from(tx.value || 0),
+  }))
+}
+
 export function imposeGasLimit(intent, gasLimit) {
   return {
     ...intent,

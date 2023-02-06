@@ -10,12 +10,15 @@ import {
   useTheme,
   useViewport,
 } from '@aragon/ui'
-import { useWallet } from 'use-wallet'
+import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
+import { useWallet } from '@/providers/Wallet'
 import { shortenAddress } from '@/utils/web3-utils'
+import safeImg from './assets/safe.png'
 
 function AccountButton({ onClick }) {
   const theme = useTheme()
   const wallet = useWallet()
+  const { connected: isSafeConnected } = useSafeAppsSDK()
 
   const { below } = useViewport()
   const compactMode = below('medium')
@@ -44,7 +47,21 @@ function AccountButton({ onClick }) {
             position: relative;
           `}
         >
-          <EthIdenticon address={wallet.account || ''} radius={RADIUS} />
+          {isSafeConnected ? (
+            <img
+              src={safeImg}
+              height={24}
+              width={24}
+              alt=""
+              css={`
+                border-radius: ${RADIUS}px;
+                display: block;
+                object-fit: cover;
+              `}
+            />
+          ) : (
+            <EthIdenticon address={wallet.account || ''} radius={RADIUS} />
+          )}
           <div
             css={`
               position: absolute;

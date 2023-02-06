@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from 'react'
 import { providers as EthersProviders } from 'ethers'
 import { UseWalletProvider, useWallet } from 'use-wallet'
+import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { getDefaultProvider, getEthersNetwork } from '@/utils/web3-utils'
 import { useWalletConnectors } from '../ethereum-providers'
 
@@ -14,6 +15,7 @@ function useWalletAugmented() {
 // Adds Ethers.js to the useWallet() object
 function WalletAugmented({ children }) {
   const wallet = useWallet()
+  const { connected: isSafeConnected, safe } = useSafeAppsSDK()
   const { ethereum, chainId } = wallet
 
   const ethers = useMemo(() => {
@@ -22,7 +24,17 @@ function WalletAugmented({ children }) {
       : getDefaultProvider()
   }, [chainId, ethereum])
 
-  const contextValue = useMemo(() => ({ ...wallet, ethers }), [wallet, ethers])
+  const contextValue = useMemo(
+    () => ({
+      ...wallet,
+      account: isSafeConnected ? safe.safeAddress : wallet.account,
+      networkName: isSafeConnected ? safe.network : wallet.networkName,
+      status: isSafeConnected ? 'connected' : wallet.status,
+      ethers,
+      chainId: isSafeConnected ? safe.chainId : chainId,
+    }),
+    [wallet, ethers, chainId, safe, isSafeConnected]
+  )
 
   return (
     <WalletAugmentedContext.Provider value={contextValue}>

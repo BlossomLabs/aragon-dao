@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { HashRouter } from 'react-router-dom'
 import { GU, Main, ScrollView, useViewport } from '@aragon/ui'
+import { SafeProvider } from '@safe-global/safe-apps-react-sdk'
 import { ConnectProvider as Connect } from './providers/Connect'
 import { OrganizationProvider } from './providers/OrganizationProvider'
 import MainView from './components/MainView'
@@ -99,28 +100,30 @@ function AppWrapper() {
 
   return (
     <HashRouter>
-      <Connect>
-        <WalletProvider>
-          <IdentityProvider>
-            <OrganizationProvider>
-              <GuardianProvider>
-                <Main
-                  assetsUrl="/aragon-ui/"
-                  layout={false}
-                  scrollView={false}
-                  theme={appearance}
-                >
-                  <MainView>
-                    <ErrorHandler>
-                      <App />
-                    </ErrorHandler>
-                  </MainView>
-                </Main>
-              </GuardianProvider>
-            </OrganizationProvider>
-          </IdentityProvider>
-        </WalletProvider>
-      </Connect>
+      <SafeProvider>
+        <Connect>
+          <WalletProvider>
+            <IdentityProvider>
+              <OrganizationProvider>
+                <GuardianProvider>
+                  <Main
+                    assetsUrl="/aragon-ui/"
+                    layout={false}
+                    scrollView={false}
+                    theme={appearance}
+                  >
+                    <MainView>
+                      <ErrorHandler>
+                        <App />
+                      </ErrorHandler>
+                    </MainView>
+                  </Main>
+                </GuardianProvider>
+              </OrganizationProvider>
+            </IdentityProvider>
+          </WalletProvider>
+        </Connect>
+      </SafeProvider>
     </HashRouter>
   )
 }

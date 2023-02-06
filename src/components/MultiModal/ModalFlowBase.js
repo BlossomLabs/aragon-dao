@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { GU } from '@aragon/ui'
+import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import MultiModalScreens from './MultiModalScreens'
 import Stepper from '../Stepper/Stepper'
 import { useWallet } from '../../providers/Wallet'
 import ErrorScreen from './screens/ErrorScreen'
+import SafeStep from '../SafeStep'
 
 const indexNumber = {
   0: 'First',
@@ -20,6 +22,7 @@ function ModalFlowBase({
   transactions,
   transactionTitle,
 }) {
+  const { connected: isSafeConnected } = useSafeAppsSDK()
   const { ethers } = useWallet()
   const signer = useMemo(() => ethers.getSigner(), [ethers])
 
@@ -88,8 +91,13 @@ function ModalFlowBase({
       allScreens.push(...screens)
     }
 
-    // Apply transaction singing at the end
-    if (transactionSteps) {
+    if (isSafeConnected) {
+      // Add the Safe transaction screen
+      allScreens.push({
+        content: <SafeStep transactions={transactions} />,
+      })
+    } else if (transactionSteps) {
+      // Apply transaction singing at the end
       allScreens.push({
         title: transactionTitle,
         width: modalWidthFromCount(transactions.length),
