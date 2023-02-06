@@ -8,7 +8,7 @@ import {
 } from '../../types/disputable-statuses'
 import useDescribeScript from '@/hooks/shared/useDescribeScript'
 import Description from '@/components/Description'
-import DisputableStatusLabel from '../DisputableStatusLabel'
+import StatusLabel from '../StatusLabel'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import VoteOption from '../VoteOption'
 import TargetAppBadge from '../TargetAppBadge'
@@ -137,7 +137,7 @@ function VoteCard({ vote, onVoteClick }) {
             margin-top: ${2 * GU}px;
           `}
         >
-          <DisputableStatusLabel status={status} />
+          <StatusLabel status={status} />
         </div>
       </div>
     </Card>
