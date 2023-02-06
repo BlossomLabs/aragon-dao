@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import {
   Bar,
   CardLayout,
@@ -15,11 +15,10 @@ import DelayCard from '../components/DelayCard'
 import EmptyFilteredDelays from '../components/EmptyFilteredDelays'
 import { useDelayedScripts } from '../hooks/useDelayedScripts'
 import useFilterDelays from '../hooks/useFilterDelays'
-import { useOrganizationState } from '@/providers/OrganizationProvider'
 import DelayHeader from '../components/DelayHeader'
 import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
 import { useWait } from '@/hooks/shared/useWait'
-import { getAppPresentation } from '@/utils/app-utils'
+import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 
 const classifyDelays = delays => {
   const ongoingDelays = delays.filter(delay => delay.status === STATUS.ONGOING)
@@ -32,25 +31,13 @@ const classifyDelays = delays => {
 }
 
 const DelaysWrapper = () => {
-  const { apps = [] } = useOrganizationState()
   // TODO: handle error case
-  const [delays, { loading: delaysLoading }] = useDelayedScripts()
-  const executionTargetApps = useMemo(
-    () =>
-      apps
-        .filter(app =>
-          (delays || []).some(delay =>
-            delay.executionTargets.includes(app.address.toLowerCase())
-          )
-        )
-        .map(app => ({
-          appAddress: app.address,
-          ...getAppPresentation(app),
-          identifier: app.name,
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    [apps, delays]
-  )
+  const [
+    delays,
+    executionTargetApps,
+    { loading: delaysLoading },
+  ] = useDelayedScripts()
+
   const isWaiting = useWait()
   const isLoading = delaysLoading || isWaiting
 
@@ -83,11 +70,6 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
   const { ongoingDelays, pausedDelays, pendingDelays } = classifyDelays(
     filteredDelays
   )
-
-  const multipleOfTarget = executionTargetApps.reduce((map, { humanName }) => {
-    map.set(humanName, map.has(humanName))
-    return map
-  }, new Map())
 
   return (
     <React.Fragment>
@@ -138,14 +120,18 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
             onChange={handleDelayAppFilterChange}
             items={[
               'All',
-              <ThisApp showTag={multipleOfTarget.get('Delay')} />,
               ...executionTargetApps.map(
-                ({ humanName, identifier }) =>
-                  `${humanName}${
-                    multipleOfTarget.get(humanName) && identifier
-                      ? ` (${identifier})`
-                      : ''
-                  }`
+                ({ appAddress, humanName, iconSrc }) => {
+                  return (
+                    <AppBadgeWithSkeleton
+                      targetApp={{
+                        address: appAddress,
+                        name: humanName,
+                        icon: iconSrc,
+                      }}
+                    />
+                  )
+                }
               ),
               'External',
             ]}
@@ -168,27 +154,6 @@ const Delays = React.memo(({ delays, executionTargetApps }) => {
     </React.Fragment>
   )
 })
-
-const ThisApp = ({ showTag }) => (
-  <div
-    css={`
-      display: flex;
-      align-items: center;
-    `}
-  >
-    Delay
-    {showTag && (
-      <Tag
-        size="small"
-        css={`
-          margin-left: ${1 * GU}px;
-        `}
-      >
-        this app
-      </Tag>
-    )}
-  </div>
-)
 
 const DelayGroups = ({ ongoingDelays, pausedDelays, pendingDelays }) => {
   const { below } = useViewport()

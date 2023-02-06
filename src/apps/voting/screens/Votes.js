@@ -14,6 +14,7 @@ import VoteCard from '../components/VoteCard/VoteCard'
 import VoteCardGroup from '../components/VoteCard/VoteCardGroup'
 import { usePath } from '@/hooks/shared'
 import styled from 'styled-components'
+import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 
 const sortVotes = (a, b) => {
   const dateDiff = b.data.endDate - a.data.endDate
@@ -49,15 +50,6 @@ const Votes = React.memo(function Votes({
   const theme = useTheme()
   const { openVotes, closedVotes } = useVotes(filteredVotes)
   const compactMode = below('large')
-
-  const multipleOfTarget = useMemo(
-    () =>
-      executionTargets.reduce((map, { appAddress }) => {
-        map.set(appAddress, map.has(appAddress))
-        return map
-      }, new Map()),
-    [executionTargets]
-  )
 
   return (
     <React.Fragment>
@@ -130,15 +122,17 @@ const Votes = React.memo(function Votes({
             onChange={handleVoteAppFilterChange}
             items={[
               'All',
-              <ThisVoting showTag={multipleOfTarget.get('Voting')} />,
-              ...executionTargets.map(
-                ({ appAddress, name, identifier }) =>
-                  `${name}${
-                    multipleOfTarget.get(appAddress) && identifier
-                      ? ` (${identifier})`
-                      : ''
-                  }`
-              ),
+              ...executionTargets.map(({ appAddress, humanName, iconSrc }) => {
+                return (
+                  <AppBadgeWithSkeleton
+                    targetApp={{
+                      address: appAddress,
+                      name: humanName,
+                      icon: iconSrc,
+                    }}
+                  />
+                )
+              }),
               'External',
             ]}
           />
@@ -163,27 +157,6 @@ const Votes = React.memo(function Votes({
     </React.Fragment>
   )
 })
-
-const ThisVoting = ({ showTag }) => (
-  <div
-    css={`
-      display: flex;
-      align-items: center;
-    `}
-  >
-    Voting
-    {showTag && (
-      <Tag
-        size="small"
-        css={`
-          margin-left: ${1 * GU}px;
-        `}
-      >
-        this app
-      </Tag>
-    )}
-  </div>
-)
 
 const VoteGroups = React.memo(({ openVotes, closedVotes }) => {
   const [, navigate] = usePath()

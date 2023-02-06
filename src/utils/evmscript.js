@@ -14,6 +14,7 @@ export function isEmptyCallScript(script) {
     script === EMPTY_CALLSCRIPT_UTF8
   )
 }
+
 export function getDeepestForwardingSteps(steps) {
   if (steps.length > 1) {
     return steps
@@ -37,6 +38,7 @@ export const buildExecutionTarget = (evmCallScript, installedApps) => {
   const deepestForwardingPathStep = getDeepestForwardingSteps(
     forwardingPathSteps
   )
+
   const executionTargetAddresses = new Set(
     deepestForwardingPathStep.map(step => step.to.toLowerCase())
   )
@@ -60,7 +62,7 @@ export const buildExecutionTarget = (evmCallScript, installedApps) => {
     if (!installedApp) {
       targetApp = {
         address: targetAddress,
-        icon: null,
+        iconSrc: null,
         name: 'External',
       }
     } else {
@@ -79,7 +81,7 @@ export const buildExecutionTarget = (evmCallScript, installedApps) => {
 
       targetApp = {
         address: installedApp.address,
-        icon: appIconSrc,
+        iconSrc: appIconSrc,
         name: installedApp.manifest.name,
       }
     }
@@ -87,11 +89,12 @@ export const buildExecutionTarget = (evmCallScript, installedApps) => {
 
   let executionTargetData = {}
   if (targetApp) {
-    const { address, icon, name } = getAppPresentation(targetApp) ?? targetApp
+    const { address, iconSrc, name } =
+      getAppPresentation(targetApp) ?? targetApp
     executionTargetData = {
       address,
       name,
-      iconSrc: icon,
+      iconSrc,
       identifier: address,
     }
   }
@@ -101,6 +104,21 @@ export const buildExecutionTarget = (evmCallScript, installedApps) => {
     executionTargets: [...executionTargetAddresses.values()],
   }
 }
+
+// Reduce the list of installed apps to just those that have been targetted by apps
+export const buildExecutionTargetApps = (apps, entities) =>
+  apps
+    .filter(app =>
+      entities?.some(data =>
+        data?.executionTargets?.includes(app.address.toLowerCase())
+      )
+    )
+    .map(app => ({
+      appAddress: app.address,
+      ...getAppPresentation(app),
+      identifier: app.name,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
 
 export function targetDataFromTransactionRequest(apps, describedSteps) {
   const steps = getDeepestForwardingSteps(describedSteps)

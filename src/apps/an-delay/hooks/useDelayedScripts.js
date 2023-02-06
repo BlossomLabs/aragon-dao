@@ -4,7 +4,10 @@ import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { formatDelayedScript, getStatus } from '../lib/delay-utils'
 import useNow from '@/hooks/shared/useNow'
 import { useConnectedApp } from '@/providers/ConnectedApp'
-import { buildExecutionTarget } from '@/utils/evmscript'
+import {
+  buildExecutionTarget,
+  buildExecutionTargetApps,
+} from '@/utils/evmscript'
 
 export const useDelayedScripts = () => {
   const { apps } = useOrganizationState()
@@ -20,19 +23,20 @@ export const useDelayedScripts = () => {
   )
   const delayStatusKey = delayStatus.map(String).join('')
 
-  return [
-    useMemo(
-      () =>
-        rawDelayedScripts.map((script, index) => ({
-          ...formatDelayedScript(script),
-          ...buildExecutionTarget(script.evmCallScript, apps),
-          status: delayStatus[index],
-        })),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [apps, rawDelayedScripts, delayStatusKey]
-    ),
-    { loading, error },
-  ]
+  return useMemo(() => {
+    const decoratedDelayScripts = rawDelayedScripts.map((script, index) => ({
+      ...formatDelayedScript(script),
+      ...buildExecutionTarget(script.evmCallScript, apps),
+      status: delayStatus[index],
+    }))
+
+    const executionTargetApps = buildExecutionTargetApps(
+      apps,
+      decoratedDelayScripts
+    )
+
+    return [decoratedDelayScripts, executionTargetApps, { loading, error }]
+  }, [apps, rawDelayedScripts, delayStatusKey])
 }
 
 export const useDelayedScript = scriptId => {
