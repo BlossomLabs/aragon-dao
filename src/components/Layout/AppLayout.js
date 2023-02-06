@@ -8,7 +8,7 @@ function AppLayout({ children }) {
   return (
     <div
       css={`
-        padding-bottom: ${compactMode ? 5 * GU : 0}px;
+        padding-bottom: ${compactMode ? 14 * GU : 0}px;
       `}
     >
       {children}
