@@ -18,7 +18,7 @@ import Description from '@/components/Description'
 import { addressesEqual } from '@/utils/web3-utils'
 import { getIpfsUrlFromUri } from '@/utils/ipfs-utils'
 import DisputableActionStatus from './DisputableActionStatus'
-import DisputableStatusLabel from '../DisputableStatusLabel'
+import StatusLabel from '../StatusLabel'
 import {
   VOTE_CANCELLED,
   VOTE_SETTLED,
@@ -64,16 +64,17 @@ function getPresentation(disputableStatus) {
   return disputablePresentation[disputableStatus] || {}
 }
 
-function VoteDetails({ vote }) {
-  const [voter] = useVoterState()
+function VoteDetails({ vote, voteStatus }) {
+  const [voter, voterStatus] = useVoterState()
   const [modalVisible, setModalVisible] = useState(false)
   const [modalData, setModalData] = useState({})
   const [modalMode, setModalMode] = useState(null)
-  const { voteId, id, script, disputableStatus } = vote
+  const { voteId, id, script, disputableStatus } = vote || {}
   const { describedSteps, targetApp, loading, emptyScript } = useDescribeScript(
     script,
     id
   )
+  const voteLoading = voteStatus.loading || voterStatus.loading
 
   const { boxPresentation, disabledProgressBars } = useMemo(
     () => getPresentation(disputableStatus),
@@ -146,6 +147,7 @@ function VoteDetails({ vote }) {
               <VoteActions
                 vote={vote}
                 voter={voter}
+                loading={voteLoading}
                 onVote={handleVote}
                 onExecute={handleExecute}
               />
@@ -249,7 +251,7 @@ function Details({
       )}
 
       <InfoField label="Status">
-        <DisputableStatusLabel status={disputableStatus} />
+        <StatusLabel status={disputableStatus} />
       </InfoField>
       <InfoField label="Submitted By">
         <div
@@ -318,7 +320,7 @@ function SummaryInfo({ vote, disabledProgressBars }) {
           positiveSize={yeasPct}
           negativeSize={naysPct}
           requiredSize={
-            parseFloat(vote.settings.formattedMinimumAcceptanceQuorumPct) / 100
+            parseFloat(vote.setting.formattedMinimumAcceptanceQuorumPct) / 100
           }
           css={`
             margin-bottom: ${2 * GU}px;

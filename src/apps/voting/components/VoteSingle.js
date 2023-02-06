@@ -1,15 +1,18 @@
 import React from 'react'
 import { BackButton, Bar } from '@aragon/ui'
 import LoadingSection from '@/components/Loading/LoadingSection'
-import { SingleVoteSubscriptionProvider } from '../providers/SingleVoteSubscription'
+import {
+  SingleVoteSubscriptionProvider,
+  useSingleVoteSubscription,
+} from '../providers/SingleVoteSubscription'
 import VoteDetails from './VoteDetails/VoteDetails'
-import { useSingleVote } from '../hooks/useSingleVote'
 import { usePath } from '@/hooks/shared'
 import AppHeader from '@/components/AppHeader'
 import { VoterProvider } from '../providers/Voter'
 
 function VoteSingle({ match }) {
   const { id } = match.params
+
   return (
     <SingleVoteSubscriptionProvider voteId={id}>
       <VoterProvider>
@@ -20,8 +23,8 @@ function VoteSingle({ match }) {
 }
 
 function VoteSingleContent() {
+  const { vote, voteStatus } = useSingleVoteSubscription()
   const [, navigate] = usePath()
-  const [vote, voteStatus] = useSingleVote()
   const title = voteStatus.error ? "Couldn't load vote." : 'Loading vote.'
 
   return (
@@ -31,7 +34,7 @@ function VoteSingleContent() {
         <BackButton onClick={() => navigate('../')} />
       </Bar>
       <LoadingSection show={!vote} title={title} showSpinner={!vote}>
-        {vote && <VoteDetails vote={vote} />}
+        {vote && <VoteDetails vote={vote} voteStatus={voteStatus} />}
       </LoadingSection>
     </>
   )

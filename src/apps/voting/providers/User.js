@@ -10,10 +10,10 @@ function VotingUserProvider({ children }) {
   const { account } = useWallet()
 
   const [user, userStatus] = useConnect(() => {
-    if (!account) {
+    if (!account || !connectedApp) {
       return
     }
-    return connectedApp?.onVoter(account)
+    return connectedApp.onVoter(account)
   }, [connectedApp, account])
 
   return (

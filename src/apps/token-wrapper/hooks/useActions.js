@@ -13,11 +13,13 @@ import tokenSymbolAbi from '../abi/token-symbol.json'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
 import { useGasLimit } from '@/hooks/shared/useGasLimit'
+import { useNetwork } from '@/hooks/shared'
 
 const tokenAbi = [].concat(tokenAllowanceAbi, tokenSymbolAbi)
 
 export default function useActions() {
-  const { account, chainId } = useWallet()
+  const { chainId } = useNetwork()
+  const { account } = useWallet()
   const { connectedApp } = useConnectedApp()
   const mounted = useMounted()
   const [GAS_LIMIT, APPROVE_GAS_LIMIT] = useGasLimit(1000000)

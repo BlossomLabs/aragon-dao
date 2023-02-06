@@ -16,14 +16,12 @@ import { useWallet } from '@/providers/Wallet'
 import { dateFormat } from '../../utils/date-utils'
 import { getConnectedAccountCast } from '../../vote-utils'
 import { VOTE_YEA, VOTE_NAY } from '../../vote-types'
-import { useAppState } from '../../providers/VotingProvider'
 
-function VoteActions({ vote, voter: voter_, onVote, onExecute }) {
-  const { token } = useAppState()
+function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
   const theme = useTheme()
   const { snapshotBlock, startDate, hasEnded } = vote
   const { account: connectedAccount } = useWallet()
-  const voter = voter_ ?? {}
+  const votingToken = vote.votingToken
   const connectedAccountCast = getConnectedAccountCast(vote, connectedAccount)
   const isAccountVoteCasted = [VOTE_YEA, VOTE_NAY].includes(
     connectedAccountCast.vote
@@ -55,15 +53,11 @@ function VoteActions({ vote, voter: voter_, onVote, onExecute }) {
     onExecute()
   }, [onExecute])
 
-  if (!voter_) {
-    return (
-      <div>
-        <Buttons disabled />
-      </div>
-    )
-  }
-
   if (!connectedAccount) {
+    if (hasEnded) {
+      return null
+    }
+
     return (
       <div
         css={`
@@ -130,7 +124,7 @@ function VoteActions({ vote, voter: voter_, onVote, onExecute }) {
         <TokenReference
           snapshotBlock={snapshotBlock}
           startDate={startDate}
-          tokenSymbol={token.symbol}
+          tokenSymbol={votingToken.symbol}
           accountBalance={voter.accountBalance}
           accountBalanceNow={voter.accountBalanceNow}
           canUserVoteOnBehalfOf={voter.canVoteOnBehalfOf}
@@ -147,6 +141,7 @@ function VoteActions({ vote, voter: voter_, onVote, onExecute }) {
       </>
     )
   }
+
   if (isAccountVoteCasted) {
     return (
       <div>
@@ -158,6 +153,10 @@ function VoteActions({ vote, voter: voter_, onVote, onExecute }) {
     )
   }
 
+  if (loading) {
+    return null
+  }
+
   return (
     <div>
       <Buttons disabled />
@@ -165,11 +164,11 @@ function VoteActions({ vote, voter: voter_, onVote, onExecute }) {
         {voter.accountBalanceNow > 0
           ? 'Although the currently connected account holds tokens, it'
           : 'The currently connected account'}{' '}
-        did not hold any <strong>{token.symbol}</strong> tokens when this vote
-        began ({dateFormat(startDate)}) and therefore cannot participate in this
-        vote. Make sure your accounts are holding{' '}
-        <strong>{token.symbol}</strong> at the time a vote begins if you'd like
-        to vote using this Voting app.
+        did not hold any <strong>{votingToken.symbol}</strong> tokens when this
+        vote began ({dateFormat(startDate)}) and therefore cannot participate in
+        this vote. Make sure your accounts are holding{' '}
+        <strong>{votingToken.symbol}</strong> at the time a vote begins if you'd
+        like to vote using this Voting app.
       </Info>
     </div>
   )

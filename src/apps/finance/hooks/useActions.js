@@ -12,10 +12,12 @@ import financeActions from '../actions/finance-action-types'
 import tokenAbi from '@/abi/minimeToken.json'
 import { constants } from 'ethers'
 import { useGasLimit } from '@/hooks/shared/useGasLimit'
+import { useNetwork } from '@/hooks/shared'
 import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
 
 export default function useActions() {
-  const { account, chainId } = useWallet()
+  const { chainId } = useNetwork()
+  const { account } = useWallet()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const mounted = useMounted()
   const [GAS_LIMIT, APPROVE_GAS_LIMIT] = useGasLimit(2000000)

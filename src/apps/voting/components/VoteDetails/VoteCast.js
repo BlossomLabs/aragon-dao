@@ -23,7 +23,7 @@ function VoteCast({ voteSupported, vote }) {
       css={`
         display: flex;
         justify-content: center;
-        margin-top: ${5 * GU}px;
+        /* margin-top: ${5 * GU}px; */
         background-color: ${theme.background};
         border: 1px solid ${theme.border};
         padding: ${4 * GU}px;

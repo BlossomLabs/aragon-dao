@@ -27,7 +27,7 @@ function InfoBoxes({ vote, disabledProgressBars }) {
         <SummaryWithPercentages
           disabledProgressBars={disabledProgressBars}
           size={support}
-          requiredSize={parseFloat(vote.settings.formattedSupportRequiredPct)}
+          requiredSize={parseFloat(vote.setting.formattedSupportRequiredPct)}
         />
       </Box>
       <Box
@@ -43,7 +43,7 @@ function InfoBoxes({ vote, disabledProgressBars }) {
           disabledProgressBars={disabledProgressBars}
           size={quorumProgress}
           requiredSize={parseFloat(
-            vote.settings.formattedMinimumAcceptanceQuorumPct
+            vote.setting.formattedMinimumAcceptanceQuorumPct
           )}
         />
       </Box>

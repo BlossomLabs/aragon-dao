@@ -2,41 +2,62 @@ import React, { useContext, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useConnect } from '@1hive/connect-react'
 import { useConnectedApp } from '@/providers/ConnectedApp'
-import { useAppState } from './VotingProvider'
+import {
+  getDelegatedVotingEndDate,
+  getExecutionDelayEndDate,
+} from '../vote-utils'
+import { DisputableStatusType } from '../types/disputable-statuses'
+import { toMs } from '@/utils/date-utils'
+
+const SingleVoteSubscriptionContext = React.createContext()
+
+function processVote(vote) {
+  const endDate = vote.endDate
+  const delegatedVotingEndDate = getDelegatedVotingEndDate(vote)
+  const executionDelayEndDate = getExecutionDelayEndDate(vote, endDate)
+
+  return {
+    ...vote,
+    /**
+     * Keep track of connector's model object as it
+     * has relevant data fetching and formatting methods
+     */
+    voteEntity: vote,
+    disputableStatus: DisputableStatusType[vote.status],
+    endDate: toMs(endDate),
+    extendedPeriod: toMs(vote.currentQuietEndingExtensionDuration),
+    hasEnded: vote.hasEnded,
+    naysPct: vote.naysPct,
+    quietEndingPeriod: toMs(vote.setting.quietEndingPeriod),
+    // settledAt: toMs(vote.settledAt),
+    startDate: toMs(vote.startDate),
+    yeasPct: vote.yeasPct,
+    delegatedVotingEndDate: toMs(delegatedVotingEndDate),
+    executionDelayEndDate: toMs(executionDelayEndDate),
+    isDelayed: vote.hasEnded && toMs(executionDelayEndDate) > Date.now(),
+  }
+}
 
 function buildVoteId(connectedApp, voteId) {
   return `${connectedApp.address}-vote-${voteId}`
 }
 
-const SingleVoteSubscriptionContext = React.createContext()
-
 function SingleVoteSubscriptionProvider({ voteId, children }) {
-  const { isSyncing, token } = useAppState()
   const { connectedApp } = useConnectedApp()
 
-  const [vote, { loading: voteLoading, error: voteError }] = useConnect(() => {
-    return connectedApp?.onVote(buildVoteId(connectedApp, voteId))
-  }, [connectedApp, voteId])
-
-  const [extendedVote, extendedVoteStatus] = useExtendVote(vote, voteId)
-
-  const loading = voteLoading || extendedVoteStatus.loading || isSyncing
-  const error = voteError || extendedVoteStatus.error
-
-  const SingleVoteSubscriptionState = useMemo(
-    () => [
-      {
-        voteEntity: vote,
-        ...(extendedVote ?? {}),
-        votingToken: token,
-      },
-      { loading, error },
-    ],
-    [vote, extendedVote, loading, error, token]
+  const [vote, voteStatus] = useConnect(
+    () => connectedApp?.onVote(buildVoteId(connectedApp, voteId)),
+    [connectedApp]
   )
 
+  const processedVote = useMemo(() => {
+    return vote ? processVote(vote) : undefined
+  }, [vote])
+
   return (
-    <SingleVoteSubscriptionContext.Provider value={SingleVoteSubscriptionState}>
+    <SingleVoteSubscriptionContext.Provider
+      value={{ vote: processedVote, voteStatus }}
+    >
       {children}
     </SingleVoteSubscriptionContext.Provider>
   )
@@ -45,29 +66,6 @@ function SingleVoteSubscriptionProvider({ voteId, children }) {
 SingleVoteSubscriptionProvider.propTypes = {
   voteId: PropTypes.string,
   children: PropTypes.node,
-}
-
-function useExtendVote(vote) {
-  const [voteExtraData, voteExtraDataStatus] = useConnect(async () => {
-    if (!vote) {
-      return
-    }
-
-    const [settings] = await Promise.all([vote.setting()])
-
-    return {
-      settings,
-    }
-  }, [vote])
-  const extendedVote = useMemo(
-    () => ({
-      baseVote: vote,
-      ...(voteExtraData ?? {}),
-    }),
-    [vote, voteExtraData]
-  )
-
-  return [extendedVote, voteExtraDataStatus]
 }
 
 function useSingleVoteSubscription() {

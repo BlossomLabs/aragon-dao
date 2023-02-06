@@ -102,7 +102,7 @@ export function getAccountCastDelegatedStake(vote, account) {
     .filter(
       cast =>
         addressesEqual(cast.caster, account) &&
-        !addressesEqual(cast.voter.address, account)
+        !addressesEqual(cast.voterAddress, account)
     )
     .reduce((acc, cast) => acc.add(new BN(cast.stake)), new BN(0))
 
@@ -111,7 +111,7 @@ export function getAccountCastDelegatedStake(vote, account) {
 
 export function getAccountCastStake(vote, account) {
   const userCast = vote.casts.find(cast =>
-    addressesEqual(cast.voter.address, account)
+    addressesEqual(cast.voterAddress, account)
   )
 
   return new BN(userCast?.stake || 0)
@@ -138,12 +138,12 @@ export async function getCanUserVoteOnBehalfOf(
 
 export function getDelegatedVotingEndDate(vote) {
   const baseDelegatedVotingEndDate =
-    parseInt(vote.startDate) + parseInt(vote.delegatedVotingPeriod)
+    parseInt(vote.startDate) + parseInt(vote.setting.delegatedVotingPeriod)
   return baseDelegatedVotingEndDate
 }
 
 export function getExecutionDelayEndDate(vote, endDate) {
-  return parseInt(endDate) + parseInt(vote.executionDelay)
+  return parseInt(endDate) + parseInt(vote.setting.executionDelay)
 }
 
 export async function getCanUserVote(votingContract, voteId, account) {
@@ -154,9 +154,7 @@ export async function getCanUserVote(votingContract, voteId, account) {
   return votingContract.canVote(voteId, account)
 }
 export function getConnectedAccountCast(vote, account) {
-  const userCast = vote.casts.find(cast =>
-    addressesEqual(cast.voter.address, account)
-  )
+  const userCast = vote.casts.find(cast => addressesEqual(cast.caster, account))
 
   if (userCast) {
     return {
