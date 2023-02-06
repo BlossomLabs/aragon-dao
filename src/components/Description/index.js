@@ -1,12 +1,13 @@
 import React from 'react'
 import { PropTypes } from 'prop-types'
-import { GU, IdentityBadge, Tag, useTheme } from '@aragon/ui'
+import { GU, Tag, useTheme } from '@aragon/ui'
 import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 import {
   getAppPresentation,
   getAppPresentationByAddress,
 } from '@/utils/app-utils'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
+import LocalIdentityBadge from '../LocalIdentityBadge/LocalIdentityBadge'
 
 function Description({ disableBadgeInteraction, path }) {
   return (
@@ -68,16 +69,20 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
       step.annotatedDescription.map(({ type, value }, index) => {
         const key = index + 1
 
-        if (type === 'address' || type === 'any-account') {
+        if (type === 'address') {
           return (
             <span key={key}>
-              <IdentityBadge
+              <LocalIdentityBadge
                 badgeOnly={disableBadgeInteraction}
                 compact
-                entity={type === 'any-account' ? 'Any account' : value}
+                entity={value}
               />
             </span>
           )
+        }
+
+        if (type === 'any-account') {
+          return <Tag key={key}>{'Any account'}</Tag>
         }
 
         if (type === 'app') {
@@ -107,12 +112,8 @@ function DescriptionStep({ step, disableBadgeInteraction }) {
           return <Tag key={key}>{value.name}</Tag>
         }
 
-        if (type === 'role' || type === 'kernelNamespace' || type === 'app') {
-          return <span key={key}> “{value.name}”</span>
-        }
-
         if (type === 'apmPackage') {
-          return <span key={key}> “{value.artifact.appName}”</span>
+          return <Tag key={key}> “{value.artifact.appName}”</Tag>
         }
 
         return (
