@@ -29,7 +29,7 @@ import {
 } from '../../lib/token-utils'
 import { getContract } from '@/hooks/shared/useContract'
 import { addressesEqual } from '@/utils/web3-utils'
-import AmountInput from '../AmountInput'
+import AmountInput from '../../../../components/AmountInput'
 import ToggleContent from '../ToggleContent'
 import TokenSelector from '../TokenSelector'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
@@ -289,7 +289,9 @@ class Deposit extends React.Component {
       addressesEqual(selectedToken.value, ETHER_TOKEN_FAKE_ADDRESS)
     const tokenSelected = selectedToken.value && !ethSelected
     const isMainnet = network?.type === 'main'
-    const isMaxButtonVisible = selectedToken && selectedToken.data.symbol
+    const isMaxButtonVisible = Boolean(
+      selectedToken && selectedToken.data.symbol
+    )
 
     const selectedTokenSymbol = selectedToken?.data?.symbol || 'ETH'
 

@@ -13,7 +13,7 @@ import {
   Button,
 } from '@aragon/ui'
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
-import AmountInput from '../AmountInput'
+import AmountInput from '../../../../components/AmountInput'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensInfo from '@/components/RequiredTokensInfo'
 import { useFee } from '@/providers/Fee'

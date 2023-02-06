@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState } from 'react'
 import BN from 'bn.js'
 import {
   Button,
-  ButtonBase,
   Field,
   GU,
   IconCross,
@@ -16,12 +15,12 @@ import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import { formatTokenAmount } from '@/utils/token'
 import { toDecimals } from '@/utils/math-utils'
 import { useAppState } from '../../../providers/TokenWrapperProvider'
-import NumericInput from '@/components/NumericInput'
 import { useTokenBalanceOf } from '@/hooks/shared/useAccountTokenBalance'
 import { useWallet } from '@/providers/Wallet'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { useNetwork } from '@/hooks/shared'
 import { ParticipationDisclaimer } from '@/components/Disclaimers'
+import AmountInput from '@/components/AmountInput'
 
 const Convert = React.memo(function({ mode, getTransactions }) {
   const { chainId } = useNetwork()
@@ -55,6 +54,7 @@ const Convert = React.memo(function({ mode, getTransactions }) {
     return null
   }, [amount, accountBalance])
   const isButtonDisabled = amount.valueBN.eq(new BN(0)) || Boolean(errorMessage)
+  const isMaxButtonVisible = !!accountBalance
 
   const handleEditMode = useCallback(
     editMode => {
@@ -133,27 +133,17 @@ const Convert = React.memo(function({ mode, getTransactions }) {
           margin-top: ${2 * GU}px;
         `}
       >
-        <NumericInput
+        <AmountInput
           css={`
             margin-bottom: ${1 * GU}px;
           `}
           value={amount.value}
           onChange={handleAmountChange}
+          onMaxClick={handleMaxSelected}
+          showMax={isMaxButtonVisible}
           onFocus={() => handleEditMode(true)}
           onBlur={() => handleEditMode(false)}
           wide
-          adornment={
-            <ButtonBase
-              css={`
-                margin-right: ${1 * GU}px;
-                color: ${theme.accent};
-              `}
-              onClick={handleMaxSelected}
-            >
-              MAX
-            </ButtonBase>
-          }
-          adornmentPosition="end"
         />
 
         {accountTokenBalanceLoading ? (
