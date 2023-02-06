@@ -10,7 +10,6 @@ import MenuPanel from './components/MenuPanel/MenuPanel'
 import Header from './components/Header/Header'
 
 import { WalletProvider } from './providers/Wallet'
-import { IdentityProvider } from './providers/Identity'
 import { ConnectedAppProvider } from './providers/ConnectedApp'
 import { GuardianProvider } from './providers/Guardian'
 import { ErrorHandler } from './components/Error/ErrorHandler'
@@ -70,7 +69,9 @@ function App() {
                 onOpenApp={() =>
                   autoClosingPanel ? setMenuPanelOpen(false) : undefined
                 }
-                css="z-index: 3"
+                css={`
+                  z-index: 3;
+                `}
               />
 
               <div
@@ -103,24 +104,22 @@ function AppWrapper() {
       <SafeProvider>
         <Connect>
           <WalletProvider>
-            <IdentityProvider>
-              <OrganizationProvider>
-                <GuardianProvider>
-                  <Main
-                    assetsUrl="/aragon-ui/"
-                    layout={false}
-                    scrollView={false}
-                    theme={appearance}
-                  >
-                    <MainView>
-                      <ErrorHandler>
-                        <App />
-                      </ErrorHandler>
-                    </MainView>
-                  </Main>
-                </GuardianProvider>
-              </OrganizationProvider>
-            </IdentityProvider>
+            <OrganizationProvider>
+              <GuardianProvider>
+                <Main
+                  assetsUrl="/aragon-ui/"
+                  layout={false}
+                  scrollView={false}
+                  theme={appearance}
+                >
+                  <MainView>
+                    <ErrorHandler>
+                      <App />
+                    </ErrorHandler>
+                  </MainView>
+                </Main>
+              </GuardianProvider>
+            </OrganizationProvider>
           </WalletProvider>
         </Connect>
       </SafeProvider>

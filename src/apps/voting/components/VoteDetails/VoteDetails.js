@@ -11,10 +11,8 @@ import {
 } from '@aragon/ui'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import LayoutBox from '@/components/Layout/LayoutBox'
-import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { useWallet } from '@/providers/Wallet'
 import MultiModal from '@/components/MultiModal/MultiModal'
-import Description from '@/components/Description'
 import { addressesEqual } from '@/utils/web3-utils'
 import { getIpfsUrlFromUri } from '@/utils/ipfs-utils'
 import DisputableActionStatus from './DisputableActionStatus'
@@ -40,6 +38,7 @@ import EnactVoteScreens from '../../components/ModalFlows/EnactVote/EnactVoteScr
 import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 import { useVoterState } from '../../providers/Voter'
+import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
 
 function getPresentation(disputableStatus) {
   const disputablePresentation = {
@@ -214,7 +213,7 @@ function Details({
         <div>
           <InfoField label="Description">
             <DescriptionWithSkeleton
-              description={description}
+              path={description}
               loading={descriptionLoading}
             />
           </InfoField>
@@ -265,32 +264,6 @@ function Details({
       </InfoField>
     </div>
   )
-}
-
-function DescriptionWithSkeleton({ description, loading }) {
-  if (loading) {
-    return (
-      <>
-        <LoadingSkeleton
-          css={`
-            width: 95%;
-          `}
-        />
-        <LoadingSkeleton
-          css={`
-            width: 70%;
-          `}
-        />
-        <LoadingSkeleton
-          css={`
-            width: 35%;
-          `}
-        />
-      </>
-    )
-  }
-
-  return <Description path={description} />
 }
 
 function SummaryInfo({ vote, disabledProgressBars }) {

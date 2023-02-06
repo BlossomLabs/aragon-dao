@@ -1,14 +1,31 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { ButtonBase, GU, Link, RADIUS, useTheme, textStyle } from '@aragon/ui'
+import {
+  ButtonBase,
+  GU,
+  Link,
+  RADIUS,
+  useTheme,
+  textStyle,
+  useViewport,
+} from '@aragon/ui'
 import { getProviderFromUseWalletId } from 'use-wallet'
 import { connectors } from '../../ethereum-providers'
 
 function ScreenProviders({ onActivate }) {
+  const { below } = useViewport()
+  const compactMode = below('medium')
+
   const providersInfo = connectors.map(provider => [
     provider.id,
     getProviderFromUseWalletId(provider.id),
   ])
+
+  const mobileProvidersInfo = providersInfo.filter(
+    ([id]) => id === 'walletconnect'
+  )
+
+  const displayedProviders = compactMode ? mobileProvidersInfo : providersInfo
 
   return (
     <div
@@ -25,10 +42,10 @@ function ScreenProviders({ onActivate }) {
           display: grid;
           grid-gap: ${1.5 * GU}px;
           grid-auto-flow: row;
-          grid-template-columns: repeat(2, 1fr);
+          ${compactMode ? '' : 'grid-template-columns: repeat(2, 1fr)'};
         `}
       >
-        {providersInfo.map(([id, provider]) => (
+        {displayedProviders.map(([id, provider]) => (
           <ProviderButton
             key={id}
             id={id}

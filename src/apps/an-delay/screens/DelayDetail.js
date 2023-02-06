@@ -18,7 +18,6 @@ import STATUS from '../delay-status-types'
 import { usePath } from '@/hooks/shared'
 import { useDelayedScript } from '../hooks/useDelayedScripts'
 import useDescribeScript from '@/hooks/shared/useDescribeScript'
-import Description from '@/components/Description'
 import LayoutLimiter from '@/components/Layout/LayoutLimiter'
 import MultiModal from '@/components/MultiModal/MultiModal'
 import DelayActionScreens from '../components/ModalFlows/DelayActionScreens'
@@ -28,6 +27,7 @@ import { formatTime } from '@/utils/time-utils'
 import DelayHeader from '../components/DelayHeader'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
+import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
@@ -66,13 +66,14 @@ const DelayDetailWrapper = ({ match }) => {
             delay={delay}
             targetApp={targetApp}
             path={describedSteps}
+            loading={describeLoading}
           />
         )}
       </LoadingSection>
     </LayoutLimiter>
   )
 }
-const DelayDetail = React.memo(({ delay, path, targetApp }) => {
+const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
   const { account } = useWallet()
   const [modalVisible, setModalVisible] = useState(false)
   const [, setModalMode] = useState(null)
@@ -133,7 +134,7 @@ const DelayDetail = React.memo(({ delay, path, targetApp }) => {
                     `}
                   >
                     {path ? (
-                      <Description path={path} />
+                      <DescriptionWithSkeleton path={path} loading={loading} />
                     ) : (
                       // TODO: Improve default description (include execution target's data)
                       DEFAULT_DESCRIPTION
