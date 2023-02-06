@@ -7,11 +7,10 @@ import {
   VOTE_CHALLENGED,
 } from '../../types/disputable-statuses'
 import useDescribeScript from '@/hooks/shared/useDescribeScript'
-import Description from '@/components/Description'
 import StatusLabel from '../StatusLabel'
-import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import VoteOption from '../VoteOption'
 import TargetAppBadge from '../TargetAppBadge'
+import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
 
 function getAttributes(status, theme) {
   const attributes = {
@@ -112,9 +111,9 @@ function VoteCard({ vote, onVoteClick }) {
             </p>
           ) : (
             <DescriptionWithSkeleton
-              description={describedSteps}
+              path={describedSteps}
               loading={loading}
-              voteNumber={voteId}
+              itemNumber={voteId}
             />
           )}
         </div>
@@ -148,39 +147,5 @@ VoteCard.propTypes = {
   vote: PropTypes.object,
   onVoteClick: PropTypes.func.isRequired,
 }
-
-/* eslint-disable react/prop-types */
-
-function DescriptionWithSkeleton({ description, voteNumber, loading }) {
-  if (loading) {
-    return (
-      <>
-        <LoadingSkeleton
-          css={`
-            width: 95%;
-          `}
-        />
-        <LoadingSkeleton
-          css={`
-            width: 70%;
-          `}
-        />
-        <LoadingSkeleton
-          css={`
-            width: 35%;
-          `}
-        />
-      </>
-    )
-  }
-
-  return (
-    <>
-      <strong css="font-weight: bold">#{voteNumber}: </strong>{' '}
-      <Description disableBadgeInteraction path={description} />
-    </>
-  )
-}
-/* eslint-enable react/prop-types */
 
 export default VoteCard

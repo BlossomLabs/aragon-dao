@@ -69,7 +69,9 @@ function App() {
                 onOpenApp={() =>
                   autoClosingPanel ? setMenuPanelOpen(false) : undefined
                 }
-                css="z-index: 3"
+                css={`
+                  z-index: 3;
+                `}
               />
 
               <div
