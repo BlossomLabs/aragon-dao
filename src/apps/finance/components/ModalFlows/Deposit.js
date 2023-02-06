@@ -34,6 +34,7 @@ import ToggleContent from '../ToggleContent'
 import TokenSelector from '../TokenSelector'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
+import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -351,9 +352,11 @@ class Deposit extends React.Component {
           )}
         </Info>
 
-        <Button wide mode="strong" type="submit" disabled={disabled}>
-          Submit deposit
-        </Button>
+        <TermsOfUseDisclaimer>
+          <Button wide mode="strong" type="submit" disabled={disabled}>
+            Submit deposit
+          </Button>
+        </TermsOfUseDisclaimer>
         {errorMessage && <ValidationError message={errorMessage} />}
 
         <VSpace size={2} />

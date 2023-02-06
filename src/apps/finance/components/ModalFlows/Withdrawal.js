@@ -17,6 +17,7 @@ import AmountInput from '../AmountInput'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensInfo from '@/components/RequiredTokensInfo'
 import { useFee } from '@/providers/Fee'
+import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const RECEIPIENT_NOT_ADDRESS_ERROR = Symbol('RECEIPIENT_NOT_ADDRESS_ERROR')
@@ -207,10 +208,11 @@ class Withdrawal extends React.Component {
             wide
           />
         </Field>
-
-        <Button disabled={disabled} mode="strong" type="submit" wide>
-          Submit withdrawal
-        </Button>
+        <TermsOfUseDisclaimer>
+          <Button disabled={disabled} mode="strong" type="submit" wide>
+            Submit withdrawal
+          </Button>
+        </TermsOfUseDisclaimer>
         {!hasFeeTokens && (
           <RequiredTokensInfo
             css={`

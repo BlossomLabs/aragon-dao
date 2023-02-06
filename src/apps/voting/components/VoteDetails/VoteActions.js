@@ -16,6 +16,7 @@ import { useWallet } from '@/providers/Wallet'
 import { dateFormat } from '../../utils/date-utils'
 import { getConnectedAccountCast } from '../../vote-utils'
 import { VOTE_YEA, VOTE_NAY } from '../../vote-types'
+import { ParticipationDisclaimer } from '@/components/Disclaimers'
 
 function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
   const theme = useTheme()
@@ -108,9 +109,19 @@ function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
       <>
         {voter.canExecute && (
           <>
-            <Button mode="strong" onClick={handleVoteExecution} wide>
-              Enact this vote
-            </Button>
+            <div
+              css={`
+                display: flex;
+                flex-direction: column;
+                gap: ${0.5 * GU}px;
+              `}
+            >
+              <ParticipationDisclaimer>
+                <Button mode="strong" onClick={handleVoteExecution} wide>
+                  Enact this vote
+                </Button>
+              </ParticipationDisclaimer>
+            </div>
             <Info>
               The voting period is closed and the vote has passed.{' '}
               <strong>Anyone</strong> can now enact this vote to execute its
@@ -125,7 +136,9 @@ function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
   if (voter.canVote || voter.canVoteOnBehalfOf) {
     return (
       <>
-        <Buttons onVoteYes={handleVoteYes} onVoteNo={handleVoteNo} />
+        <ParticipationDisclaimer>
+          <Buttons onVoteYes={handleVoteYes} onVoteNo={handleVoteNo} />
+        </ParticipationDisclaimer>
         <TokenReference
           snapshotBlock={snapshotBlock}
           startDate={startDate}

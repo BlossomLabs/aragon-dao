@@ -21,6 +21,7 @@ import { useTokenBalanceOf } from '@/hooks/shared/useAccountTokenBalance'
 import { useWallet } from '@/providers/Wallet'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { useNetwork } from '@/hooks/shared'
+import { ParticipationDisclaimer } from '@/components/Disclaimers'
 
 const Convert = React.memo(function({ mode, getTransactions }) {
   const { chainId } = useNetwork()
@@ -38,6 +39,22 @@ const Convert = React.memo(function({ mode, getTransactions }) {
     accountBalance,
     { loading: accountTokenBalanceLoading, error: accountTokenBalanceError },
   ] = useTokenBalanceOf(token?.id, account, chainId)
+  const errorMessage = useMemo(() => {
+    if (!accountBalance) {
+      return null
+    }
+
+    if (amount.valueBN.eq(new BN(-1))) {
+      return 'Invalid amount'
+    }
+
+    if (amount.valueBN.gt(accountBalance)) {
+      return 'Insufficient balance'
+    }
+
+    return null
+  }, [amount, accountBalance])
+  const isButtonDisabled = amount.valueBN.eq(new BN(0)) || Boolean(errorMessage)
 
   const handleEditMode = useCallback(
     editMode => {
@@ -108,22 +125,6 @@ const Convert = React.memo(function({ mode, getTransactions }) {
     [mode, amount, getTransactions, next]
   )
 
-  const errorMessage = useMemo(() => {
-    if (!accountBalance) {
-      return null
-    }
-
-    if (amount.valueBN.eq(new BN(-1))) {
-      return 'Invalid amount'
-    }
-
-    if (amount.valueBN.gt(accountBalance)) {
-      return 'Insufficient balance'
-    }
-
-    return null
-  }, [amount, accountBalance])
-
   return (
     <form onSubmit={handleSubmit}>
       <Field
@@ -193,7 +194,6 @@ const Convert = React.memo(function({ mode, getTransactions }) {
           </span>
         )}
       </Field>
-
       {isWrapMode ? (
         <React.Fragment>
           <Info
@@ -222,17 +222,18 @@ const Convert = React.memo(function({ mode, getTransactions }) {
           </Info>
         </React.Fragment>
       )}
-
-      <Button
-        label={isWrapMode ? 'Wrap' : 'Unwrap'}
-        wide
-        type="submit"
-        mode="strong"
-        disabled={amount.valueBN.eq(new BN(0)) || Boolean(errorMessage)}
-        css={`
-          margin-top: ${2 * GU}px;
-        `}
-      />
+      <ParticipationDisclaimer>
+        <Button
+          label={isWrapMode ? 'Wrap' : 'Unwrap'}
+          wide
+          type="submit"
+          mode="strong"
+          disabled={isButtonDisabled}
+          css={`
+            margin: ${2 * GU}px 0;
+          `}
+        />
+      </ParticipationDisclaimer>
       {errorMessage && (
         <Info
           mode="warning"
