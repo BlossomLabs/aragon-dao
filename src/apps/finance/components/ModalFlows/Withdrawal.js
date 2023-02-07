@@ -208,7 +208,11 @@ class Withdrawal extends React.Component {
             wide
           />
         </Field>
-        <FinancialComplianceFormDisclaimer>
+        <FinancialComplianceFormDisclaimer
+          css={`
+            margin: ${2 * GU}px 0;
+          `}
+        >
           <Button disabled={disabled} mode="strong" type="submit" wide>
             Submit withdrawal
           </Button>

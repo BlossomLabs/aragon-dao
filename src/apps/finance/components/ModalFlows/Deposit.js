@@ -354,7 +354,11 @@ class Deposit extends React.Component {
           )}
         </Info>
 
-        <TermsOfUseDisclaimer>
+        <TermsOfUseDisclaimer
+          css={`
+            margin: ${2 * GU}px 0;
+          `}
+        >
           <Button wide mode="strong" type="submit" disabled={disabled}>
             Submit deposit
           </Button>

@@ -7,21 +7,23 @@ const PARTICIPATION_DISCLAIMER = 'ARAGON_DAO_PARTICIPATION_TERMS'
 const TERMS_OF_USE_DISCLAIMER = 'ARAGON_DAO_TERMS_OF_USE'
 const FINANCIAL_COMPLIANCE_FORM = 'ARAGON_DAO_FINANCIAL_COMPLIANCE_FORM'
 
+const PLACEHOLDER = '%s'
+
 const DISCLAIMERS = {
   [PARTICIPATION_DISCLAIMER]: {
-    text: 'I have read and accept the %s.',
+    text: `I have read and accept the ${PLACEHOLDER}.`,
     link:
       'https://bafybeifenxcrhkcitglsdttvkfzhrqenzjq2abqndq4eekhby4ngnj4eta.ipfs.nftstorage.link/participation.html',
     label: 'Aragon DAO Participation Agreement',
   },
   [TERMS_OF_USE_DISCLAIMER]: {
-    text: 'I have read and accept the %s.',
+    text: `I have read and accept the ${PLACEHOLDER}.`,
     link:
       'https://bafybeifenxcrhkcitglsdttvkfzhrqenzjq2abqndq4eekhby4ngnj4eta.ipfs.nftstorage.link/proposal.html',
     label: 'Aragon DAO Terms of Use',
   },
   [FINANCIAL_COMPLIANCE_FORM]: {
-    text: 'I have completed a %s for this Withdraw Request.',
+    text: `I have completed a ${PLACEHOLDER} for this Withdraw Request.`,
     link: 'https://aragonassociation.typeform.com/to/OzRifY1N',
     label: 'Financial Compliance Form',
     startUnchecked: true,
@@ -55,31 +57,39 @@ function getLocalStorageValue(key) {
 function DisclaimerCheckbox({ type, isChecked, toggleCheckbox }) {
   const { account } = useWallet()
   const { link, label, text } = DISCLAIMERS[type]
-  const [pre, post] = text.split('%s')
+  const [pre, post] = text.split(PLACEHOLDER)
 
   return (
-    <div
-      css={`
-        display: flex;
-        gap: ${1 * GU}px;
-        align-items: center;
-      `}
-    >
-      <label>
+    <label>
+      <div
+        css={`
+          display: flex;
+          gap: ${0.5 * GU}px;
+          align-items: center;
+        `}
+      >
         <Checkbox
           checked={isChecked}
           disabled={!account}
           onChange={toggleCheckbox}
-        />{' '}
-        {pre}
-        <Link href={link}>{label}</Link>
-        {post}
-      </label>
-    </div>
+        />
+        <div
+          css={`
+            position: relative;
+            top: 2px;
+            cursor: pointer;
+          `}
+        >
+          {pre}
+          <Link href={link}>{label}</Link>
+          {post}
+        </div>
+      </div>
+    </label>
   )
 }
 
-export function DisclaimerLayout({ children, types }) {
+export function DisclaimerLayout({ children, types, ...props }) {
   const { chainId } = useNetwork()
   const { account } = useWallet()
   const localStorageIds = types.map(type =>
@@ -126,8 +136,9 @@ export function DisclaimerLayout({ children, types }) {
         display: flex;
         flex-direction: column;
         gap: ${0.5 * GU}px;
-        margin-top: ${2 * GU}px;
+        justify-content: center;
       `}
+      {...props}
     >
       {types.map((type, i) => (
         <DisclaimerCheckbox
@@ -142,9 +153,9 @@ export function DisclaimerLayout({ children, types }) {
   )
 }
 
-export function ParticipationDisclaimer({ children }) {
+export function ParticipationDisclaimer({ children, ...props }) {
   return (
-    <DisclaimerLayout types={[PARTICIPATION_DISCLAIMER]}>
+    <DisclaimerLayout types={[PARTICIPATION_DISCLAIMER]} {...props}>
       {children}
     </DisclaimerLayout>
   )
