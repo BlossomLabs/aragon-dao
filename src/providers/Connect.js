@@ -9,6 +9,7 @@ function ConnectProvider({ children }) {
       connector="thegraph"
       options={{
         network: env('CHAIN_ID'),
+        ipfs: env('IPFS_RESOLVER') || "https://ipfs.blossom.software/ipfs/{cid}{path}"
       }}
     >
       {children}
