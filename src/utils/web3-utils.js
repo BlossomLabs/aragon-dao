@@ -21,7 +21,7 @@ const networks = {
     type: 'xdai',
     defaultEthNode: 'https://rpc.gnosis.gateway.fm/',
     explorer: 'blockscout',
-    nativeToken: 'Xdai',
+    nativeToken: 'xDAI',
   },
   main: {
     chainId: 1,

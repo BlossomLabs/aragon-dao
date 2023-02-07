@@ -116,9 +116,10 @@ function ModalFlowBase({
     return allScreens
   }, [
     displayErrorScreen,
-    transactions,
     screens,
+    isSafeConnected,
     transactionSteps,
+    transactions,
     transactionTitle,
   ])
 

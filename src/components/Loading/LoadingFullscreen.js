@@ -46,7 +46,7 @@ function LoadingFullscreen({ ...props }) {
         from={{ opacity: 0, transform: `scale3d(1.5, 1.5, 1)` }}
         to={{ opacity: 1, transform: `scale3d(1, 1, 1)` }}
       >
-        {(transitionProps) => (
+        {transitionProps => (
           <AnimatedDiv
             css={`
               display: flex;
