@@ -149,7 +149,9 @@ export async function getCanUserVote(votingContract, voteId, account) {
   return votingContract.canVote(voteId, account)
 }
 export function getConnectedAccountCast(vote, account) {
-  const userCast = vote.casts.find(cast => addressesEqual(cast.caster, account))
+  const userCast = vote.casts.find(cast =>
+    addressesEqual(cast.voterAddress, account)
+  )
 
   if (userCast) {
     return {

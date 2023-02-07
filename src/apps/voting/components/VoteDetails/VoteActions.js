@@ -152,14 +152,14 @@ function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
     )
   }
 
-  if (isAccountVoteCasted) {
+  if (!!Object.keys(voter).length && isAccountVoteCasted) {
     return (
-      <div>
+      <>
         <Buttons disabled />
         <Info mode="warning">
           You have already voted and changing vote is not allowed.
         </Info>
-      </div>
+      </>
     )
   }
 
@@ -168,7 +168,7 @@ function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
   }
 
   return (
-    <div>
+    <>
       <Buttons disabled />
       <Info mode="warning">
         {voter.accountBalanceNow > 0
@@ -180,7 +180,7 @@ function VoteActions({ vote, voter = {}, loading, onVote, onExecute }) {
         <strong>{votingToken.symbol}</strong> at the time a vote begins if you'd
         like to vote using this Voting app.
       </Info>
-    </div>
+    </>
   )
 }
 

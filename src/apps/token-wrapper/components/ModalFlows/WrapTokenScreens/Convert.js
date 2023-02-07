@@ -212,16 +212,17 @@ const Convert = React.memo(function({ mode, getTransactions }) {
           </Info>
         </React.Fragment>
       )}
-      <ParticipationDisclaimer>
+      <ParticipationDisclaimer
+        css={`
+          margin: ${2 * GU}px 0;
+        `}
+      >
         <Button
           label={isWrapMode ? 'Wrap' : 'Unwrap'}
           wide
           type="submit"
           mode="strong"
           disabled={isButtonDisabled}
-          css={`
-            margin: ${2 * GU}px 0;
-          `}
         />
       </ParticipationDisclaimer>
       {errorMessage && (

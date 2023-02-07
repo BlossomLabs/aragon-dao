@@ -123,9 +123,9 @@ function AccountPopover({
                   setMeasuredHeight(true)
                 }}
               >
-                {(screenData) => ({ opacity, transform }) => (
+                {screenData => ({ opacity, transform }) => (
                   <AnimatedDiv
-                    ref={(elt) => {
+                    ref={elt => {
                       if (elt) {
                         setHeight(elt.clientHeight)
                       }
