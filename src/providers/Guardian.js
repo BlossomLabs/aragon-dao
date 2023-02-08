@@ -65,9 +65,15 @@ function GuardianProvider({ children }) {
       ])
 
       return {
-        to: GUARDIANS_TOKEN_MANAGER,
-        data: TOKEN_MANAGER_INTERFACE.encodeFunctionData('forward', [script]),
-        from: account,
+        transactions: [
+          {
+            to: GUARDIANS_TOKEN_MANAGER,
+            data: TOKEN_MANAGER_INTERFACE.encodeFunctionData('forward', [
+              script,
+            ]),
+            from: account,
+          },
+        ],
       }
     },
     [account, isGuardian]
