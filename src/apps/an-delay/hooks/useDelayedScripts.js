@@ -21,7 +21,6 @@ export const useDelayedScripts = () => {
   const delayStatus = (rawDelayedScripts || []).map(script =>
     getStatus(script, now)
   )
-  // const delayStatusKey = delayStatus.map(String).join('')
 
   return useMemo(() => {
     const decoratedDelayScripts = rawDelayedScripts.map((script, index) => ({
