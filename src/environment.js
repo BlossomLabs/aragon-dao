@@ -21,6 +21,11 @@ const ENV_VARS = {
   GOVERNANCE_APP_ADDRESSES: processCommaSeparatedValues(
     process.env.GOVERNANCE_APP_ADDRESSES || ''
   ),
+  ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY || null,
+  ANKR_API_KEY: process.env.ANKR_API_KEY || null,
+  INFURA_API_KEY: process.env.INFURA_API_KEY || null,
+  POCKET_API_KEY: process.env.POCKET_API_KEY || null,
+  DEFAULT_ETH_NODE: process.env.DEFAULT_ETH_NODE || null,
 }
 
 export function env(name) {
