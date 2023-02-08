@@ -10,7 +10,7 @@ export const connectors = [
   {
     id: 'frame',
     properties: {
-      chainId: [env('CHAIN_ID')],
+      chainId: env('CHAIN_ID'),
     },
   },
   {
