@@ -1241,9 +1241,9 @@
     graphql-tag "^2.10.3"
 
 "@blossom-labs/connect-token-wrapper@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-token-wrapper/-/connect-token-wrapper-0.1.0.tgz#3b5836e29e9a27d9ca174b44dec34fe1d0bc69d2"
-  integrity sha512-NyEjOFfg4wgbw/Tr4wigTKgQFl4dINJgZZXz/IKXI/Z3DlsjLlG8CENBj1tSgp9/zj/fWwpHBpeMXY/HU7Mhiw==
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-token-wrapper/-/connect-token-wrapper-0.1.1.tgz#caf2ab18dafe9fe12926f23ff794b08abfe57791"
+  integrity sha512-bNhAEW43GMQZEqsqRpJcLmEMa+HiYiUo/+VCbCpIE42HPpZz2R1pZf5LQaGYCUlrfAxcPvp7qdFNDdTVF954Pw==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
