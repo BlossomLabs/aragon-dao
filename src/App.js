@@ -102,8 +102,8 @@ function AppWrapper() {
   return (
     <HashRouter>
       <SafeProvider>
-        <Connect>
-          <WalletProvider>
+        <WalletProvider>
+          <Connect>
             <OrganizationProvider>
               <GuardianProvider>
                 <Main
@@ -120,8 +120,8 @@ function AppWrapper() {
                 </Main>
               </GuardianProvider>
             </OrganizationProvider>
-          </WalletProvider>
-        </Connect>
+          </Connect>
+        </WalletProvider>
       </SafeProvider>
     </HashRouter>
   )

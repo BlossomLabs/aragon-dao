@@ -100,7 +100,7 @@ function getBackendServicesKeys() {
     alchemy: env('ALCHEMY_API_KEY'),
     infura: env('INFURA_API_KEY'),
     pocket: env('POCKET_API_KEY'),
-    ankr: env('ANKR_API_KEY')
+    ankr: env('ANKR_API_KEY'),
   }
 }
 
@@ -109,7 +109,10 @@ export function getDefaultProvider(chainId = CHAIN_ID) {
 
   return defaultEthNode
     ? new Providers.StaticJsonRpcProvider(defaultEthNode)
-    : ethers.getDefaultProvider(getEthersNetwork(chainId), getBackendServicesKeys())
+    : ethers.getDefaultProvider(
+        getEthersNetwork(chainId),
+        getBackendServicesKeys()
+      )
 }
 
 export function encodeFunctionData(contract, functionName, params) {
