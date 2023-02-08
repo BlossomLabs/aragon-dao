@@ -37,8 +37,6 @@ const networks = {
 const ETH_ADDRESS_SPLIT_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 const ETH_ADDRESS_TEST_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 
-export const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
-
 const CHAIN_ID = env('CHAIN_ID')
 
 export function getNetworkType(chainId = CHAIN_ID) {
@@ -62,17 +60,6 @@ function getNetworkInternalName(chainId = CHAIN_ID) {
 
 export function getNetwork(chainId = CHAIN_ID) {
   return networks[getNetworkInternalName(chainId)]
-}
-
-export function getNetworkName(chainId = CHAIN_ID) {
-  chainId = String(chainId)
-
-  if (chainId === '1') return 'Mainnet'
-  if (chainId === '4') return 'Rinkeby'
-  if (chainId === '100') return 'Gnosis'
-  if (chainId === '137') return 'Polygon'
-
-  return 'unknown'
 }
 
 export function getEthersNetwork(chainId) {

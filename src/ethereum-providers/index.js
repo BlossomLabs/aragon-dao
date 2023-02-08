@@ -4,19 +4,19 @@ export const connectors = [
   {
     id: 'injected',
     properties: {
-      chainId: [1, 100], // add here to handle more injected chains
+      chainId: [env('CHAIN_ID')], // add here to handle more injected chains
     },
   },
   {
     id: 'frame',
     properties: {
-      chainId: env('CHAIN_ID'),
+      chainId: [env('CHAIN_ID')],
     },
   },
   {
     id: 'walletconnect',
     properties: {
-      chainId: [1, 100], // add here to handle more injected chains
+      chainId: [env('CHAIN_ID')], // add here to handle more injected chains
       rpc: {
         '100': 'https://rpc.gnosis.gateway.fm/',
       },

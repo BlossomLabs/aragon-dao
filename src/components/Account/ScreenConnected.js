@@ -15,7 +15,6 @@ import { getProviderFromUseWalletId } from 'use-wallet'
 import { useCopyToClipboard } from '../../hooks/shared/useCopyToClipboard'
 import safeImg from './assets/safe.png'
 
-/* eslint-disable react/prop-types */
 function ScreenConnected({ wallet }) {
   const theme = useTheme()
   const { connected: isSafeConnected } = useSafeAppsSDK()
@@ -88,6 +87,7 @@ function ScreenConnected({ wallet }) {
           >
             <IdentityBadge
               entity={wallet.account}
+              shorten
               compact
               badgeOnly
               css={`
@@ -136,6 +136,5 @@ function ScreenConnected({ wallet }) {
     </div>
   )
 }
-/* eslint-disable react/prop-types */
 
 export default ScreenConnected

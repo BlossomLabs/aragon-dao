@@ -5,7 +5,6 @@ import { ButtonBase, GU, textStyle, useTheme, springs } from '@aragon/ui'
 import MenuPanelAppInstance, {
   MENU_PANEL_APP_INSTANCE_HEIGHT,
 } from './MenuPanelAppInstance'
-import useLocalIdentity from '../../hooks/shared/useLocalIdentity'
 import { addressesEqual } from '@/utils/web3-utils'
 
 export const MENU_ITEM_BASE_HEIGHT = 5 * GU
@@ -148,8 +147,7 @@ const MenuPanelItem = React.memo(function MenuPanelItem({
   instanceId,
   singleInstance,
 }) {
-  const { name: localIdentity } = useLocalIdentity(instanceId)
-  const label = (singleInstance && localIdentity) || name
+  const label = singleInstance || name
 
   return (
     <ButtonBase
