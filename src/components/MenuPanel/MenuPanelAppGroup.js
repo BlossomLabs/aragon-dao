@@ -147,8 +147,6 @@ const MenuPanelItem = React.memo(function MenuPanelItem({
   instanceId,
   singleInstance,
 }) {
-  const label = singleInstance || name
-
   return (
     <ButtonBase
       onClick={onClick}
@@ -172,7 +170,7 @@ const MenuPanelItem = React.memo(function MenuPanelItem({
           ${textStyle('body2')}
         `}
       >
-        {label}
+        {name}
       </span>
     </ButtonBase>
   )
