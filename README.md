@@ -38,12 +38,20 @@ Create a `.env` file with environment variables. You can use the `.env.example` 
 
 Below you can find a list of all the required variables:
 
-| Env variable | Description |
-| ------------ | ----------- |
-| `CHAIN_ID`   | The ID of the chain where the DAO is located on.
-| `DAO_ID`     | The Aragon ID (ENS name) or address of the DAO.
-| `GUARDIANS_TOKEN_MANAGER` | The address of the Guardian Token Manager app.
-| `BUDGET_APP_ADDRESSES` | A list of comma-separated addresses of DAO apps that should be labeled as "Budget".
+| Env variable              | Description                                                                             |
+| ------------------------- | --------------------------------------------------------------------------------------- |
+| `CHAIN_ID`                | The ID of the chain where the DAO is located on.                                        |
+| `DAO_ID`                  | The Aragon ID (ENS name) or address of the DAO.                                         |
+| `GUARDIANS_TOKEN_MANAGER` | The address of the Guardian Token Manager app.                                          |
+
+And here a list of optional variables:
+
+| Env variable              | Description                                                                             |
+| ------------------------- | --------------------------------------------------------------------------------------- |
+| `ALCHEMY_API_KEY`         | The API key for Alchemy.com.                                                            |
+| `INFURA_API_KEY`          | The API key for Infura.io.                                                              |
+| `POCKET_API_KEY`          | The API key for Pokt.network.                                                           |
+| `ANKR_API_KEY`            | The API key for Ankr.com.                                                               |
+| `IPFS_RESOLVER`           | An URL similar to https://gateway.ipfs.io/ipfs/{cid}{path} with a custom IPFS gateway.  |
+| `BUDGET_APP_ADDRESSES`    | A list of comma-separated addresses of DAO apps that should be labeled as "Budget".     |
 | `GOVERNANCE_APP_ADDRESSES`| A list of comma-separated addresses of DAO apps that should be labeled as "Governance". |
-
-
