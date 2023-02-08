@@ -31,7 +31,6 @@ const classifyDelays = delays => {
 }
 
 const DelaysWrapper = () => {
-  // TODO: handle error case
   const [
     delays,
     executionTargetApps,

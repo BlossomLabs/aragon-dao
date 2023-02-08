@@ -47,49 +47,4 @@ Holders.defaultProps = {
   holders: [],
 }
 
-// TODO: Use after integrating identity system
-
-// function EntryActions({ address, onUnwrapTokens }) {
-//   const theme = useTheme()
-//   const { account: connectedAccount } = useWallet()
-//   const [label, showLocalIdentityModal] = useIdentity(address)
-
-//   const isCurrentUser = addressesEqual(address, connectedAccount)
-//   const editLabel = useCallback(() => showLocalIdentityModal(address), [
-//     address,
-//     showLocalIdentityModal,
-//   ])
-
-//   const actions = [
-//     ...(isCurrentUser ? [[onUnwrapTokens, IconRemove, 'Unwrap tokens']] : []),
-//     [editLabel, IconLabel, `${label ? 'Edit' : 'Add'} custom label`],
-//   ]
-//   return (
-//     <ContextMenu zIndex={1}>
-//       {actions.map(([onClick, Icon, label], index) => (
-//         <ContextMenuItem onClick={onClick} key={index}>
-//           <span
-//             css={`
-//               position: relative;
-//               display: flex;
-//               align-items: center;
-//               justify-content: center;
-//               color: ${theme.surfaceContentSecondary};
-//             `}
-//           >
-//             <Icon />
-//           </span>
-//           <span
-//             css={`
-//               margin-left: ${1 * GU}px;
-//             `}
-//           >
-//             {label}
-//           </span>
-//         </ContextMenuItem>
-//       ))}
-//     </ContextMenu>
-//   )
-// }
-
 export default Holders

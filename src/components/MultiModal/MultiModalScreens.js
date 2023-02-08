@@ -85,7 +85,6 @@ function MultiModalFrame({ visible, onClosed }) {
                   css={`
                     z-index: 2;
 
-                    /* TODO: Add radius option to Modal in @aragon/ui */
                     & > div > div > div {
                       border-radius: ${2 * RADIUS}px !important;
                     }

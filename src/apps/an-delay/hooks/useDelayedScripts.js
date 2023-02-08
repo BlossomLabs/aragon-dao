@@ -13,7 +13,7 @@ export const useDelayedScripts = () => {
   const { apps } = useOrganizationState()
   const { connectedApp } = useConnectedApp()
 
-  const [rawDelayedScripts = [], { loading, error }] = useConnect(
+  const [rawDelayedScripts = [], rawDelayedScriptsStatus] = useConnect(
     () => connectedApp?.onDelayedScripts({ first: 50 }),
     [connectedApp]
   )
@@ -21,7 +21,7 @@ export const useDelayedScripts = () => {
   const delayStatus = (rawDelayedScripts || []).map(script =>
     getStatus(script, now)
   )
-  const delayStatusKey = delayStatus.map(String).join('')
+  // const delayStatusKey = delayStatus.map(String).join('')
 
   return useMemo(() => {
     const decoratedDelayScripts = rawDelayedScripts.map((script, index) => ({
@@ -35,8 +35,8 @@ export const useDelayedScripts = () => {
       decoratedDelayScripts
     )
 
-    return [decoratedDelayScripts, executionTargetApps, { loading, error }]
-  }, [apps, rawDelayedScripts, delayStatusKey])
+    return [decoratedDelayScripts, executionTargetApps, rawDelayedScriptsStatus]
+  }, [apps, rawDelayedScripts, delayStatus, rawDelayedScriptsStatus])
 }
 
 export const useDelayedScript = scriptId => {
