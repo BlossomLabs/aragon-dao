@@ -35,6 +35,8 @@ const ETH_ADDRESS_TEST_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 const CHAIN_ID = env('CHAIN_ID')
 const STATIC_ETH_NODE = env('STATIC_ETH_NODE')
 
+const ETHERS_UNSUPPORTED_CHAIN_IDS = [100]
+
 let STATIC_PROVIDER = null
 
 export function getNetworkType(chainId = CHAIN_ID) {
@@ -50,12 +52,8 @@ export function isLocalOrUnknownNetwork(chainId = CHAIN_ID) {
   return getNetworkType(chainId) === DEFAULT_LOCAL_CHAIN
 }
 
-function getNetworkInternalName(chainId = CHAIN_ID) {
-  return isLocalOrUnknownNetwork(chainId) ? 'local' : getNetworkType(chainId)
-}
-
 export function getNetwork(chainId = CHAIN_ID) {
-  return networks[getNetworkInternalName(chainId)]
+  return networks[chainId]
 }
 
 export function getEthersNetwork(chainId) {
@@ -118,6 +116,10 @@ function getBackendServicesKeys() {
 }
 
 export function getDefaultProvider(chainId = CHAIN_ID) {
+  if (ETHERS_UNSUPPORTED_CHAIN_IDS.includes(chainId)) {
+    return getStaticProvider()
+  }
+
   return ethers.getDefaultProvider(
     getEthersNetwork(chainId),
     getBackendServicesKeys()
