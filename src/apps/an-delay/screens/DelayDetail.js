@@ -136,7 +136,6 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                     {path ? (
                       <DescriptionWithSkeleton path={path} loading={loading} />
                     ) : (
-                      // TODO: Improve default description (include execution target's data)
                       DEFAULT_DESCRIPTION
                     )}
                   </div>

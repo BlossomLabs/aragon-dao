@@ -68,13 +68,9 @@ export default function useActions() {
 
   const pauseExecution = useCallback(
     async (script, onDone = noop) => {
-      let intent = await connectedANDelayApp.intent(
-        'pauseExecution',
-        [script.id],
-        {
-          actAs: account,
-        }
-      )
+      let intent = callAsGuardian(connectedANDelayApp, 'pauseExecution', [
+        script.id,
+      ])
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 
@@ -87,7 +83,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedANDelayApp, GAS_LIMIT, mounted]
+    [callAsGuardian, connectedANDelayApp, GAS_LIMIT, mounted]
   )
 
   const resumeExecution = useCallback(
@@ -116,11 +112,9 @@ export default function useActions() {
 
   const cancelExecution = useCallback(
     async (script, onDone = noop) => {
-      let intent = {
-        transactions: [
-          callAsGuardian(connectedANDelayApp, 'cancelExecution', [script.id]),
-        ],
-      }
+      let intent = callAsGuardian(connectedANDelayApp, 'cancelExecution', [
+        script.id,
+      ])
 
       intent = imposeGasLimit(intent, GAS_LIMIT)
 

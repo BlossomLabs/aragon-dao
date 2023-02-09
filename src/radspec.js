@@ -1,5 +1,5 @@
 import { shortenAddress } from '@aragon/ui'
-import { ZERO_ADDR } from './constants'
+import { constants } from 'ethers'
 import organizationActions from './actions/organization-action-types'
 import { formatTime } from './utils/time-utils'
 
@@ -17,7 +17,7 @@ export default {
     `Cancel script execution with ID ${id}`,
   [organizationActions.DELEGATE_VOTING]: ({ representative }) => {
     return `${
-      representative !== ZERO_ADDR
+      representative !== constants.AddressZero
         ? `Delegate votes to: ${shortenAddress(representative)}`
         : `Remove delegate`
     }`

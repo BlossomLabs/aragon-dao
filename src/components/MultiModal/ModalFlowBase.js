@@ -37,7 +37,6 @@ function ModalFlowBase({
               : `${indexNumber[index]} transaction`
 
             return {
-              // TODO: Add titles from description
               title,
               handleSign: async ({
                 setSuccess,

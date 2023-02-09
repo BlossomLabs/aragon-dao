@@ -1212,9 +1212,9 @@
     to-fast-properties "^2.0.0"
 
 "@blossom-labs/connect-an-delay@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.1.tgz#a12f67cc66728b94c420e21434646047eeadc2d3"
-  integrity sha512-aET7jLwXi0H/0m1msNMmZV/YWpbOVs8Raq5HzFEezSyFgc6PIVewdeQetzRcA8AOiiYfWwjcRDCwHitX0iTUqQ==
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.2.tgz#0b1f9c74eb4032973acf1ba9790babd4e6585343"
+  integrity sha512-8HvpNnGWMDga3RurjytmGXnQL1n6B3Wx9lJFUpkeSlCQm5CeZhX5e8n6iGmHpB0uPjFKVrdyBtVhbYig7jcsCQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
@@ -1241,9 +1241,9 @@
     graphql-tag "^2.10.3"
 
 "@blossom-labs/connect-token-wrapper@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-token-wrapper/-/connect-token-wrapper-0.1.0.tgz#3b5836e29e9a27d9ca174b44dec34fe1d0bc69d2"
-  integrity sha512-NyEjOFfg4wgbw/Tr4wigTKgQFl4dINJgZZXz/IKXI/Z3DlsjLlG8CENBj1tSgp9/zj/fWwpHBpeMXY/HU7Mhiw==
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-token-wrapper/-/connect-token-wrapper-0.1.1.tgz#caf2ab18dafe9fe12926f23ff794b08abfe57791"
+  integrity sha512-bNhAEW43GMQZEqsqRpJcLmEMa+HiYiUo/+VCbCpIE42HPpZz2R1pZf5LQaGYCUlrfAxcPvp7qdFNDdTVF954Pw==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"

@@ -96,32 +96,38 @@ function App() {
   )
 }
 
-function AppWrapper() {
+function AragonApp() {
   const { appearance } = useAppTheme()
 
   return (
+    <Main
+      assetsUrl="/aragon-ui/"
+      layout={false}
+      scrollView={false}
+      theme={appearance}
+    >
+      <MainView>
+        <ErrorHandler>
+          <App />
+        </ErrorHandler>
+      </MainView>
+    </Main>
+  )
+}
+
+function AppWrapper() {
+  return (
     <HashRouter>
       <SafeProvider>
-        <Connect>
-          <WalletProvider>
+        <WalletProvider>
+          <Connect>
             <OrganizationProvider>
               <GuardianProvider>
-                <Main
-                  assetsUrl="/aragon-ui/"
-                  layout={false}
-                  scrollView={false}
-                  theme={appearance}
-                >
-                  <MainView>
-                    <ErrorHandler>
-                      <App />
-                    </ErrorHandler>
-                  </MainView>
-                </Main>
+                <AragonApp />
               </GuardianProvider>
             </OrganizationProvider>
-          </WalletProvider>
-        </Connect>
+          </Connect>
+        </WalletProvider>
       </SafeProvider>
     </HashRouter>
   )

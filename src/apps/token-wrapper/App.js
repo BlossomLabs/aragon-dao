@@ -4,7 +4,6 @@ import {
   useAppState,
 } from './providers/TokenWrapperProvider'
 import MultiModal from '@/components/MultiModal/MultiModal'
-import NoWrappedTokens from './screens/NoWrappedTokens'
 import Holders from './screens/Holders'
 import AppHeader from './components/AppHeader'
 import InfoBox from './components/InfoBox'
@@ -19,7 +18,6 @@ function App() {
   const isWaiting = useWait()
 
   const appStateReady = depositedToken?.id && wrappedToken?.id
-  const showHolders = appStateReady && holders && holders.length > 0
   const isLoading = isSyncing || isWaiting
 
   const handleShowModal = useCallback(() => {
@@ -45,16 +43,7 @@ function App() {
             tokenSymbol={wrappedToken && wrappedToken.symbol}
           />
           <LayoutColumns
-            primary={
-              showHolders ? (
-                <Holders holders={holders} wrappedToken={wrappedToken} />
-              ) : (
-                <NoWrappedTokens
-                  isSyncing={isSyncing}
-                  onConvertTokens={appStateReady ? handleConvertTokens : null}
-                />
-              )
-            }
+            primary={<Holders holders={holders} wrappedToken={wrappedToken} />}
             secondary={
               appStateReady && (
                 <InfoBox

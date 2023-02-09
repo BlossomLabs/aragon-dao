@@ -1,14 +1,10 @@
 import { ethers, providers as Providers } from 'ethers'
 import { env } from '@/environment'
 import {
-  ARBISCAN_NETWORK_TYPES,
-  ARBISCAN_TYPES,
   BLOCKSCOUT_NETWORK_TYPES,
   BLOCKSCOUT_TYPES,
   ETHERSCAN_NETWORK_TYPES,
   ETHERSCAN_TYPES,
-  POLYGONSCAN_NETWORK_TYPES,
-  POLYGONSCAN_TYPES,
 } from './provider-types'
 
 const DEFAULT_LOCAL_CHAIN = ''
@@ -19,7 +15,6 @@ const networks = {
     ensRegistry: '0xaafca6b0c89521752e559650206d7c925fd0e530',
     name: 'Gnosis Chain',
     type: 'xdai',
-    defaultEthNode: 'https://rpc.gnosis.gateway.fm/',
     explorer: 'blockscout',
     nativeToken: 'xDAI',
   },
@@ -28,7 +23,7 @@ const networks = {
     ensRegistry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     name: 'Mainnet',
     type: 'main',
-    defaultEthNode: 'https://eth-rpc.gateway.pokt.network',
+    network: 'homestead',
     explorer: 'etherscan',
     nativeToken: 'ETH',
   },
@@ -37,17 +32,18 @@ const networks = {
 const ETH_ADDRESS_SPLIT_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 const ETH_ADDRESS_TEST_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 
-export const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
-
 const CHAIN_ID = env('CHAIN_ID')
+const STATIC_ETH_NODE = env('STATIC_ETH_NODE')
+
+const ETHERS_UNSUPPORTED_CHAIN_IDS = [100]
+
+let STATIC_PROVIDER = null
 
 export function getNetworkType(chainId = CHAIN_ID) {
   chainId = String(chainId)
 
   if (chainId === '1') return 'main'
-  if (chainId === '4') return 'rinkeby'
   if (chainId === '100') return 'xdai'
-  if (chainId === '137') return 'polygon'
 
   return DEFAULT_LOCAL_CHAIN
 }
@@ -64,21 +60,11 @@ export function getNetwork(chainId = CHAIN_ID) {
   return networks[getNetworkInternalName(chainId)]
 }
 
-export function getNetworkName(chainId = CHAIN_ID) {
-  chainId = String(chainId)
-
-  if (chainId === '1') return 'Mainnet'
-  if (chainId === '4') return 'Rinkeby'
-  if (chainId === '100') return 'Gnosis'
-  if (chainId === '137') return 'Polygon'
-
-  return 'unknown'
-}
-
 export function getEthersNetwork(chainId) {
-  const { type, ensRegistry } = getNetwork(chainId)
+  const { network, ensRegistry } = getNetwork(chainId)
+
   return {
-    name: type,
+    name: network,
     chainId: chainId,
     ensAddress: ensRegistry,
   }
@@ -112,12 +98,36 @@ export function shortenAddress(address, charsLength = 4) {
   )
 }
 
-export function getDefaultProvider(chainId = CHAIN_ID) {
-  const { defaultEthNode, type } = getNetwork(chainId)
+export const getStaticProvider = () => {
+  if (STATIC_PROVIDER) {
+    return STATIC_PROVIDER
+  }
 
-  return defaultEthNode
-    ? new Providers.StaticJsonRpcProvider(defaultEthNode)
-    : ethers.getDefaultProvider(type, 'x')
+  const provider = new Providers.StaticJsonRpcProvider(STATIC_ETH_NODE)
+
+  STATIC_PROVIDER = provider
+
+  return provider
+}
+
+function getBackendServicesKeys() {
+  return {
+    alchemy: env('ALCHEMY_API_KEY'),
+    infura: env('INFURA_API_KEY'),
+    pocket: env('POCKET_API_KEY'),
+    ankr: env('ANKR_API_KEY'),
+  }
+}
+
+export function getDefaultProvider(chainId = CHAIN_ID) {
+  if (ETHERS_UNSUPPORTED_CHAIN_IDS.includes(chainId)) {
+    return getStaticProvider()
+  }
+
+  return ethers.getDefaultProvider(
+    getEthersNetwork(chainId),
+    getBackendServicesKeys()
+  )
 }
 
 export function encodeFunctionData(contract, functionName, params) {
@@ -184,44 +194,12 @@ const BLOCK_EXPLORERS = {
     const typePart = BLOCKSCOUT_TYPES.get(type)
     return `https://blockscout.com/poa/${networkName}/${typePart}/${value}`
   },
-  polygonscan: ({ type, value, networkType }) => {
-    if (networkType === 'private') {
-      return ''
-    }
-
-    if (!POLYGONSCAN_NETWORK_TYPES.has(networkType)) {
-      throw new Error('provider not supported.')
-    }
-    if (!POLYGONSCAN_TYPES.has(type)) {
-      throw new Error('type not supported.')
-    }
-
-    const subdomain = POLYGONSCAN_NETWORK_TYPES.get(networkType)
-    const typePart = POLYGONSCAN_TYPES.get(type)
-    return `https://${subdomain}polygonscan.com/${typePart}/${value}`
-  },
-  arbiscan: ({ type, value, networkType }) => {
-    if (networkType === 'private') {
-      return ''
-    }
-
-    if (!ARBISCAN_NETWORK_TYPES.has(networkType)) {
-      throw new Error('provider not supported.')
-    }
-    if (!ARBISCAN_TYPES.has(type)) {
-      throw new Error('type not supported.')
-    }
-
-    const subdomain = ARBISCAN_NETWORK_TYPES.get(networkType)
-    const typePart = ARBISCAN_TYPES.get(type)
-    return `https://${subdomain}arbiscan.com/${typePart}/${value}`
-  },
 }
 
 export function blockExplorerUrl(
   type,
   value,
-  { networkType = 'xdai', provider = 'blockscout' } = {}
+  { networkType = 'main', provider = 'etherscan' } = {}
 ) {
   const explorer = BLOCK_EXPLORERS[provider]
 
