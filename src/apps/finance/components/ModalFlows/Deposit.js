@@ -334,8 +334,8 @@ class Deposit extends React.Component {
           )}
           <p>
             Configure your deposit above, and sign the transaction with your
-            wallet after clicking “Submit Transfer”. It will then show up in
-            your Finance app once processed.
+            wallet after clicking “Submit deposit". It will then show up in your
+            Finance app once processed.
           </p>
           {tokenSelected && (
             <React.Fragment>
