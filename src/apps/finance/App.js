@@ -26,11 +26,6 @@ const App = () => {
     setModalVisible(false)
   }, [])
 
-  console.log(tokenBalances)
-  console.log(loadingTokens)
-  console.log(error)
-  console.log('-------------------------------')
-
   return (
     <>
       {loadingTokens ? (
