@@ -1,49 +1,14 @@
 import React from 'react'
-// import BN from 'bn.js'
 import { Box, GU, textStyle, useTheme, useViewport } from '@aragon/ui'
 import BalanceToken from './BalanceToken'
-// import { getConvertedAmount } from '../lib/conversion-utils'
-// import { useConvertRates } from './useConvertRates'
-import useBalances from '../hooks/useBalances'
 import { BN } from 'bn.js'
 
-// Prepare the balances for the BalanceToken component
-// function useBalanceItems(balances) {
-//   const verifiedSymbols = balances
-//     .filter(({ verified }) => verified)
-//     .map(({ symbol }) => symbol)
-
-//   const convertRates = useConvertRates(verifiedSymbols)
-
-//   const balanceItems = useMemo(() => {
-//     return balances.map(
-//       ({ address, amount, decimals, symbol, verified }) => {
-//         return {
-//           address,
-//           amount,
-//           convertedAmount: convertRates[symbol]
-//             ? getConvertedAmount(amount, convertRates[symbol], decimals)
-//             : new BN('-1'),
-//           decimals,
-//           symbol,
-//           verified,
-//         }
-//       },
-//       [balances, convertRates]
-//     )
-//   })
-//   return balanceItems
-// }
-
-// TODO: maybe re-add this section once the real dao reaches mainnet
-
-function Balances({ tokenBalances, loading }) {
+function Balances({ tokenBalances }) {
   const theme = useTheme()
   const { below } = useViewport()
   // const balanceItems = useBalanceItems(balances)
 
   const compact = below('medium')
-
   return (
     <div>
       <Box heading="Token Balances" padding={0}>
@@ -61,7 +26,7 @@ function Balances({ tokenBalances, loading }) {
               padding: ${1 * GU}px;
             `}
           >
-            {loading || tokenBalances.length === 0 ? (
+            {tokenBalances.length === 0 ? (
               <div
                 css={`
                   display: flex;

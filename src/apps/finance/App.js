@@ -15,7 +15,7 @@ const App = () => {
   const { below } = useViewport()
   const compactMode = below('medium')
 
-  const [tokenBalances, { loading: loadingTokens, error }] = useBalances()
+  const [tokenBalances, { loading: loadingTokens }] = useBalances()
   const [modalVisible, setModalVisible] = useState(false)
 
   const handleShowModal = useCallback(() => {
@@ -28,8 +28,8 @@ const App = () => {
 
   return (
     <>
-      {loadingTokens ? (
-        <LoadingAppScreen isLoading={loadingTokens} />
+      {!tokenBalances ? (
+        <LoadingAppScreen isLoading={loadingTokens || !tokenBalances} />
       ) : (
         <>
           <AppHeader
@@ -46,7 +46,7 @@ const App = () => {
               )
             }
           />
-          <Balances tokenBalances={tokenBalances} loading={loadingTokens} />
+          <Balances tokenBalances={tokenBalances} />
           <Transfers tokens={tokenBalances} />
         </>
       )}
