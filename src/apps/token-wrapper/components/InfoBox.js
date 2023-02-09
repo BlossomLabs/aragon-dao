@@ -2,19 +2,17 @@ import React from 'react'
 import { Box, GU, TokenBadge, useTheme, textStyle } from '@aragon/ui'
 import { useNetwork } from '@/hooks/shared'
 import wrap from '../assets/wrap.svg'
-import { fromDecimals } from '@/utils/math-utils'
+import { formatBalance } from '@/utils/math-utils'
 
 function InfoBox({ depositedToken, wrappedToken }) {
   const network = useNetwork()
   const theme = useTheme()
   const depositedTokenAddress = depositedToken.address ?? depositedToken.id
   const wrappedTokenAddress = wrappedToken.address ?? wrappedToken.id
-  const totalSupply = wrappedToken.totalSupply
-    ? fromDecimals(
-        wrappedToken.totalSupply.toString(),
-        wrappedToken.numDecimals
-      )
-    : '0'
+  const totalSupply = formatBalance(
+    wrappedToken.totalSupply,
+    wrappedToken.tokenDecimalsBase
+  )
   const depositedTokenSymbol = depositedToken.symbol
   const wrappedTokenSymbol = wrappedToken.symbol
 
