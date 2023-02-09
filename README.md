@@ -43,15 +43,19 @@ Below you can find a list of all the required variables:
 | `CHAIN_ID`                | The ID of the chain where the DAO is located on.                                        |
 | `DAO_ID`                  | The Aragon ID (ENS name) or address of the DAO.                                         |
 | `GUARDIANS_TOKEN_MANAGER` | The address of the Guardian Token Manager app.                                          |
+| `STATIC_ETH_NODE` | Ethereum JSON-RPC endpoint                                          |
+
 
 And here a list of optional variables:
 
 | Env variable              | Description                                                                             |
 | ------------------------- | --------------------------------------------------------------------------------------- |
-| `ALCHEMY_API_KEY`         | The API key for Alchemy.com.                                                            |
+| `ALCHEMY_API_KEY`         | The API key for Alchemy.com.                                                          |
 | `INFURA_API_KEY`          | The API key for Infura.io.                                                              |
 | `POCKET_API_KEY`          | The API key for Pokt.network.                                                           |
 | `ANKR_API_KEY`            | The API key for Ankr.com.                                                               |
 | `IPFS_RESOLVER`           | An URL similar to https://gateway.ipfs.io/ipfs/{cid}{path} with a custom IPFS gateway.  |
 | `BUDGET_APP_ADDRESSES`    | A list of comma-separated addresses of DAO apps that should be labeled as "Budget".     |
 | `GOVERNANCE_APP_ADDRESSES`| A list of comma-separated addresses of DAO apps that should be labeled as "Governance". |
+
+The optional API keys env variables are useful for setting different providers for request balancing in production environments.
