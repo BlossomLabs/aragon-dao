@@ -52,8 +52,12 @@ export function isLocalOrUnknownNetwork(chainId = CHAIN_ID) {
   return getNetworkType(chainId) === DEFAULT_LOCAL_CHAIN
 }
 
+function getNetworkInternalName(chainId = CHAIN_ID) {
+  return isLocalOrUnknownNetwork(chainId) ? 'local' : getNetworkType(chainId)
+}
+
 export function getNetwork(chainId = CHAIN_ID) {
-  return networks[chainId]
+  return networks[getNetworkInternalName(chainId)]
 }
 
 export function getEthersNetwork(chainId) {
