@@ -1,24 +1,26 @@
 import { env } from '@/environment'
 
+const CHAIN_ID = env('CHAIN_ID')
+
 export const connectors = [
   {
     id: 'injected',
     properties: {
-      chainId: [env('CHAIN_ID')], // add here to handle more injected chains
+      chainId: [CHAIN_ID], // add here to handle more injected chains
     },
   },
   {
     id: 'frame',
     properties: {
-      chainId: env('CHAIN_ID'),
+      chainId: CHAIN_ID,
     },
   },
   {
     id: 'walletconnect',
     properties: {
-      chainId: [env('CHAIN_ID')], // add here to handle more injected chains
+      chainId: [CHAIN_ID], // add here to handle more injected chains
       rpc: {
-        [env('CHAIN_ID')]: env('STATIC_ETH_NODE'),
+        [`${CHAIN_ID}`]: env('STATIC_ETH_NODE'),
       },
     },
   },
