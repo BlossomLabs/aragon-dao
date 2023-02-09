@@ -1,12 +1,39 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+import BN from 'bn.js'
 import { Box, GU, textStyle, useTheme, useViewport } from '@aragon/ui'
 import BalanceToken from './BalanceToken'
-import { BN } from 'bn.js'
+import { getConvertedAmount } from '../lib/conversion-utils'
+import { useConvertRates } from './useConvertRates'
 
-function Balances({ tokenBalances }) {
+// Prepare the balances for the BalanceToken component
+function useBalanceItems(balances) {
+  const symbols = balances.map(({ symbol }) => symbol)
+
+  const convertRates = useConvertRates(symbols)
+
+  const balanceItems = useMemo(() => {
+    return balances.map(
+      ({ address, balance, decimals, symbol }) => {
+        return {
+          address,
+          balance,
+          convertedAmount: convertRates[symbol]
+            ? getConvertedAmount(balance, convertRates[symbol], decimals)
+            : new BN('-1'),
+          decimals,
+          symbol,
+        }
+      },
+      [balances, convertRates]
+    )
+  })
+  return balanceItems
+}
+
+function Balances({ tokenBalances, loading }) {
   const theme = useTheme()
   const { below } = useViewport()
-  // const balanceItems = useBalanceItems(balances)
+  const balanceItems = useBalanceItems(tokenBalances)
 
   const compact = below('medium')
   return (
@@ -26,7 +53,7 @@ function Balances({ tokenBalances }) {
               padding: ${1 * GU}px;
             `}
           >
-            {tokenBalances.length === 0 ? (
+            {loading || balanceItems.length === 0 ? (
               <div
                 css={`
                   display: flex;
@@ -51,14 +78,8 @@ function Balances({ tokenBalances }) {
                     : ''}
                 `}
               >
-                {tokenBalances.map(
-                  ({
-                    address,
-                    balance, // convertedAmount,
-                    decimals,
-                    symbol,
-                    verified,
-                  }) => (
+                {balanceItems.map(
+                  ({ address, balance, convertedAmount, decimals, symbol }) => (
                     <li
                       key={address}
                       css={`
@@ -77,8 +98,8 @@ function Balances({ tokenBalances }) {
                         address={address}
                         amount={balance}
                         compact={compact}
-                        // convertedAmount={convertedAmount}
-                        decimals={new BN(decimals)}
+                        convertedAmount={convertedAmount}
+                        decimals={decimals}
                         symbol={symbol}
                       />
                     </li>

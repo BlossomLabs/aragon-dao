@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { GU } from '@aragon/ui'
+import { GU, tokenIconUrl } from '@aragon/ui'
 import { useNetwork } from '@/hooks/shared'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
-import { tokenIconUrl } from '../lib/icon-utils'
 import { ETHER_TOKEN_FAKE_ADDRESS } from '../lib/token-utils'
 import { addressesEqual } from '@/utils/web3-utils'
 
@@ -22,7 +21,7 @@ const TokenSelectorInstance = React.memo(function TokenSelectorInstance({
       `}
     >
       {showIcon ? (
-        <Icon src={tokenIconUrl(address, symbol, network && network.type)} />
+        <Icon src={tokenIconUrl(address, symbol, network?.type)} />
       ) : (
         <div
           css={`

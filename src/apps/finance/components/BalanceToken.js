@@ -1,17 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import BN from 'bn.js'
-import { GU, Help, formatTokenAmount, textStyle, useTheme } from '@aragon/ui'
+import {
+  GU,
+  Help,
+  formatTokenAmount,
+  textStyle,
+  useTheme,
+  tokenIconUrl,
+} from '@aragon/ui'
+import { useNetwork } from '@/hooks/shared'
 
 function BalanceToken({
+  address,
   amount,
   compact,
   convertedAmount,
   decimals,
   symbol,
-  verified,
 }) {
   const theme = useTheme()
+  const network = useNetwork()
 
   const amountFormatted = formatTokenAmount(amount, decimals, {
     digits: decimals,
@@ -35,6 +44,17 @@ function BalanceToken({
           text-transform: uppercase;
         `}
       >
+        {address && (
+          <img
+            alt=""
+            width="20"
+            height="20"
+            src={tokenIconUrl(address, symbol, network?.type)}
+            css={`
+              margin-right: ${0.75 * GU}px;
+            `}
+          />
+        )}
         {symbol || '?'}
       </div>
       <div>
@@ -78,7 +98,6 @@ function BalanceToken({
 
 BalanceToken.defaultProps = {
   convertedAmount: new BN(-1),
-  verified: false,
 }
 
 BalanceToken.propTypes = {
@@ -87,7 +106,6 @@ BalanceToken.propTypes = {
   convertedAmount: PropTypes.instanceOf(BN),
   decimals: PropTypes.instanceOf(BN).isRequired,
   symbol: PropTypes.string.isRequired,
-  verified: PropTypes.bool.isRequired,
 }
 
 function SplitAmount({ amountFormatted }) {
