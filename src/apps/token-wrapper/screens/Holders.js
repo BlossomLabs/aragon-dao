@@ -6,9 +6,11 @@ import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBad
 import You from '../components/You'
 import { addressesEqual } from '@/utils/web3-utils'
 import { formatBalance } from '@/utils/math-utils'
+import { useAppState } from '../providers/TokenWrapperProvider'
 
 const Holders = React.memo(function Holders({ holders, wrappedToken }) {
   const { account: connectedAccount } = useWallet()
+  const { isSyncing } = useAppState()
   const holderEntries = holders
     .map(holder => ({
       ...holder,
@@ -20,6 +22,14 @@ const Holders = React.memo(function Holders({ holders, wrappedToken }) {
     <DataView
       fields={['Holder', 'Wrapped balance']}
       entries={holderEntries}
+      emptyState={{
+        default: {
+          title: ' No wrapped tokens yet!',
+        },
+        loading: {
+          displayLoader: isSyncing,
+        },
+      }}
       renderEntry={({ address, balance, isConnectedAccount }) => {
         return [
           <div>
