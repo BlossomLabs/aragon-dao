@@ -18,7 +18,7 @@ export const connectors = [
     properties: {
       chainId: [env('CHAIN_ID')], // add here to handle more injected chains
       rpc: {
-        '100': 'https://rpc.gnosis.gateway.fm/',
+        [env('CHAIN_ID')]: env('STATIC_ETH_NODE'),
       },
     },
   },
