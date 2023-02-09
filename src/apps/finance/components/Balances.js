@@ -12,21 +12,18 @@ function useBalanceItems(balances) {
   const convertRates = useConvertRates(symbols)
 
   const balanceItems = useMemo(() => {
-    return balances.map(
-      ({ address, balance, decimals, symbol }) => {
-        return {
-          address,
-          balance,
-          convertedAmount: convertRates[symbol]
-            ? getConvertedAmount(balance, convertRates[symbol], decimals)
-            : new BN('-1'),
-          decimals,
-          symbol,
-        }
-      },
-      [balances, convertRates]
-    )
-  })
+    return balances.map(({ address, balance, decimals, symbol }) => {
+      return {
+        address,
+        balance,
+        convertedAmount: convertRates[symbol]
+          ? getConvertedAmount(balance, convertRates[symbol], decimals)
+          : new BN('-1'),
+        decimals,
+        symbol,
+      }
+    })
+  }, [balances, convertRates])
   return balanceItems
 }
 
