@@ -15,7 +15,7 @@ const App = () => {
   const { below } = useViewport()
   const compactMode = below('medium')
 
-  const [tokenBalances, { loading: loadingTokens }] = useBalances()
+  const [tokenBalances, { loading: loadingTokens, error }] = useBalances()
   const [modalVisible, setModalVisible] = useState(false)
 
   const handleShowModal = useCallback(() => {
@@ -25,6 +25,11 @@ const App = () => {
   const handleHideModal = useCallback(() => {
     setModalVisible(false)
   }, [])
+
+  console.log(tokenBalances)
+  console.log(loadingTokens)
+  console.log(error)
+  console.log('-------------------------------')
 
   return (
     <>

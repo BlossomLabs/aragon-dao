@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useConnect } from '@1hive/connect-react'
 import { useConnectedApp } from '@/providers/ConnectedApp'
-import { useContractReadOnly, getContract } from '@/hooks/shared/useContract'
+import { getContract } from '@/hooks/shared/useContract'
 import { useMounted } from '@/hooks/shared/useMounted'
 import BN from 'bn.js'
 
@@ -27,34 +27,29 @@ const useBalances = (timeout = 7000) => {
   const { chainId } = useNetwork()
   const { nativeToken } = useNetwork()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
-  const [tokenBalances = [], { error }] = useConnect(
+  const [tokenBalances = [], tokenBalancesStatus] = useConnect(
     () => connectedFinanceApp?.onBalance(),
     [connectedFinanceApp]
   )
+  const [vaultContract, vaultContractStatus] = useConnect(async () => {
+    if (!connectedFinanceApp) {
+      return
+    }
+
+    const financeContract = connectedFinanceApp._app.ethersContract()
+    const vaultAddress = await financeContract.vault()
+    return getContract(vaultAddress, vaultBalanceAbi, chainId)
+  }, [connectedFinanceApp, chainId])
+
   const mounted = useMounted()
   const [tokenData, setTokenData] = useState([])
   const [tokenWithBalance, setTokenWithBalance] = useState([])
-  const [loadingBalances, setLoadingBalances] = useState(true)
-
-  const vaultAddress = useRef()
-
-  const financeContract = useContractReadOnly(
-    connectedFinanceApp?.address,
-    connectedFinanceApp?._app.abi,
-    chainId
-  )
-
-  useEffect(() => {
-    if (!financeContract) {
-      return
-    }
-    const getVaultContract = async () => {
-      const vaultAddr = await financeContract.vault()
-      vaultAddress.current = vaultAddr
-      getContractInstance(vaultAddress, vaultBalanceAbi, chainId)
-    }
-    getVaultContract()
-  }, [chainId, financeContract])
+  const [loadingBalances, setLoadingBalances] = useState(false)
+  const loading =
+    tokenBalancesStatus.loading ||
+    vaultContractStatus.loading ||
+    loadingBalances
+  const error = tokenBalancesStatus.error || vaultContractStatus.error
 
   useEffect(() => {
     if (!tokenBalances?.length || !mounted) {
@@ -62,6 +57,7 @@ const useBalances = (timeout = 7000) => {
     }
     const getTokenData = async () => {
       try {
+        setLoadingBalances(true)
         const tokensWithData = await Promise.all(
           tokenBalances.map(async tokenBalance => {
             const tokenContract = getContractInstance(
@@ -102,21 +98,16 @@ const useBalances = (timeout = 7000) => {
   }, [chainId, mounted, nativeToken, tokenBalances])
 
   useEffect(() => {
-    if (!vaultAddress.current) {
+    if (!vaultContract) {
       return
     }
-
-    const vaultContract = getContractInstance(
-      vaultAddress?.current,
-      vaultBalanceAbi,
-      chainId
-    )
 
     let cancelled = false
     let timeoutId
 
     const pollAccountBalance = async () => {
       try {
+        setLoadingBalances(true)
         const tokensWithBalances = await Promise.all(
           tokenData.map(async tokenData => {
             const vaultBalance = await vaultContract.balance(tokenData.address)
@@ -146,7 +137,7 @@ const useBalances = (timeout = 7000) => {
       cancelled = true
       window.clearTimeout(timeoutId)
     }
-  }, [chainId, timeout, tokenData])
+  }, [chainId, timeout, tokenData, vaultContract])
 
   const balancesKey = tokenWithBalance
     .map(token => token.balance.toString())
@@ -158,7 +149,7 @@ const useBalances = (timeout = 7000) => {
       return tokenWithBalance
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tokenWithBalance, balancesKey]),
-    { loading: loadingBalances, error },
+    { loading, error },
   ]
 }
 
