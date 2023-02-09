@@ -15,7 +15,6 @@ const networks = {
     ensRegistry: '0xaafca6b0c89521752e559650206d7c925fd0e530',
     name: 'Gnosis Chain',
     type: 'xdai',
-    defaultEthNode: 'https://rpc.gnosis.gateway.fm/',
     explorer: 'blockscout',
     nativeToken: 'xDAI',
   },
@@ -25,7 +24,6 @@ const networks = {
     name: 'Mainnet',
     type: 'main',
     network: 'homestead',
-    defaultEthNode: env('DEFAULT_ETH_NODE'),
     explorer: 'etherscan',
     nativeToken: 'ETH',
   },
@@ -35,6 +33,9 @@ const ETH_ADDRESS_SPLIT_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 const ETH_ADDRESS_TEST_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 
 const CHAIN_ID = env('CHAIN_ID')
+const STATIC_ETH_NODE = env('STATIC_ETH_NODE')
+
+let STATIC_PROVIDER = null
 
 export function getNetworkType(chainId = CHAIN_ID) {
   chainId = String(chainId)
@@ -95,6 +96,18 @@ export function shortenAddress(address, charsLength = 4) {
   )
 }
 
+export const getStaticProvider = () => {
+  if (STATIC_PROVIDER) {
+    return STATIC_PROVIDER
+  }
+
+  const provider = new Providers.StaticJsonRpcProvider(STATIC_ETH_NODE)
+
+  STATIC_PROVIDER = provider
+
+  return provider
+}
+
 function getBackendServicesKeys() {
   return {
     alchemy: env('ALCHEMY_API_KEY'),
@@ -105,14 +118,10 @@ function getBackendServicesKeys() {
 }
 
 export function getDefaultProvider(chainId = CHAIN_ID) {
-  const { defaultEthNode } = getNetwork(chainId)
-
-  return defaultEthNode
-    ? new Providers.StaticJsonRpcProvider(defaultEthNode)
-    : ethers.getDefaultProvider(
-        getEthersNetwork(chainId),
-        getBackendServicesKeys()
-      )
+  return ethers.getDefaultProvider(
+    getEthersNetwork(chainId),
+    getBackendServicesKeys()
+  )
 }
 
 export function encodeFunctionData(contract, functionName, params) {

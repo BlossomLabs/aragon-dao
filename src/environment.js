@@ -12,6 +12,7 @@ function throwIfNotExists(envName) {
 const ENV_VARS = {
   CHAIN_ID: parseInt(throwIfNotExists(process.env.CHAIN_ID)),
   DAO_ID: throwIfNotExists(process.env.DAO_ID),
+  STATIC_ETH_NODE: throwIfNotExists(process.env.STATIC_ETH_NODE),
   GUARDIANS_TOKEN_MANAGER: throwIfNotExists(
     process.env.GUARDIANS_TOKEN_MANAGER
   ),
@@ -25,7 +26,7 @@ const ENV_VARS = {
   ANKR_API_KEY: process.env.ANKR_API_KEY || null,
   INFURA_API_KEY: process.env.INFURA_API_KEY || null,
   POCKET_API_KEY: process.env.POCKET_API_KEY || null,
-  DEFAULT_ETH_NODE: process.env.DEFAULT_ETH_NODE || null,
+  IPFS_RESOLVER: process.env.IPFS_RESOLVER || null,
 }
 
 export function env(name) {
