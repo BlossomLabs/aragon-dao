@@ -208,7 +208,7 @@ const App = React.memo(function App() {
 })
 
 export default () => (
-  <FeeProvider>
+  <FeeProvider type="budget">
     <App />
   </FeeProvider>
 )

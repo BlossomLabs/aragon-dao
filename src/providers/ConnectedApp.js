@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import { useOrganizationState } from './OrganizationProvider'
 import connectVoting from '@blossom-labs/connect-bl-tao-voting'
 import connectTokenWrapper from '@blossom-labs/connect-token-wrapper'
@@ -27,6 +27,20 @@ const getConnector = appName => {
 
 const CONNECTED_APPS_CACHE = {}
 
+async function rawLoadOrCreateConnectedApp(app) {
+  const connect = getConnector(app.name)
+
+  if (!app || !connect) {
+    return
+  }
+
+  const connectedApp = await connect(app)
+
+  CONNECTED_APPS_CACHE[app.address] = connectedApp
+
+  return connectedApp
+}
+
 async function loadOrCreateConnectedApp(appAddress, apps) {
   if (!apps) {
     return
@@ -41,39 +55,21 @@ async function loadOrCreateConnectedApp(appAddress, apps) {
   }
 
   const app = apps.find(app => addressesEqual(app.address, appAddress))
-  const connect = getConnector(app.name)
 
-  if (!app || !connect) {
-    return
-  }
-
-  const connectedApp = await connect(app)
-
-  CONNECTED_APPS_CACHE[appAddress] = connectedApp
-
-  return connectedApp
+  return rawLoadOrCreateConnectedApp(app)
 }
 
 function ConnectedAppProvider({ children }) {
   const [path] = usePath()
 
   const { apps } = useOrganizationState()
-  const [connectedApp, connectedAppStatus] = useConnect(() => {
+  const [connectedApp, connectedAppStatus] = useConnect(async () => {
     const [, , currentAppAddress] = path.split('/')
     return loadOrCreateConnectedApp(currentAppAddress, apps)
   }, [apps, path])
 
-  const getConnectedApp = useCallback(
-    appAddress => {
-      return loadOrCreateConnectedApp(appAddress, apps)
-    },
-    [apps]
-  )
-
   return (
-    <AppConnectorContext.Provider
-      value={{ connectedApp, connectedAppStatus, getConnectedApp }}
-    >
+    <AppConnectorContext.Provider value={{ connectedApp, connectedAppStatus }}>
       {children}
     </AppConnectorContext.Provider>
   )
@@ -83,4 +79,9 @@ function useConnectedApp() {
   return useContext(AppConnectorContext)
 }
 
-export { ConnectedAppProvider, useConnectedApp }
+export {
+  ConnectedAppProvider,
+  useConnectedApp,
+  loadOrCreateConnectedApp,
+  rawLoadOrCreateConnectedApp,
+}

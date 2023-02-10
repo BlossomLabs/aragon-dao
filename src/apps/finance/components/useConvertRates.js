@@ -46,7 +46,7 @@ export function useConvertRates(symbols) {
           )
           retryTimer = setTimeout(update, retryDelay.current)
         }
-        console.log('Error:', err)
+        console.error(err)
       }
     }
     update()

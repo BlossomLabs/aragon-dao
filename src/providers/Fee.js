@@ -1,7 +1,9 @@
+import { env } from '@/environment'
 import { useTokenBalanceOf } from '@/hooks/shared/useAccountTokenBalance'
 import { useConnect } from '@1hive/connect-react'
 import { BN } from 'bn.js'
 import React, { useContext, useMemo } from 'react'
+import { rawLoadOrCreateConnectedApp } from './ConnectedApp'
 import { useOrganizationState } from './OrganizationProvider'
 import { useWallet } from './Wallet'
 
@@ -11,33 +13,59 @@ const FORWARDER_FEE_APP_NAME = 'an-delay'
 
 const ZERO_BN = new BN(0)
 
-function FeeProvider({ children }) {
+const BUDGET_APP_ADDRESSES = env('BUDGET_APP_ADDRESSES')
+const GOVERNANCE_APP_ADDRESSES = env('GOVERNANCE_APP_ADDRESSES')
+
+function FeeProvider({ children, type = '' }) {
   const { account } = useWallet()
   const { apps } = useOrganizationState()
-  const [feeTokenAddress, tokenStatus] = useConnect(async () => {
-    const app = apps.find(app => app.name === FORWARDER_FEE_APP_NAME)
-
-    if (!app) {
+  const [delayData, delayDataStatus] = useConnect(async () => {
+    if (!apps) {
       return
     }
 
-    const feeTokenAddress = await app.ethersContract().feeToken()
+    const delays = apps.filter(app => app.name === FORWARDER_FEE_APP_NAME)
+    let labeledAppAddresses
+    let delay
+    if (type.toLowerCase() === 'budget') {
+      labeledAppAddresses = BUDGET_APP_ADDRESSES
+    } else if (type.toLowerCase() === 'governance') {
+      labeledAppAddresses = GOVERNANCE_APP_ADDRESSES
+    }
 
-    return feeTokenAddress
-  }, [apps])
+    if (!labeledAppAddresses) {
+      throw new Error('Unknown provided type')
+    }
+
+    delay = delays.find(delay =>
+      labeledAppAddresses.includes(delay.address.toLowerCase())
+    )
+
+    const delayConnector = await rawLoadOrCreateConnectedApp(delay)
+
+    return delayConnector?.appData()
+  }, [apps, type])
   const [feeTokenBalance, balanceStatus] = useTokenBalanceOf(
-    feeTokenAddress,
+    delayData?.feeToken?.address,
     account
   )
   const hasFeeTokens = !!feeTokenBalance && feeTokenBalance.gt(ZERO_BN)
-  const loading = tokenStatus.loading || balanceStatus.loading
-  const error = tokenStatus.error || balanceStatus.error
+  const loading = delayDataStatus.loading || balanceStatus.loading
+  const error = delayDataStatus.error || balanceStatus.error
 
   return (
     <FeeContext.Provider
       value={useMemo(
-        () => ({ feeTokenBalance, hasFeeTokens, loading, error }),
-        [feeTokenBalance, hasFeeTokens, loading, error]
+        () => ({
+          executionDelay: delayData?.executionDelay,
+          feeToken: delayData?.feeToken,
+          feeAmount: delayData?.feeAmount,
+          feeTokenBalance,
+          hasFeeTokens,
+          loading,
+          error,
+        }),
+        [delayData, feeTokenBalance, hasFeeTokens, loading, error]
       )}
     >
       {children}

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Button, Field, GU, Info, TextInput, textStyle } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
-import RequiredTokensInfo from '@/components/RequiredTokensInfo'
+import RequiredTokensError from '@/components/RequiredTokensInfo'
 import { useFee } from '@/providers/Fee'
 
 function CreateNewVote({ getTransactions }) {
@@ -69,13 +69,11 @@ function CreateNewVote({ getTransactions }) {
       >
         Create new proposal
       </Button>
-      {!hasFeeTokens && (
-        <RequiredTokensInfo
-          css={`
-            margin-top: ${2 * GU}px;
-          `}
-        />
-      )}
+      <RequiredTokensError
+        css={`
+          margin-top: ${2 * GU}px;
+        `}
+      />
     </div>
   )
 }

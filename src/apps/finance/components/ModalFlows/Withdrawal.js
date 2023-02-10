@@ -15,7 +15,7 @@ import {
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
 import AmountInput from '../../../../components/AmountInput'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
-import RequiredTokensInfo from '@/components/RequiredTokensInfo'
+import RequiredTokensError from '@/components/RequiredTokensInfo'
 import { useFee } from '@/providers/Fee'
 import { FinancialComplianceFormDisclaimer } from '@/components/Disclaimers'
 
@@ -217,13 +217,12 @@ class Withdrawal extends React.Component {
             Submit withdrawal
           </Button>
         </FinancialComplianceFormDisclaimer>
-        {!hasFeeTokens && (
-          <RequiredTokensInfo
-            css={`
-              margin-top: ${2 * GU}px;
-            `}
-          />
-        )}
+        <RequiredTokensError
+          css={`
+            margin-top: ${2 * GU}px;
+          `}
+        />
+
         {errorMessage && <ValidationError message={errorMessage} />}
       </form>
     ) : (

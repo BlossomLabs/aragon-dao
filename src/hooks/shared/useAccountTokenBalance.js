@@ -13,8 +13,12 @@ export function useTokenBalanceOf(tokenAddress, account, chainId) {
   )
 
   return useConnect(async () => {
-    if (!tokenContract || !account) {
+    if (!tokenContract) {
       return
+    }
+
+    if (!account) {
+      return null
     }
 
     const result = await tokenContract.balanceOf(account)

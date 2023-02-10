@@ -60,7 +60,7 @@ const App = () => {
 
 function AppWrapper() {
   return (
-    <FeeProvider>
+    <FeeProvider type="budget">
       <App />
     </FeeProvider>
   )
