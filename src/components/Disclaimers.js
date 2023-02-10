@@ -13,13 +13,13 @@ const DISCLAIMERS = {
   [PARTICIPATION_DISCLAIMER]: {
     text: `I have read and accept the ${PLACEHOLDER}.`,
     link:
-      'https://bafybeifenxcrhkcitglsdttvkfzhrqenzjq2abqndq4eekhby4ngnj4eta.ipfs.nftstorage.link/participation.html',
+      'https://bafybeidgxjx5v3cka5uhz3k7hqx43xprtjxlpccbn3ud2jixalqvz52hla.ipfs.nftstorage.link/AragonDAOpaprticipationagreementpublicversion.html',
     label: 'Aragon DAO Participation Agreement',
   },
   [TERMS_OF_USE_DISCLAIMER]: {
     text: `I have read and accept the ${PLACEHOLDER}.`,
     link:
-      'https://bafybeifenxcrhkcitglsdttvkfzhrqenzjq2abqndq4eekhby4ngnj4eta.ipfs.nftstorage.link/proposal.html',
+      'https://bafybeidgxjx5v3cka5uhz3k7hqx43xprtjxlpccbn3ud2jixalqvz52hla.ipfs.nftstorage.link/AragonDAOproposaltermspublicversion.docx.html',
     label: 'Aragon DAO Terms of Use',
   },
   [FINANCIAL_COMPLIANCE_FORM]: {
