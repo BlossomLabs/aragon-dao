@@ -27,7 +27,7 @@ const Convert = React.memo(function({ mode, getTransactions }) {
   const { account } = useWallet()
   const theme = useTheme()
   const [amount, setAmount] = useState({
-    value: '0',
+    value: '',
     valueBN: new BN('0'),
   })
   const { wrappedToken, depositedToken } = useAppState()
@@ -55,26 +55,6 @@ const Convert = React.memo(function({ mode, getTransactions }) {
   }, [amount, accountBalance])
   const isButtonDisabled = amount.valueBN.eq(new BN(0)) || Boolean(errorMessage)
   const isMaxButtonVisible = !!accountBalance
-
-  const handleEditMode = useCallback(
-    editMode => {
-      setAmount(amount => {
-        const newValue = amount.valueBN.gte(0)
-          ? formatTokenAmount(amount.valueBN, token.numDecimals, false, false, {
-              commas: !editMode,
-              replaceZeroBy: editMode ? '' : '0',
-              rounding: token.numDecimals,
-            })
-          : ''
-
-        return {
-          ...amount,
-          value: newValue,
-        }
-      })
-    },
-    [token.numDecimals]
-  )
 
   // Amount change handler
   const handleAmountChange = useCallback(
@@ -141,8 +121,6 @@ const Convert = React.memo(function({ mode, getTransactions }) {
           onChange={handleAmountChange}
           onMaxClick={handleMaxSelected}
           showMax={isMaxButtonVisible}
-          onFocus={() => handleEditMode(true)}
-          onBlur={() => handleEditMode(false)}
           wide
         />
 
