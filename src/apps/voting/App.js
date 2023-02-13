@@ -56,14 +56,6 @@ const App = React.memo(function App() {
     setModalMode(mode)
   }, [])
 
-  const handleRevokeDelegation = useCallback(() => {
-    handleShowModal('revoke')
-  }, [handleShowModal])
-
-  const handleDelegate = useCallback(() => {
-    handleShowModal('delegate')
-  }, [handleShowModal])
-
   const handleNewVote = useCallback(() => {
     handleShowModal('newVote')
   }, [handleShowModal])
@@ -105,9 +97,22 @@ const App = React.memo(function App() {
             emptyStateLabel={noVotes ? 'No proposals yet' : 'Loaded'}
             action={
               account ? (
-                <Button wide mode="strong" onClick={handleNewVote}>
-                  Create a new proposal
-                </Button>
+                <div
+                  css={`
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: ${1 * GU}px;
+                  `}
+                >
+                  <Button wide mode="strong" onClick={handleNewVote}>
+                    Create a new proposal
+                  </Button>
+                  {showDelegateButton && (
+                    <DelegationButton user={user} onClick={handleShowModal} />
+                  )}
+                </div>
               ) : null
             }
             illustration={
@@ -129,22 +134,9 @@ const App = React.memo(function App() {
                 !selectedVote && (
                   <>
                     {showDelegateButton && (
-                      <Button
-                        mode="normal"
-                        onClick={() =>
-                          setModalMode(
-                            user?.representative
-                              ? handleRevokeDelegation
-                              : handleDelegate
-                          )
-                        }
-                        label={
-                          user?.representative
-                            ? 'Revoke Delegation'
-                            : 'Vote Delegation'
-                        }
-                        icon={<IconToken />}
-                        display={compactMode ? 'icon' : 'label'}
+                      <DelegationButton
+                        user={user}
+                        onClick={handleShowModal}
                         css={`
                           margin-right: ${1 * GU}px;
                         `}
@@ -206,6 +198,22 @@ const App = React.memo(function App() {
     </>
   )
 })
+
+function DelegationButton({ user, onClick, ...props }) {
+  const { below } = useViewport()
+  const compactMode = below('medium')
+
+  return (
+    <Button
+      mode="normal"
+      onClick={() => onClick(user?.representative ? 'revoke' : 'delegate')}
+      label={user?.representative ? 'Revoke Delegation' : 'Vote Delegation'}
+      icon={<IconToken />}
+      display={compactMode ? 'icon' : 'label'}
+      {...props}
+    />
+  )
+}
 
 export default () => (
   <FeeProvider type="budget">
