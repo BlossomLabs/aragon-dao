@@ -150,7 +150,7 @@ const Convert = React.memo(function({ mode, getTransactions }) {
               color: ${theme.contentSecondary};
             `}
           >
-            {'Your have '}
+            {'You have '}
             <span
               css={`
                 font-weight: 600;
