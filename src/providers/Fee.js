@@ -16,6 +16,18 @@ const ZERO_BN = new BN(0)
 const BUDGET_APP_ADDRESSES = env('BUDGET_APP_ADDRESSES')
 const GOVERNANCE_APP_ADDRESSES = env('GOVERNANCE_APP_ADDRESSES')
 
+function formatDelayData(delayData) {
+  return {
+    ...delayData,
+    executionDelay: parseInt(delayData.executionDelay),
+    feeToken: {
+      ...delayData.feeToken,
+      decimals: parseInt(delayData.feeToken.decimals),
+    },
+    feeAmount: new BN(delayData.feeAmount),
+  }
+}
+
 function FeeProvider({ children, type = '' }) {
   const { account } = useWallet()
   const { apps } = useOrganizationState()
@@ -42,14 +54,19 @@ function FeeProvider({ children, type = '' }) {
     )
 
     const delayConnector = await rawLoadOrCreateConnectedApp(delay)
+    const delayData = await delayConnector?.appData()
 
-    return delayConnector?.appData()
+    return delayData ? formatDelayData(delayData) : undefined
   }, [apps, type])
   const [feeTokenBalance, balanceStatus] = useTokenBalanceOf(
     delayData?.feeToken?.address,
     account
   )
-  const hasFeeTokens = !!feeTokenBalance && feeTokenBalance.gt(ZERO_BN)
+  const hasFeeTokens =
+    !!feeTokenBalance &&
+    !!delayData &&
+    feeTokenBalance.gt(ZERO_BN) &&
+    feeTokenBalance.gte(delayData.feeAmount)
   const loading = delayDataStatus.loading || balanceStatus.loading
   const error = delayDataStatus.error || balanceStatus.error
 
