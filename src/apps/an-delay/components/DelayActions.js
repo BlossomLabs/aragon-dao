@@ -40,6 +40,10 @@ const DelayActions = React.memo(({ status, onDelayAction }) => {
   const theme = useTheme()
   const props = getMainActionProps(status, theme)
 
+  if (!isGuardian) {
+    return null
+  }
+
   return (
     <div
       css={`
@@ -53,7 +57,6 @@ const DelayActions = React.memo(({ status, onDelayAction }) => {
       <DelayButton
         label="Cancel"
         onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
-        disabled={!isGuardian}
       />
     </div>
   )
