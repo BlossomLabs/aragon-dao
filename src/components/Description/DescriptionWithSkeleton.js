@@ -27,7 +27,9 @@ export const DescriptionWithSkeleton = ({ path, itemNumber, loading }) => {
 
   return (
     <>
-      {itemNumber && <strong css="font-weight: bold">#{itemNumber}: </strong>}
+      {itemNumber !== undefined && (
+        <strong css="font-weight: bold">#{itemNumber}: </strong>
+      )}
       <Description disableBadgeInteraction path={path} />
     </>
   )

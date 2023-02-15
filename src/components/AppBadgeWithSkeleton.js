@@ -18,7 +18,7 @@ function AppBadgeWithSkeleton({ targetApp, loading, ...props }) {
   }
 
   if (!targetApp) {
-    return <></>
+    return <AppBadge label="Unknown" />
   }
 
   const { address, name, icon } = targetApp
