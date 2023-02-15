@@ -17,8 +17,8 @@ function App() {
   const { depositedToken, holders, isSyncing, wrappedToken } = useAppState()
   const isWaiting = useWait()
 
-  const appStateReady = depositedToken?.id && wrappedToken?.id
-  const isLoading = isSyncing || isWaiting
+  const appTokensReady = depositedToken?.id && wrappedToken?.id
+  const isLoading = isSyncing || isWaiting || !appTokensReady
 
   const handleShowModal = useCallback(() => {
     setModalVisible(true)
@@ -45,12 +45,10 @@ function App() {
           <LayoutColumns
             primary={<Holders holders={holders} wrappedToken={wrappedToken} />}
             secondary={
-              appStateReady && (
-                <InfoBox
-                  depositedToken={depositedToken}
-                  wrappedToken={wrappedToken}
-                />
-              )
+              <InfoBox
+                depositedToken={depositedToken}
+                wrappedToken={wrappedToken}
+              />
             }
           />
         </React.Fragment>
