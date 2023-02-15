@@ -104,7 +104,7 @@ BalanceToken.propTypes = {
   amount: PropTypes.instanceOf(BN).isRequired,
   compact: PropTypes.bool.isRequired,
   convertedAmount: PropTypes.instanceOf(BN),
-  decimals: PropTypes.instanceOf(BN).isRequired,
+  decimals: PropTypes.number.isRequired,
   symbol: PropTypes.string.isRequired,
 }
 
