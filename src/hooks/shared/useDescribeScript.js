@@ -85,7 +85,7 @@ const useDecribeScript = (evmCallScript, scriptId) => {
       !apps ||
       !connection ||
       !evmCallScript ||
-      !scriptId ||
+      scriptId === undefined ||
       emptyScript
     ) {
       return
