@@ -7,7 +7,7 @@ import {
   ETHERSCAN_TYPES,
 } from './provider-types'
 
-const DEFAULT_LOCAL_CHAIN = ''
+const DEFAULT_LOCAL_CHAIN = '1337'
 
 const networks = {
   xdai: {
@@ -24,6 +24,15 @@ const networks = {
     name: 'Mainnet',
     type: 'main',
     network: 'homestead',
+    explorer: 'etherscan',
+    nativeToken: 'ETH',
+  },
+  local: {
+    chainId: 1337,
+    ensRegistry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    name: 'local',
+    type: 'main',
+    network: 'dev',
     explorer: 'etherscan',
     nativeToken: 'ETH',
   },
