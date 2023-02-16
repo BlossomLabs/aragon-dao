@@ -17,7 +17,13 @@ const getMainActionProps = (status, theme) => {
         mainAction: actions.PAUSE_EXECUTION,
         label: 'Pause',
         beforeIcon: PauseIcon,
-        css: `color: white; background-color: ${theme.purple};`,
+        css: `
+          color: white;
+          background-color: ${theme.purple};
+          &:disabled {
+            opacity: 0.7;
+          }  
+        `,
       }
     case STATUS.PAUSED:
       return {
@@ -39,8 +45,12 @@ const DelayActions = React.memo(({ status, onDelayAction }) => {
   const { isGuardian } = useGuardianState()
   const theme = useTheme()
   const props = getMainActionProps(status, theme)
+  const displayActions =
+    isGuardian ||
+    // Everybody can execute a script so always display actions
+    props.mainAction === actions.EXECUTE
 
-  if (!isGuardian) {
+  if (!displayActions) {
     return null
   }
 
@@ -54,10 +64,14 @@ const DelayActions = React.memo(({ status, onDelayAction }) => {
       `}
     >
       <DelayButton {...props} onClick={() => onDelayAction(props.mainAction)} />
-      <DelayButton
-        label="Cancel"
-        onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
-      />
+
+      {isGuardian && (
+        <DelayButton
+          label="Cancel"
+          onClick={() => onDelayAction(actions.CANCEL_EXECUTION)}
+          disabled={!isGuardian}
+        />
+      )}
     </div>
   )
 })
