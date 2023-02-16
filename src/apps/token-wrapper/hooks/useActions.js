@@ -11,8 +11,7 @@ import tokenActions from '../actions/token-action-types'
 import tokenAllowanceAbi from '../abi/token-allowance.json'
 import tokenSymbolAbi from '../abi/token-symbol.json'
 import { useConnectedApp } from '@/providers/ConnectedApp'
-import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
-import { useGasLimit } from '@/hooks/shared/useGasLimit'
+import { describeIntent } from '@/utils/tx-utils'
 import { useNetwork } from '@/hooks/shared'
 
 const tokenAbi = [].concat(tokenAllowanceAbi, tokenSymbolAbi)
@@ -22,7 +21,6 @@ export default function useActions() {
   const { account } = useWallet()
   const { connectedApp } = useConnectedApp()
   const mounted = useMounted()
-  const [GAS_LIMIT, APPROVE_GAS_LIMIT] = useGasLimit(1000000)
 
   const getAllowance = useCallback(
     async tokenAddress => {
@@ -50,15 +48,13 @@ export default function useActions() {
         actAs: account,
       })
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       intent = describeIntent(intent, radspec[tokenActions.WRAP]())
 
       if (mounted()) {
         onDone(intent.transactions)
       }
     },
-    [account, connectedApp, mounted, GAS_LIMIT]
+    [account, connectedApp, mounted]
   )
 
   const unwrap = useCallback(
@@ -67,15 +63,13 @@ export default function useActions() {
         actAs: account,
       })
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       intent = describeIntent(intent, radspec[tokenActions.UNWRAP]())
 
       if (mounted()) {
         onDone(intent.transactions)
       }
     },
-    [account, connectedApp, mounted, GAS_LIMIT]
+    [account, connectedApp, mounted]
   )
 
   const approve = useCallback(
@@ -92,12 +86,11 @@ export default function useActions() {
         data: approveData,
         from: account,
         to: tokenContract.address,
-        gasLimit: APPROVE_GAS_LIMIT,
       }
 
       return intent
     },
-    [account, APPROVE_GAS_LIMIT]
+    [account]
   )
 
   const approveTokenAmount = useCallback(

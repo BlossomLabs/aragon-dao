@@ -1,21 +1,43 @@
-import { BigNumber } from 'ethers'
+const DEFAULT_GAS_LIMIT = 450_000
+const DEFAULT_GAS_FUZZ_FACTOR = 1.5
+const BLOCK_GAS_LIMIT_FACTOR = 0.95
 
-export function normalizeTransaction(transactions) {
-  return transactions.map(tx => ({
-    ...tx,
-    value: BigNumber.from(tx.value || 0),
-  }))
-}
-
-export function imposeGasLimit(intent, gasLimit) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => ({ ...tx, gasLimit })),
-  }
+const NETWORK_GAS_DATA = {
+  1: {
+    blockGasLimit: 15_000_000,
+    gasLimit: DEFAULT_GAS_LIMIT,
+    gasFuzzFactor: 1.25,
+  },
+  100: {
+    blockGasLimit: 30_000_000,
+    gasLimit: DEFAULT_GAS_LIMIT,
+    gasFuzzFactor: DEFAULT_GAS_FUZZ_FACTOR,
+  },
 }
 
 const KNOWN_DESCRIPTIONS = {
   '0x095ea7b3': 'Approve ANT for required action',
+}
+
+export async function getRecommendedGasLimit(chainId, provider, tx) {
+  const { blockGasLimit, gasLimit, gasFuzzFactor } = NETWORK_GAS_DATA[chainId]
+  let estimatedGas
+
+  try {
+    estimatedGas = await provider.estimateGas(tx)
+  } catch (err) {
+    console.error(`Couldn't estimate gas: ${err.message}`)
+    return gasLimit
+  }
+  const upperGasLimit = Math.round(blockGasLimit * BLOCK_GAS_LIMIT_FACTOR)
+
+  if (estimatedGas > upperGasLimit) {
+    return estimatedGas
+  }
+
+  const bufferedGasLimit = Math.round(estimatedGas * gasFuzzFactor)
+
+  return Math.min(bufferedGasLimit, upperGasLimit)
 }
 
 export function describeIntent(intent, description) {

@@ -1,8 +1,15 @@
-import React, { useEffect } from 'react'
+import { BigNumber } from 'ethers'
+import { useEffect } from 'react'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { useMultiModal } from './MultiModal/MultiModalProvider'
-import { normalizeTransaction } from '@/utils/tx-utils'
+
+function normalizeTransaction(transactions) {
+  return transactions.map(tx => ({
+    ...tx,
+    value: BigNumber.from(tx.value || 0),
+  }))
+}
 
 export default function SafeStep({ transactions }) {
   const mounted = useMounted()

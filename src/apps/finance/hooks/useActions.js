@@ -11,16 +11,14 @@ import financeActions from '../actions/finance-action-types'
 
 import tokenAbi from '@/abi/minimeToken.json'
 import { constants } from 'ethers'
-import { useGasLimit } from '@/hooks/shared/useGasLimit'
 import { useNetwork } from '@/hooks/shared'
-import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
+import { describeIntent } from '@/utils/tx-utils'
 
 export default function useActions() {
   const { chainId } = useNetwork()
   const { account } = useWallet()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const mounted = useMounted()
-  const [GAS_LIMIT, APPROVE_GAS_LIMIT] = useGasLimit(2000000)
 
   const getAllowance = useCallback(
     async tokenAddress => {
@@ -52,8 +50,6 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       /**
        * We need to add the amount as tx value when depositting
        * native tokens
@@ -71,7 +67,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted, GAS_LIMIT]
+    [account, connectedFinanceApp, mounted]
   )
 
   const withdraw = useCallback(
@@ -84,15 +80,13 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       intent = describeIntent(intent, radspec[financeActions.WITHDRAW]())
 
       if (mounted()) {
         onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted, GAS_LIMIT]
+    [account, connectedFinanceApp, mounted]
   )
 
   const approve = useCallback(
@@ -108,14 +102,13 @@ export default function useActions() {
         data: approveData,
         from: account,
         to: tokenContract.address,
-        gasLimit: APPROVE_GAS_LIMIT,
       }
 
       if (mounted()) {
         return intent
       }
     },
-    [account, APPROVE_GAS_LIMIT, mounted]
+    [account, mounted]
   )
 
   const approveTokenAmount = useCallback(

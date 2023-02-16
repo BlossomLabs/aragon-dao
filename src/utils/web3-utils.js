@@ -43,6 +43,7 @@ const ETH_ADDRESS_TEST_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 
 const CHAIN_ID = env('CHAIN_ID')
 const STATIC_ETH_NODE = env('STATIC_ETH_NODE')
+const LOCAL_ETH_NODES = ['http://127.0.0.1:8545', 'http://localhost:8545']
 
 const ETHERS_UNSUPPORTED_CHAIN_IDS = [100]
 
@@ -129,7 +130,10 @@ function getBackendServicesKeys() {
 }
 
 export function getDefaultProvider(chainId = CHAIN_ID) {
-  if (ETHERS_UNSUPPORTED_CHAIN_IDS.includes(chainId)) {
+  if (
+    ETHERS_UNSUPPORTED_CHAIN_IDS.includes(chainId) ||
+    LOCAL_ETH_NODES.includes(STATIC_ETH_NODE)
+  ) {
     return getStaticProvider()
   }
 

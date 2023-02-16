@@ -1,22 +1,19 @@
-import { useCallback, useMemo } from 'react'
 import { noop } from '@aragon/ui'
 import { utils } from 'ethers'
+import { useCallback, useMemo } from 'react'
+
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
 import radspec from '@/radspec'
-import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
-import { useGasLimit } from '@/hooks/shared/useGasLimit'
-
-import votingActions from '../actions/voting-action-types'
-
 import { useMounted } from '@/hooks/shared/useMounted'
 import { EMPTY_CALLSCRIPT } from '@/utils/evmscript'
+import { describeIntent } from '@/utils/tx-utils'
+import votingActions from '../actions/voting-action-types'
 
 export default function useActions() {
   const mounted = useMounted()
   const { account } = useWallet()
   const { connectedApp: votingApp } = useConnectedApp()
-  const [GAS_LIMIT] = useGasLimit()
 
   const delegateVoting = useCallback(
     async (representative, onDone = noop) => {
@@ -27,7 +24,6 @@ export default function useActions() {
           actAs: account,
         }
       )
-      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       intent = describeIntent(
         intent,
@@ -35,11 +31,12 @@ export default function useActions() {
           representative,
         })
       )
+
       if (mounted()) {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, GAS_LIMIT, mounted]
+    [account, votingApp, mounted]
   )
 
   const vote = useCallback(
@@ -47,8 +44,6 @@ export default function useActions() {
       let intent = await votingApp.intent('vote', [voteId, supports], {
         actAs: account,
       })
-
-      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       intent = describeIntent(
         intent,
@@ -62,7 +57,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, GAS_LIMIT, mounted]
+    [account, votingApp, mounted]
   )
 
   const newVote = useCallback(
@@ -75,15 +70,13 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       intent = describeIntent(intent, radspec[votingActions.NEW_VOTE]())
 
       if (mounted()) {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, GAS_LIMIT, mounted]
+    [account, votingApp, mounted]
   )
 
   const voteOnBehalfOf = useCallback(
@@ -96,8 +89,6 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       intent = describeIntent(
         intent,
         radspec[votingActions.VOTE_ON_BEHALF_OF]({ voteId, supports })
@@ -107,7 +98,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, GAS_LIMIT, mounted]
+    [account, votingApp, mounted]
   )
 
   const executeVote = useCallback(
@@ -115,8 +106,6 @@ export default function useActions() {
       let intent = await votingApp.intent('executeVote', [voteId, script], {
         actAs: account,
       })
-
-      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       intent = describeIntent(
         intent,
@@ -127,7 +116,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, GAS_LIMIT, mounted]
+    [account, votingApp, mounted]
   )
 
   return useMemo(

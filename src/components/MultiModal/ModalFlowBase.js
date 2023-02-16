@@ -7,6 +7,8 @@ import Stepper from '../Stepper/Stepper'
 import { useWallet } from '../../providers/Wallet'
 import ErrorScreen from './screens/ErrorScreen'
 import SafeStep from '../SafeStep'
+import { getRecommendedGasLimit } from '@/utils/tx-utils'
+import { useNetwork } from '@/hooks/shared'
 
 const indexNumber = {
   0: 'First',
@@ -23,7 +25,9 @@ function ModalFlowBase({
   transactionTitle,
 }) {
   const { connected: isSafeConnected } = useSafeAppsSDK()
-  const { ethers } = useWallet()
+  const { ethers, type } = useWallet()
+  const { chainId } = useNetwork()
+  const isContractSender = type === 'contract'
   const signer = useMemo(() => ethers.getSigner(), [ethers])
 
   const transactionSteps = useMemo(
@@ -45,22 +49,38 @@ function ModalFlowBase({
                 setHash,
               }) => {
                 try {
-                  const trx = {
+                  const tx = {
                     from: transaction.from,
                     to: transaction.to,
                     data: transaction.data,
-                    gasLimit: transaction.gasLimit,
                     value: transaction.value ?? undefined,
                   }
-                  const tx = await signer.sendTransaction(trx)
 
-                  setHash(tx.hash)
+                  /**
+                   * We have to perform the estimated gas calculation inside the modal flow as there may
+                   * be pre-transactions that need to be executed in order to calculate the gas of the next
+                   * transaction correctly.
+                   */
+                  let gasLimit = isContractSender
+                    ? /*
+                       * Specific condition for Wallet Connect usages through a Safe contract:
+                       * We need to set the gas limit to 0 to avoid an issue that sets safeTxGas
+                       * wrongly provoking a tx revert.
+                       */
+                      0
+                    : await getRecommendedGasLimit(chainId, signer, tx)
+
+                  tx.gasLimit = gasLimit
+
+                  const txReceipt = await signer.sendTransaction(tx)
+
+                  setHash(txReceipt.hash)
 
                   setWorking()
 
                   // We need to wait for pre-transactions to mine before asking for the next signature
                   // TODO: Provide a better user experience than waiting on all transactions
-                  await tx.wait()
+                  await txReceipt.wait()
 
                   setSuccess()
                 } catch (err) {
@@ -71,7 +91,7 @@ function ModalFlowBase({
             }
           })
         : null,
-    [transactions, signer]
+    [transactions, signer, isContractSender, chainId]
   )
 
   const extendedScreens = useMemo(() => {

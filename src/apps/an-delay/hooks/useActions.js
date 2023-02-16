@@ -6,8 +6,7 @@ import anDelayActions from '../actions/an-delay-action.types'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useGuardianState } from '@/providers/Guardian'
 import { useANDelaySettings } from '../providers/ANDelaySettingsProvider'
-import { useGasLimit } from '@/hooks/shared/useGasLimit'
-import { describeIntent, imposeGasLimit } from '@/utils/tx-utils'
+import { describeIntent } from '@/utils/tx-utils'
 import { useMounted } from '@/hooks/shared/useMounted'
 
 export default function useActions() {
@@ -16,7 +15,6 @@ export default function useActions() {
   const { callAsGuardian } = useGuardianState()
   const { connectedApp: connectedANDelayApp } = useConnectedApp()
   const { executionDelay } = useANDelaySettings()
-  const [GAS_LIMIT] = useGasLimit()
 
   const execute = useCallback(
     async (script, onDone = noop) => {
@@ -28,15 +26,13 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       intent = describeIntent(intent, radspec[anDelayActions.EXECUTE](script))
 
       if (mounted()) {
         onDone(intent.transactions)
       }
     },
-    [account, connectedANDelayApp, GAS_LIMIT, mounted]
+    [account, connectedANDelayApp, mounted]
   )
 
   const delayExecution = useCallback(
@@ -48,8 +44,6 @@ export default function useActions() {
           actAs: account,
         }
       )
-
-      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       intent = describeIntent(
         intent,
@@ -63,7 +57,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedANDelayApp, executionDelay, GAS_LIMIT, mounted]
+    [account, connectedANDelayApp, executionDelay, mounted]
   )
 
   const pauseExecution = useCallback(
@@ -71,8 +65,6 @@ export default function useActions() {
       let intent = callAsGuardian(connectedANDelayApp, 'pauseExecution', [
         script.id,
       ])
-
-      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       intent = describeIntent(
         intent,
@@ -83,7 +75,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [callAsGuardian, connectedANDelayApp, GAS_LIMIT, mounted]
+    [callAsGuardian, connectedANDelayApp, mounted]
   )
 
   const resumeExecution = useCallback(
@@ -96,8 +88,6 @@ export default function useActions() {
         }
       )
 
-      intent = imposeGasLimit(intent, GAS_LIMIT)
-
       intent = describeIntent(
         intent,
         radspec[anDelayActions.RESUME_EXECUTION](script)
@@ -107,7 +97,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedANDelayApp, GAS_LIMIT, mounted]
+    [account, connectedANDelayApp, mounted]
   )
 
   const cancelExecution = useCallback(
@@ -115,8 +105,6 @@ export default function useActions() {
       let intent = callAsGuardian(connectedANDelayApp, 'cancelExecution', [
         script.id,
       ])
-
-      intent = imposeGasLimit(intent, GAS_LIMIT)
 
       intent = describeIntent(
         intent,
@@ -127,7 +115,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [connectedANDelayApp, callAsGuardian, GAS_LIMIT, mounted]
+    [connectedANDelayApp, callAsGuardian, mounted]
   )
 
   return useMemo(
