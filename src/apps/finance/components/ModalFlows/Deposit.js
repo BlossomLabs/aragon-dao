@@ -458,7 +458,7 @@ const SelectedTokenBalance = ({ network, selectedToken }) => {
             color: ${theme.contentSecondary};
           `}
         >
-          {'Your have '}
+          {'You have '}
           <span
             css={`
               font-weight: 600;

@@ -3,12 +3,26 @@ import { DropDown, Field, isAddress, TextInput } from '@aragon/ui'
 import { useNetwork } from '@/hooks/shared'
 import { ETHER_TOKEN_VERIFIED_BY_SYMBOL } from '../lib/verified-tokens'
 import TokenSelectorInstance from './TokenSelectorInstance'
+import { constants } from 'ethers'
 
 const INITIAL_STATE = {
   customToken: {
     address: '',
     value: '',
   },
+}
+
+function NativeTokenInstance() {
+  const { nativeToken } = useNetwork()
+
+  return (
+    <TokenSelectorInstance
+      address={constants.AddressZero}
+      name={nativeToken}
+      symbol={nativeToken}
+      showIcon
+    />
+  )
 }
 
 class TokenSelector extends React.Component {
@@ -64,22 +78,47 @@ class TokenSelector extends React.Component {
       return this.state.customToken.address
     }
 
-    // Adjust for custom address
-    const token = this.props.tokens[index - 1]
+    const tokensAlreadyHaveNative = !!this.props.tokens.find(
+      ({ address }) => address === constants.AddressZero
+    )
+    /**
+     * We only add the native token when is not included
+     * in the received tokens
+     */
+    if (index === 1 && !tokensAlreadyHaveNative) {
+      return constants.AddressZero
+    }
+
+    // Adjust from custom address and possibly native token
+    const adjustedIndex = tokensAlreadyHaveNative ? index - 1 : index - 2
+
+    const token = this.props.tokens[adjustedIndex]
+
     return token.address
   }
   getItems() {
     return ['Other…', ...this.getTokenItems()]
   }
   getTokenItems() {
-    return this.props.tokens.map(({ address, name, symbol, verified }) => (
-      <TokenSelectorInstance
-        address={address}
-        name={name}
-        showIcon={verified}
-        symbol={symbol}
-      />
-    ))
+    const tokenItems = this.props.tokens.map(
+      ({ address, name, symbol, verified }) => (
+        <TokenSelectorInstance
+          address={address}
+          name={name}
+          showIcon={verified}
+          symbol={symbol}
+        />
+      )
+    )
+    if (
+      !this.props.tokens.find(
+        ({ address }) => address === constants.AddressZero
+      )
+    ) {
+      tokenItems.unshift(<NativeTokenInstance />)
+    }
+
+    return tokenItems
   }
   render() {
     const { customToken } = this.state
