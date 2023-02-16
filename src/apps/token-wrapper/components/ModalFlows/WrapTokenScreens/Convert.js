@@ -157,7 +157,7 @@ const Convert = React.memo(function({ mode, getTransactions }) {
               `}
             >
               {formatTokenAmount(accountBalance, token.numDecimals)}{' '}
-              <TokenBadge address={token.address} symbol={token.symbol} />
+              <TokenBadge address={token.id} symbol={token.symbol} />
             </span>
           </span>
         )}
