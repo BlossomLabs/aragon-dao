@@ -1,15 +1,15 @@
-const DEFAULT_GAS_LIMIT = 450_000
+const DEFAULT_GAS_LIMIT = 450000
 const DEFAULT_GAS_FUZZ_FACTOR = 1.5
 const BLOCK_GAS_LIMIT_FACTOR = 0.95
 
 const NETWORK_GAS_DATA = {
   1: {
-    blockGasLimit: 15_000_000,
+    blockGasLimit: 15000000,
     gasLimit: DEFAULT_GAS_LIMIT,
     gasFuzzFactor: 1.25,
   },
   100: {
-    blockGasLimit: 30_000_000,
+    blockGasLimit: 30000000,
     gasLimit: DEFAULT_GAS_LIMIT,
     gasFuzzFactor: DEFAULT_GAS_FUZZ_FACTOR,
   },
