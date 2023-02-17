@@ -37,13 +37,21 @@ export default function RequiredTokensError({ ...props }) {
           <strong>{feeToken.symbol}</strong> tokens will be locked in order to
           perform this action. You'll get them back once the delay period of{' '}
           <strong>{formattedExecutionDelay}</strong> is completed.
+          <strong>
+            If the proposal is to be vetoed, Guardians will temporarily pause it
+            to ensure the proper recovery of the funds go to your address.
+          </strong>
         </>
       ) : (
         <>
           You need to have <strong>{formattedRequiredFeeAmount}</strong>{' '}
           <strong>{feeToken.symbol}</strong> in order to perform this action.
           You'll get them back once the delay period of{' '}
-          <strong>{formattedExecutionDelay}</strong> is completed.
+          <strong>{formattedExecutionDelay}</strong> is completed.{' '}
+          <strong>
+            If the proposal is to be vetoed, Guardians will temporarily pause it
+            to ensure the proper recovery of the funds go to your address.
+          </strong>
         </>
       )}
     </Info>
