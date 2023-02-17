@@ -3,6 +3,7 @@ import { Button, Field, GU, Info, TextInput, textStyle } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensError from '@/components/RequiredTokensInfo'
 import { useFee } from '@/providers/Fee'
+import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
 
 function CreateNewVote({ getTransactions }) {
   const { hasFeeTokens } = useFee()
@@ -52,23 +53,23 @@ function CreateNewVote({ getTransactions }) {
       <Info
         css={`
           margin-top: ${1 * GU}px;
+          margin-bottom: ${3 * GU}px;
         `}
       >
         These proposals are informative and used for signaling. They don’t have
         any direct repercussions on the organization.
       </Info>
 
-      <Button
-        mode="strong"
-        wide
-        css={`
-          margin-top: ${3 * GU}px;
-        `}
-        onClick={handleOnCreateVote}
-        disabled={disableButton}
-      >
-        Create new Proposal
-      </Button>
+      <TermsOfUseDisclaimer>
+        <Button
+          mode="strong"
+          wide
+          onClick={handleOnCreateVote}
+          disabled={disableButton}
+        >
+          Create new Proposal
+        </Button>
+      </TermsOfUseDisclaimer>
       <RequiredTokensError
         css={`
           margin-top: ${2 * GU}px;
