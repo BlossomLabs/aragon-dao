@@ -5,6 +5,10 @@ import { addressesEqual } from './web3-utils'
 import iconSvgAcl from '@/assets/app-acl.svg'
 import iconSvgKernel from '@/assets/app-kernel.svg'
 import iconSvgRegistry from '@/assets/app-registry.svg'
+import { APP_TYPES } from '@/app-types'
+
+const BUDGET_APP_ADDRESSES = env('BUDGET_APP_ADDRESSES')
+const GOVERNANCE_APP_ADDRESSES = env('GOVERNANCE_APP_ADDRESSES')
 
 const KNOWN_ICONS = {
   '0x3b4bf6bf3ad5000ecf0f989d5befde585c6860fea3e574a4fab4c49d1c177d9c': iconSvgKernel,
@@ -51,6 +55,22 @@ export function getAppLabel(appAddress) {
     return 'Governance'
   } else {
     return appAddress
+  }
+}
+
+export function getAppType(appAddress) {
+  if (!appAddress) {
+    return
+  }
+
+  const appAddress_ = appAddress.toLowerCase()
+
+  if (BUDGET_APP_ADDRESSES.includes(appAddress_)) {
+    return APP_TYPES.BUDGET
+  }
+
+  if (GOVERNANCE_APP_ADDRESSES.includes(appAddress_)) {
+    return APP_TYPES.GOVERNANCE
   }
 }
 

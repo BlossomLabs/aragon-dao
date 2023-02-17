@@ -67,7 +67,7 @@ function CreateNewVote({ getTransactions }) {
         onClick={handleOnCreateVote}
         disabled={disableButton}
       >
-        Create new proposal
+        Create new Proposal
       </Button>
       <RequiredTokensError
         css={`

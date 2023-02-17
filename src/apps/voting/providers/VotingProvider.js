@@ -9,6 +9,7 @@ import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useContractReadOnly } from '@/hooks/shared/useContract'
 import { constants } from 'ethers'
 import { useNetwork } from '@/hooks/shared'
+import { getAppType } from '@/utils/app-utils'
 
 const VotingContext = React.createContext()
 
@@ -123,6 +124,7 @@ function VotingProvider({ children }) {
         tokenContract,
         votes,
         pctBase,
+        type: getAppType(connectedApp?.address) ?? '',
       }}
     >
       {children}

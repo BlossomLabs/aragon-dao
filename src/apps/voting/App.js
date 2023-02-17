@@ -20,6 +20,8 @@ import AppHeader from '@/components/AppHeader'
 import LoadingAppScreen from '@/components/Loading/LoadingAppScreen'
 import { useWait } from '@/hooks/shared/useWait'
 import noVotesPng from './assets/no-votes.png'
+import { APP_TYPES } from '@/app-types'
+import { capitalizeFirstLetter } from '@/utils/format'
 
 const getTabItems = (account, isGovernanceVoting) =>
   account && isGovernanceVoting ? ['Votes', 'Your Delegators'] : ['Votes']
@@ -38,18 +40,20 @@ const App = React.memo(function App() {
     votes,
   } = useAppLogic()
   const { user, userStatus } = useUserState()
-  const { representativeManager } = useAppState()
-  const isGovernanceVoting =
-    !!representativeManager &&
-    addressesEqual(representativeManager, constants.AddressZero)
-  const showDelegateButton =
-    account && !userStatus.loading && isGovernanceVoting
-
+  const { representativeManager, type } = useAppState()
   const { below } = useViewport()
   const isWaiting = useWait()
   const compactMode = below('medium')
   const isLoading = isAppSyncing || isWaiting
   const noVotes = votes?.length === 0
+  const isGovernanceVoting =
+    !!representativeManager &&
+    addressesEqual(representativeManager, constants.AddressZero)
+  const showDelegateButton =
+    account && !userStatus.loading && isGovernanceVoting
+  const increaseCardHegiht =
+    account && !isLoading && type === APP_TYPES.GOVERNANCE
+  const votingType = capitalizeFirstLetter(type)
 
   const handleShowModal = useCallback(mode => {
     setModalVisible(true)
@@ -106,12 +110,22 @@ const App = React.memo(function App() {
                     gap: ${1 * GU}px;
                   `}
                 >
-                  <Button wide mode="strong" onClick={handleNewVote}>
-                    Create a new proposal
-                  </Button>
                   {showDelegateButton && (
                     <DelegationButton user={user} onClick={handleShowModal} />
                   )}
+                  <Button
+                    wide
+                    mode="strong"
+                    onClick={handleNewVote}
+                    css={`
+                      ${type ? 'height: 50px;' : ''}
+                    `}
+                  >
+                    <>
+                      Create a new {type && <br />}
+                      {type?.toLowerCase()} proposal
+                    </>
+                  </Button>
                 </div>
               ) : null
             }
@@ -125,6 +139,13 @@ const App = React.memo(function App() {
                 alt="No proposal here"
               />
             }
+            css={
+              increaseCardHegiht
+                ? `
+              height: 380px;
+            `
+                : ''
+            }
           />
         ) : (
           <React.Fragment>
@@ -135,6 +156,7 @@ const App = React.memo(function App() {
                   <>
                     {showDelegateButton && (
                       <DelegationButton
+                        compactMode={compactMode}
                         user={user}
                         onClick={handleShowModal}
                         css={`
@@ -146,7 +168,7 @@ const App = React.memo(function App() {
                       <Button
                         mode="strong"
                         onClick={handleNewVote}
-                        label="New Proposal"
+                        label={`New ${votingType} Proposal`}
                         icon={<IconPlus />}
                         display={compactMode ? 'icon' : 'label'}
                       />
@@ -199,10 +221,7 @@ const App = React.memo(function App() {
   )
 })
 
-function DelegationButton({ user, onClick, ...props }) {
-  const { below } = useViewport()
-  const compactMode = below('medium')
-
+function DelegationButton({ user, onClick, compactMode, ...props }) {
   return (
     <Button
       mode="normal"
