@@ -28,7 +28,10 @@ function ModalFlowBase({
   const { ethers, type } = useWallet()
   const { chainId } = useNetwork()
   const isContractSender = type === 'contract'
-  const signer = useMemo(() => ethers.getSigner(), [ethers])
+  const signer = useMemo(
+    () => (ethers && ethers.getSigner ? ethers.getSigner() : null),
+    [ethers]
+  )
 
   const transactionSteps = useMemo(
     () =>
