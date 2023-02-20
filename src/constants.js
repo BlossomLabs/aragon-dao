@@ -26,3 +26,7 @@ export const APPS_ROUTING_TO_NAME = new Map([
 export const APP_CUSTOM_NAME = new Map([['Tao Voting', 'Delegate Voting']])
 
 export const MAIN_HEADER_HEIGHT = 8 * GU
+
+export const VOTING_REFERENCE_SEPARATOR = '|'
+
+export const VOTING_DESCRIBED_STEP_PREFIX = 'Create a new vote about '

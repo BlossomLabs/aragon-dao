@@ -31,6 +31,10 @@ import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 import { useVoterState } from '../../providers/Voter'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
+import {
+  getTitleFromContext,
+  getReferenceFromContext,
+} from '@/utils/text-utils'
 
 function getPresentation(disputableStatus) {
   const disputablePresentation = {
@@ -195,7 +199,7 @@ function Details({
     >
       {emptyScript ? (
         <InfoField label="Description">
-          <p>{context}</p>
+          <p>{getTitleFromContext(context)}</p>
         </InfoField>
       ) : (
         <div>
@@ -250,6 +254,15 @@ function Details({
           <LocalIdentityBadge entity={creator} />
         </div>
       </InfoField>
+      {getReferenceFromContext(context) && (
+        <InfoField label="Reference">
+          {
+            <Link href={getReferenceFromContext(context)} external>
+              {getReferenceFromContext(context)}
+            </Link>
+          }
+        </InfoField>
+      )}
     </div>
   )
 }

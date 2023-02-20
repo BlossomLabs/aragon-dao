@@ -4,16 +4,25 @@ import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensError from '@/components/RequiredTokensInfo'
 import { useFee } from '@/providers/Fee'
 import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
+import { VOTING_REFERENCE_SEPARATOR } from '@/constants'
+import { URL_REGEX } from '@/utils/text-utils'
 
 function CreateNewVote({ getTransactions }) {
   const { hasFeeTokens } = useFee()
-  const [question, setQuestion] = useState('')
+  const [title, setTitle] = useState('')
+  const [reference, setReference] = useState('')
   const { next } = useMultiModal()
-  const disableButton = !question.length || !hasFeeTokens
+  const disableButton =
+    !title.length || !hasFeeTokens || !URL_REGEX.test(reference)
 
-  const handleQuestionChange = useCallback(event => {
-    const updatedQuestion = event.target.value
-    setQuestion(updatedQuestion)
+  const handleTitleChange = useCallback(event => {
+    const updatedTitle = event.target.value
+    setTitle(updatedTitle)
+  }, [])
+
+  const handleReferenceChange = useCallback(event => {
+    const updatedReference = event.target.value
+    setReference(updatedReference)
   }, [])
 
   const handleOnCreateVote = useCallback(() => {
@@ -21,8 +30,8 @@ function CreateNewVote({ getTransactions }) {
 
     getTransactions(() => {
       next()
-    }, question)
-  }, [getTransactions, question, next])
+    }, title.concat(VOTING_REFERENCE_SEPARATOR, reference))
+  }, [getTransactions, title, reference, next])
 
   return (
     <div
@@ -36,12 +45,30 @@ function CreateNewVote({ getTransactions }) {
         css={`
           margin-top: ${3 * GU}px;
         `}
-        label="Question"
+        label="Title"
         required
       >
         <TextInput
-          onChange={handleQuestionChange}
-          value={question}
+          onChange={handleTitleChange}
+          value={title}
+          wide
+          required
+          css={`
+            margin-top: ${1 * GU}px;
+          `}
+        />
+      </Field>
+
+      <Field
+        css={`
+          margin-top: ${1 * GU}px;
+        `}
+        label="Reference (IPFS of proposal text)"
+        required
+      >
+        <TextInput
+          onChange={handleReferenceChange}
+          value={reference}
           wide
           required
           css={`
@@ -66,6 +93,9 @@ function CreateNewVote({ getTransactions }) {
           wide
           onClick={handleOnCreateVote}
           disabled={disableButton}
+          css={`
+            margin-top: ${1 * GU}px;
+          `}
         >
           Create new Proposal
         </Button>

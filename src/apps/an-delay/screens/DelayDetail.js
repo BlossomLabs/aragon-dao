@@ -4,6 +4,7 @@ import {
   Bar,
   Box,
   GU,
+  Link,
   textStyle,
   Timer,
   useTheme,
@@ -28,8 +29,10 @@ import DelayHeader from '../components/DelayHeader'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
+import { getReference, getTitle } from '../lib/delay-utils'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
+const VOTING_DESCRIBED_STEP_PREFIX = 'Create a new vote about '
 
 const DelayDetailWrapper = ({ match }) => {
   const [, navigate] = usePath()
@@ -88,6 +91,10 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
     setModalVisible(false)
   }, [])
 
+  const isFromSignalingProposal =
+    path.length > 0 &&
+    path[0].description.indexOf(VOTING_DESCRIBED_STEP_PREFIX) !== -1
+
   return (
     <>
       <LayoutColumns
@@ -133,7 +140,9 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                       ${textStyle('body2')};
                     `}
                   >
-                    {path ? (
+                    {isFromSignalingProposal ? (
+                      getTitle(path[0].description)
+                    ) : path ? (
                       <DescriptionWithSkeleton path={path} loading={loading} />
                     ) : (
                       DEFAULT_DESCRIPTION
@@ -159,6 +168,28 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                     <LocalIdentityBadge entity={creator} />
                   </div>
                 </div>
+                {isFromSignalingProposal && (
+                  <div>
+                    <h2
+                      css={`
+                        ${textStyle('label2')};
+                        color: ${theme.surfaceContentSecondary};
+                        margin-bottom: ${2 * GU}px;
+                      `}
+                    >
+                      Reference
+                    </h2>
+                    <div
+                      css={`
+                        ${textStyle('body2')};
+                      `}
+                    >
+                      <Link href={getReference(path[0].description)} external>
+                        {getReference(path[0].description)}
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
               {account && (
                 <DelayActions
