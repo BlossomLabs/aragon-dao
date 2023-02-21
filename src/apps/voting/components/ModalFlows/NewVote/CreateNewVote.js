@@ -4,8 +4,8 @@ import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensError from '@/components/RequiredTokensInfo'
 import { useFee } from '@/providers/Fee'
 import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
-import { VOTING_REFERENCE_SEPARATOR } from '@/constants'
 import { URL_REGEX } from '@/utils/text-utils'
+import { buildContext } from '@/utils/evmscript'
 
 function CreateNewVote({ getTransactions }) {
   const { hasFeeTokens } = useFee()
@@ -30,7 +30,7 @@ function CreateNewVote({ getTransactions }) {
 
     getTransactions(() => {
       next()
-    }, title.concat(VOTING_REFERENCE_SEPARATOR, reference))
+    }, buildContext(title, reference))
   }, [getTransactions, title, reference, next])
 
   return (

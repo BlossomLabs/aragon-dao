@@ -29,10 +29,11 @@ import DelayHeader from '../components/DelayHeader'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
-import { getReference, getTitle } from '../lib/delay-utils'
+import { parseContext } from '../lib/delay-utils'
+import { isEmptyCallScript } from '@/utils/evmscript'
+import { VOTING_DESCRIBED_STEP_PREFIX } from '@/constants'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
-const VOTING_DESCRIBED_STEP_PREFIX = 'Create a new vote about '
 
 const DelayDetailWrapper = ({ match }) => {
   const [, navigate] = usePath()
@@ -86,14 +87,15 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
   const compactMode = below('large')
 
   const { id, creator } = delay
-
-  const handleModalClose = useCallback(() => {
-    setModalVisible(false)
-  }, [])
+  const [title, reference] = parseContext(path[0]?.description)
 
   const isFromSignalingProposal =
     path.length > 0 &&
     path[0].description.indexOf(VOTING_DESCRIBED_STEP_PREFIX) !== -1
+
+  const handleModalClose = useCallback(() => {
+    setModalVisible(false)
+  }, [])
 
   return (
     <>
@@ -141,7 +143,7 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                     `}
                   >
                     {isFromSignalingProposal ? (
-                      getTitle(path[0].description)
+                      title
                     ) : path ? (
                       <DescriptionWithSkeleton path={path} loading={loading} />
                     ) : (
@@ -184,8 +186,8 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                         ${textStyle('body2')};
                       `}
                     >
-                      <Link href={getReference(path[0].description)} external>
-                        {getReference(path[0].description)}
+                      <Link href={reference} external>
+                        {reference}
                       </Link>
                     </div>
                   </div>

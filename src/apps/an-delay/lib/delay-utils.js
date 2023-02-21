@@ -47,3 +47,13 @@ export function getTitle(text) {
   const parsedValue = getTitleFromContext(context)
   return parsedValue?.slice(1)
 }
+
+export function parseContext(context) {
+  if (!context) {
+    return ['', '']
+  }
+  const contextWithNoPrefix = context.replace(VOTING_DESCRIBED_STEP_PREFIX, '')
+  const reference = getReferenceFromContext(contextWithNoPrefix)
+  const title = getTitleFromContext(contextWithNoPrefix)
+  return [title?.slice(1), reference?.slice(0, -1)]
+}

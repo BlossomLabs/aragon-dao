@@ -2,6 +2,7 @@ import { decodeForwardingPath } from '@1hive/connect-react'
 import { constants } from 'ethers'
 import { getAppPresentation, getAppPresentationByAddress } from './app-utils'
 import { addressesEqual } from './web3-utils'
+import { VOTING_REFERENCE_SEPARATOR } from '@/constants'
 
 export const EMPTY_CALLSCRIPT = '0x00000001'
 export const EMPTY_CALLSCRIPT_UTF8 = '0x30783030303030303031'
@@ -153,4 +154,8 @@ export function targetDataFromTransactionRequest(apps, describedSteps) {
       icon: '',
     }
   }
+}
+
+export function buildContext(title, reference) {
+  return title.concat(VOTING_REFERENCE_SEPARATOR, reference)
 }
