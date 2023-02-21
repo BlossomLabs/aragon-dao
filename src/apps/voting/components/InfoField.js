@@ -9,6 +9,7 @@ function InfoField({ label, children, ...props }) {
       {...props}
       css={`
         margin-bottom: 0;
+        overflow-wrap: break-word;
       `}
     >
       {/* Pass unused id to disable clickable label  */}

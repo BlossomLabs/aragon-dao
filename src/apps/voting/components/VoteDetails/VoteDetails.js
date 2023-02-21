@@ -1,14 +1,6 @@
 import React, { useMemo, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import {
-  GU,
-  IconCheck,
-  Link,
-  Tag,
-  textStyle,
-  useTheme,
-  useViewport,
-} from '@aragon/ui'
+import { GU, IconCheck, Link, Tag, textStyle, useTheme } from '@aragon/ui'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import LayoutBox from '@/components/Layout/LayoutBox'
 import { useWallet } from '@/providers/Wallet'
@@ -100,10 +92,9 @@ function VoteDetails({ vote, voteStatus }) {
           <LayoutBox primary mode={boxPresentation}>
             <div
               css={`
-                display: grid;
-                grid-auto-flow: row;
-
-                grid-gap: ${4 * GU}px;
+                display: flex;
+                flex-direction: column;
+                gap: ${4 * GU}px;
               `}
             >
               <div
@@ -129,6 +120,7 @@ function VoteDetails({ vote, voteStatus }) {
               >
                 Vote #{voteId}
               </h1>
+
               <Details
                 vote={vote}
                 disputableStatus={disputableStatus}
@@ -188,10 +180,6 @@ function Details({
 }) {
   const { context, creator } = vote
 
-  const { above } = useViewport()
-
-  const twoColumnMode = above('medium')
-
   const justificationUrl = useMemo(
     () => (context.startsWith('ipfs') ? getIpfsUrlFromUri(context) : null),
     [context]
@@ -200,9 +188,9 @@ function Details({
   return (
     <div
       css={`
-        display: grid;
-        grid-template-columns: ${twoColumnMode ? `1fr ${30 * GU}px` : '1fr'};
-        grid-gap: ${3 * GU}px;
+        display: flex;
+        flex-direction: column;
+        gap: ${3 * GU}px;
       `}
     >
       {emptyScript ? (
