@@ -1221,9 +1221,9 @@
     graphql-tag "^2.10.3"
 
 "@blossom-labs/connect-bl-tao-voting@^0.3.0":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.3.1.tgz#0d6478df5b102204b7ffc39a50a01662d6e2606c"
-  integrity sha512-qm8CtF/fexv/hXez9XGdpWEBo5WvFIhxhwCVXM3IPHXVXp3wu/a1hHAy7H6S9EWR45qJRSlUOIlcyZv95phcRw==
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.3.3.tgz#4e81fcd307f6d3f405578917b561208ebca88aba"
+  integrity sha512-lbMfGKLaSyapS9DVXZXo6oBEYIco+GoARMeeMksSwJOpeI7/uROQNHoXiS/0iuBy6LnDvMNHhm1Lc/M+ziMHkA==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
