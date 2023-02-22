@@ -189,6 +189,8 @@ function Details({
     [context]
   )
 
+  const reference = getReferenceFromContext(context)
+
   return (
     <div
       css={`
@@ -254,11 +256,18 @@ function Details({
           <LocalIdentityBadge entity={creator} />
         </div>
       </InfoField>
-      {getReferenceFromContext(context) && (
+      {reference && (
         <InfoField label="Reference">
           {
-            <Link href={getReferenceFromContext(context)} external>
-              {getReferenceFromContext(context)}
+            <Link
+              css={`
+                overflow: hidden;
+                text-overflow: ellipsis;
+              `}
+              href={reference}
+              external
+            >
+              {reference}
             </Link>
           }
         </InfoField>

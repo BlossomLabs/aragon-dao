@@ -30,7 +30,6 @@ import LayoutColumns from '@/components/Layout/LayoutColumns'
 import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
 import { parseContext } from '../lib/delay-utils'
-import { isEmptyCallScript } from '@/utils/evmscript'
 import { VOTING_DESCRIBED_STEP_PREFIX } from '@/constants'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
@@ -186,7 +185,14 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                         ${textStyle('body2')};
                       `}
                     >
-                      <Link href={reference} external>
+                      <Link
+                        css={`
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                        `}
+                        href={reference}
+                        external
+                      >
                         {reference}
                       </Link>
                     </div>

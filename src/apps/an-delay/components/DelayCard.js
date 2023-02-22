@@ -10,6 +10,8 @@ import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSke
 import { usePath } from '@/hooks/shared'
 import useDecribeScript from '@/hooks/shared/useDescribeScript'
 import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
+import { parseContext } from '../lib/delay-utils'
+import { VOTING_DESCRIBED_STEP_PREFIX } from '@/constants'
 
 const DelayCard = React.memo(({ delay }) => {
   const [, navigate] = usePath()
@@ -26,6 +28,17 @@ const DelayCard = React.memo(({ delay }) => {
     evmCallScript,
     id
   )
+
+  const isFromSignalingProposal =
+    describedSteps.length > 0 &&
+    describedSteps[0].description.indexOf(VOTING_DESCRIBED_STEP_PREFIX) !== -1
+
+  const [title, _] = parseContext(describedSteps[0]?.description)
+
+  if (isFromSignalingProposal) {
+    describedSteps[0].annotatedDescription[0].value =
+      VOTING_DESCRIBED_STEP_PREFIX + `"${title}"`
+  }
 
   return (
     <CardItem onClick={() => navigate(`scripts/${id}`)}>
