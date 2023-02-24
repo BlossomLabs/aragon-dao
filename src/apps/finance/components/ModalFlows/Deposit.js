@@ -35,6 +35,7 @@ import TokenSelector from '../TokenSelector'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
+import { ValidationError } from '@/components/ValidationError'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -476,36 +477,6 @@ const SelectedTokenBalance = ({ network, selectedToken }) => {
 const VSpace = styled.div`
   height: ${p => (p.size || 1) * GU}px;
 `
-
-const ValidationError = ({ message }) => {
-  const theme = useTheme()
-  return (
-    <div>
-      <VSpace size={2} />
-      <div
-        css={`
-          display: flex;
-          align-items: center;
-        `}
-      >
-        <IconCross
-          size="tiny"
-          css={`
-            color: ${theme.negative};
-            margin-right: ${1 * GU}px;
-          `}
-        />
-        <span
-          css={`
-            ${textStyle('body3')}
-          `}
-        >
-          {message}
-        </span>
-      </div>
-    </div>
-  )
-}
 
 export default props => {
   const { next } = useMultiModal()

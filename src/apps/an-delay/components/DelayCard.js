@@ -33,7 +33,7 @@ const DelayCard = React.memo(({ delay }) => {
     describedSteps.length > 0 &&
     describedSteps[0].description.indexOf(VOTING_DESCRIBED_STEP_PREFIX) !== -1
 
-  const [title, _] = parseContext(describedSteps[0]?.description)
+  const [title] = parseContext(describedSteps[0]?.description)
 
   if (isFromSignalingProposal) {
     describedSteps[0].annotatedDescription[0].value =

@@ -6,11 +6,13 @@ import { useFee } from '@/providers/Fee'
 import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
 import { URL_REGEX } from '@/utils/text-utils'
 import { buildContext } from '@/utils/evmscript'
+import { ValidationError } from '@/components/ValidationError'
 
 function CreateNewVote({ getTransactions }) {
   const { hasFeeTokens } = useFee()
   const [title, setTitle] = useState('')
   const [reference, setReference] = useState('')
+  const [errorMessage, setErrorMessage] = useState()
   const { next } = useMultiModal()
   const disableButton =
     !title.length || !hasFeeTokens || !URL_REGEX.test(reference)
@@ -22,6 +24,12 @@ function CreateNewVote({ getTransactions }) {
 
   const handleReferenceChange = useCallback(event => {
     const updatedReference = event.target.value
+    if (updatedReference && !URL_REGEX.test(updatedReference)) {
+      setErrorMessage('Invalid reference. Must be a valid URL.')
+    } else {
+      setErrorMessage()
+    }
+
     setReference(updatedReference)
   }, [])
 
@@ -105,6 +113,7 @@ function CreateNewVote({ getTransactions }) {
           margin-top: ${2 * GU}px;
         `}
       />
+      {errorMessage && <ValidationError message={errorMessage} />}
     </div>
   )
 }

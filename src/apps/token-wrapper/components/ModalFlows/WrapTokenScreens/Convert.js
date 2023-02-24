@@ -21,6 +21,7 @@ import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { useNetwork } from '@/hooks/shared'
 import { ParticipationDisclaimer } from '@/components/Disclaimers'
 import AmountInput from '@/components/AmountInput'
+import { ValidationError } from '@/components/ValidationError'
 
 const Convert = React.memo(function({ mode, getTransactions }) {
   const { chainId } = useNetwork()
@@ -192,7 +193,7 @@ const Convert = React.memo(function({ mode, getTransactions }) {
       )}
       <ParticipationDisclaimer
         css={`
-          margin: ${2 * GU}px 0;
+          margin-top: ${2 * GU}px;
         `}
       >
         <Button
@@ -203,16 +204,7 @@ const Convert = React.memo(function({ mode, getTransactions }) {
           disabled={isButtonDisabled}
         />
       </ParticipationDisclaimer>
-      {errorMessage && (
-        <Info
-          mode="warning"
-          css={`
-            margin-top: ${2 * GU}px;
-          `}
-        >
-          {errorMessage}
-        </Info>
-      )}
+      {errorMessage && <ValidationError message={errorMessage} />}
     </form>
   )
 })
