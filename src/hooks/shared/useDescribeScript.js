@@ -4,6 +4,7 @@ import { useMounted } from '@/hooks/shared/useMounted'
 import { useOrganizationState } from '@/providers/OrganizationProvider'
 import { toUtf8String } from 'ethers/lib/utils'
 import {
+  processSignalingVoteDescription,
   isEmptyCallScript,
   targetDataFromTransactionRequest,
 } from '@/utils/evmscript'
@@ -11,7 +12,13 @@ import {
 const cachedDescriptions = new Map([])
 
 const formatNewVoteStep = step => {
-  const formattedDescription = formatDescription(step.description ?? '')
+  if (!step.description) {
+    return step
+  }
+
+  const { formattedDescription, reference } = processSignalingVoteDescription(
+    step.description
+  )
   const formattedAnnotatedDescription = step.annotatedDescription?.length
     ? step.annotatedDescription.map(item => {
         const newItem = { ...item }
@@ -20,7 +27,11 @@ const formatNewVoteStep = step => {
             newItem.value = toUtf8String(item.value)
             break
           case 'text':
-            newItem.value = formatDescription(item.value)
+            const { formattedDescription } = processSignalingVoteDescription(
+              item.value
+            )
+
+            newItem.value = formattedDescription
             break
         }
 
@@ -32,6 +43,7 @@ const formatNewVoteStep = step => {
     ...step,
     annotatedDescription: formattedAnnotatedDescription,
     description: formattedDescription,
+    reference,
   }
 }
 
@@ -41,18 +53,9 @@ const isNewVoteStep = step => {
   return sigHash === '0x0a0932da' // sig hash for "newVote(bytes,bytes)""
 }
 
-const formatDescription = rawDescription => {
-  return rawDescription
-    .split('"')
-    .map(fragment =>
-      fragment.startsWith('0x') ? toUtf8String(fragment) : fragment
-    )
-    .join('"')
-}
-
 // TODO: temporary solution for steps of new votes with context until
 // the contract's  newVote function's radspec is fixed
-const patchSteps = steps => {
+const processSteps = steps => {
   return steps.map(step => {
     if (isNewVoteStep(step)) {
       return formatNewVoteStep(step)
@@ -99,7 +102,7 @@ const useDecribeScript = (evmCallScript, scriptId) => {
     }
 
     async function describe() {
-      const steps = patchSteps(
+      const steps = processSteps(
         await describePath(
           decodeForwardingPath(evmCallScript),
           apps,

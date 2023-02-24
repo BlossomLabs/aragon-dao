@@ -13,7 +13,7 @@ function ConnectProvider({ children }) {
       options={{
         network: env('CHAIN_ID'),
         ipfs: env('IPFS_RESOLVER') ?? DEFAULT_IPFS_RESOLVER,
-        ethereum: getStaticProvider(),
+        // ethereum: getStaticProvider(),
       }}
     >
       {children}

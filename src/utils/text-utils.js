@@ -5,12 +5,3 @@ export const URL_REGEX = new RegExp(
 export function parseStringWithSeparator(text, separator) {
   return text.split(separator)
 }
-export function getReferenceFromContext(text) {
-  const parsedValue = parseStringWithSeparator(text, /\|/)
-  return parsedValue.length > 1 ? parsedValue[1] : null
-}
-
-export function getTitleFromContext(text) {
-  const parsedValue = parseStringWithSeparator(text, /\|/)
-  return parsedValue[0]
-}

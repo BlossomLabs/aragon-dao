@@ -11,7 +11,7 @@ import StatusLabel from '../StatusLabel'
 import VoteOption from '../VoteOption'
 import TargetAppBadge from '../TargetAppBadge'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
-import { getTitleFromContext } from '@/utils/text-utils'
+import { parseContext } from '@/utils/evmscript'
 
 function getAttributes(status, theme) {
   const attributes = {
@@ -54,6 +54,7 @@ function VoteCard({ vote, onVoteClick }) {
     status,
     theme
   )
+  const [title] = parseContext(context)
 
   return (
     <Card onClick={() => onVoteClick(voteId)}>
@@ -108,7 +109,7 @@ function VoteCard({ vote, onVoteClick }) {
           {emptyScript ? (
             <p>
               <strong css="font-weight: bold">#{voteId}: </strong>
-              {getTitleFromContext(context) || 'No description provided'}
+              {title || 'No description provided'}
             </p>
           ) : (
             <DescriptionWithSkeleton

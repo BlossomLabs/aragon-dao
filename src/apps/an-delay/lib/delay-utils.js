@@ -1,9 +1,6 @@
 import STATUS from '../delay-status-types'
 import { dateToEpoch, timestampToDate, toMilliseconds } from './time-utils'
-import {
-  getReferenceFromContext,
-  getTitleFromContext,
-} from '@/utils/text-utils'
+import { parseContext as parseEvmscriptContext } from '@/utils/evmscript'
 
 export const VOTING_DESCRIBED_STEP_PREFIX = 'Create a new vote about '
 
@@ -36,24 +33,12 @@ export const formatDelayedScript = delayedScript => {
   }
 }
 
-export function getReference(text) {
-  const context = text.replace(VOTING_DESCRIBED_STEP_PREFIX, '')
-  const parsedValue = getReferenceFromContext(context)
-  return parsedValue?.slice(0, -1)
-}
-
-export function getTitle(text) {
-  const context = text.replace(VOTING_DESCRIBED_STEP_PREFIX, '')
-  const parsedValue = getTitleFromContext(context)
-  return parsedValue?.slice(1)
-}
-
 export function parseContext(context) {
   if (!context) {
-    return ['', '']
+    return []
   }
   const contextWithNoPrefix = context.replace(VOTING_DESCRIBED_STEP_PREFIX, '')
-  const reference = getReferenceFromContext(contextWithNoPrefix)
-  const title = getTitleFromContext(contextWithNoPrefix)
+  const [title, reference] = parseEvmscriptContext(contextWithNoPrefix)
+
   return [title?.slice(1), reference?.slice(0, -1)]
 }

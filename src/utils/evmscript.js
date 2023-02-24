@@ -3,9 +3,15 @@ import { constants } from 'ethers'
 import { getAppPresentation, getAppPresentationByAddress } from './app-utils'
 import { addressesEqual } from './web3-utils'
 import { VOTING_REFERENCE_SEPARATOR } from '@/constants'
+import { parseStringWithSeparator } from './text-utils'
+import { toUtf8String } from 'ethers/lib/utils'
+
+const CONTEXT_SEPARATOR_REGEX = /\|/
 
 export const EMPTY_CALLSCRIPT = '0x00000001'
 export const EMPTY_CALLSCRIPT_UTF8 = '0x30783030303030303031'
+
+const SIGNALING_VOTE_DESCRIPTION_PREFIX = 'Create a new vote about'
 
 export function isEmptyCallScript(script) {
   return (
@@ -156,6 +162,44 @@ export function targetDataFromTransactionRequest(apps, describedSteps) {
   }
 }
 
+function buildSignalingVoteDescription(context) {
+  return `${SIGNALING_VOTE_DESCRIPTION_PREFIX} "${context}"`
+}
+
+export function processSignalingVoteDescription(rawDescription) {
+  const [, quotedDescription] = rawDescription.split(
+    SIGNALING_VOTE_DESCRIPTION_PREFIX
+  )
+
+  let unquotedDescription = quotedDescription
+    .trim()
+    .slice(1, quotedDescription.length - 2)
+
+  if (unquotedDescription.startsWith('0x')) {
+    unquotedDescription = toUtf8String(unquotedDescription)
+  }
+
+  const [text, reference] = parseContext(unquotedDescription)
+
+  return {
+    formattedDescription: buildSignalingVoteDescription(text),
+    reference,
+  }
+}
+
 export function buildContext(title, reference) {
   return title.concat(VOTING_REFERENCE_SEPARATOR, reference)
+}
+
+export function parseContext(context) {
+  if (!context) {
+    return []
+  }
+
+  const [title, reference] = parseStringWithSeparator(
+    context,
+    CONTEXT_SEPARATOR_REGEX
+  )
+
+  return [title?.trim(), reference?.trim()]
 }

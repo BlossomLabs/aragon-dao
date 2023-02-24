@@ -1,12 +1,19 @@
 import React, { useMemo, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { GU, IconCheck, Link, Tag, textStyle, useTheme } from '@aragon/ui'
+import {
+  GU,
+  IconCheck,
+  Link,
+  Tag,
+  textStyle,
+  useTheme,
+  useViewport,
+} from '@aragon/ui'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import LayoutBox from '@/components/Layout/LayoutBox'
 import { useWallet } from '@/providers/Wallet'
 import MultiModal from '@/components/MultiModal/MultiModal'
 import { addressesEqual } from '@/utils/web3-utils'
-import { getIpfsUrlFromUri } from '@/utils/ipfs-utils'
 import DisputableActionStatus from './DisputableActionStatus'
 import StatusLabel from '../StatusLabel'
 import {
@@ -31,10 +38,7 @@ import VoteScreens from '../../components/ModalFlows/VoteScreens/VoteScreens'
 import LocalIdentityBadge from '@/components/LocalIdentityBadge/LocalIdentityBadge'
 import { useVoterState } from '../../providers/Voter'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
-import {
-  getTitleFromContext,
-  getReferenceFromContext,
-} from '@/utils/text-utils'
+import { parseContext } from '@/utils/evmscript'
 
 function getPresentation(disputableStatus) {
   const disputablePresentation = {
@@ -96,9 +100,10 @@ function VoteDetails({ vote, voteStatus }) {
           <LayoutBox primary mode={boxPresentation}>
             <div
               css={`
-                display: flex;
-                flex-direction: column;
-                gap: ${4 * GU}px;
+                display: grid;
+                grid-auto-flow: row;
+
+                grid-gap: ${4 * GU}px;
               `}
             >
               <div
@@ -124,7 +129,6 @@ function VoteDetails({ vote, voteStatus }) {
               >
                 Vote #{voteId}
               </h1>
-
               <Details
                 vote={vote}
                 disputableStatus={disputableStatus}
@@ -183,84 +187,47 @@ function Details({
   description,
 }) {
   const { context, creator } = vote
+  const [title, reference] = parseContext(context)
+  const { above } = useViewport()
 
-  const justificationUrl = useMemo(
-    () => (context.startsWith('ipfs') ? getIpfsUrlFromUri(context) : null),
-    [context]
-  )
-
-  const reference = getReferenceFromContext(context)
+  const twoColumnMode = above('medium')
 
   return (
     <div
       css={`
-        display: flex;
-        flex-direction: column;
-        gap: ${3 * GU}px;
+        display: grid;
+        grid-template-columns: ${twoColumnMode ? `1fr ${30 * GU}px` : '1fr'};
+        grid-gap: ${3 * GU}px;
       `}
     >
       {emptyScript ? (
         <InfoField label="Description">
-          <p>{getTitleFromContext(context)}</p>
+          <p>{title}</p>
         </InfoField>
       ) : (
-        <div>
-          <InfoField label="Description">
-            <DescriptionWithSkeleton
-              path={description}
-              loading={descriptionLoading}
-            />
-          </InfoField>
-
-          <InfoField
-            label="Justification"
-            css={`
-              margin-top: ${3 * GU}px;
-            `}
-          >
-            {justificationUrl ? (
-              <Link
-                href={justificationUrl}
-                css={`
-                  max-width: 90%;
-                `}
-              >
-                <span
-                  css={`
-                    display: block;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    text-align: left;
-                  `}
-                >
-                  Read more
-                </span>
-              </Link>
-            ) : (
-              <p>{context}</p>
-            )}
-          </InfoField>
-        </div>
+        <InfoField label="Description">
+          <DescriptionWithSkeleton
+            path={description}
+            loading={descriptionLoading}
+          />
+        </InfoField>
       )}
-
       <InfoField label="Status">
         <StatusLabel status={disputableStatus} />
       </InfoField>
-      <InfoField label="Submitted By">
-        <div
+
+      {reference && (
+        <InfoField
+          label="Reference"
           css={`
-            display: flex;
-            align-items: flex-start;
+            overflow: hidden;
           `}
         >
-          <LocalIdentityBadge entity={creator} />
-        </div>
-      </InfoField>
-      {reference && (
-        <InfoField label="Reference">
           {
             <Link
               css={`
+                width: 100%;
+                text-align: left;
                 overflow: hidden;
                 text-overflow: ellipsis;
               `}
@@ -272,6 +239,17 @@ function Details({
           }
         </InfoField>
       )}
+
+      <InfoField label="Submitted By">
+        <div
+          css={`
+            display: flex;
+            align-items: flex-start;
+          `}
+        >
+          <LocalIdentityBadge entity={creator} />
+        </div>
+      </InfoField>
     </div>
   )
 }

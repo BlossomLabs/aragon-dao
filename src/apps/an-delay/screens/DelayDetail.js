@@ -29,8 +29,6 @@ import DelayHeader from '../components/DelayHeader'
 import LayoutColumns from '@/components/Layout/LayoutColumns'
 import AppBadgeWithSkeleton from '@/components/AppBadgeWithSkeleton'
 import DescriptionWithSkeleton from '@/components/Description/DescriptionWithSkeleton'
-import { parseContext } from '../lib/delay-utils'
-import { VOTING_DESCRIBED_STEP_PREFIX } from '@/constants'
 
 const DEFAULT_DESCRIPTION = 'No additional description provided.'
 
@@ -86,11 +84,8 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
   const compactMode = below('large')
 
   const { id, creator } = delay
-  const [title, reference] = parseContext(path[0]?.description)
-
-  const isFromSignalingProposal =
-    path.length > 0 &&
-    path[0].description.indexOf(VOTING_DESCRIBED_STEP_PREFIX) !== -1
+  const reference = path[0]?.reference
+  const displayReference = !!reference?.length
 
   const handleModalClose = useCallback(() => {
     setModalVisible(false)
@@ -141,9 +136,7 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                       ${textStyle('body2')};
                     `}
                   >
-                    {isFromSignalingProposal ? (
-                      title
-                    ) : path ? (
+                    {path ? (
                       <DescriptionWithSkeleton path={path} loading={loading} />
                     ) : (
                       DEFAULT_DESCRIPTION
@@ -169,8 +162,12 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                     <LocalIdentityBadge entity={creator} />
                   </div>
                 </div>
-                {isFromSignalingProposal && (
-                  <div>
+                {displayReference && (
+                  <div
+                    css={`
+                      overflow: hidden;
+                    `}
+                  >
                     <h2
                       css={`
                         ${textStyle('label2')};
@@ -186,12 +183,13 @@ const DelayDetail = React.memo(({ delay, path, targetApp, loading }) => {
                       `}
                     >
                       <Link
+                        href={reference}
+                        external
                         css={`
+                          width: 100%;
                           overflow: hidden;
                           text-overflow: ellipsis;
                         `}
-                        href={reference}
-                        external
                       >
                         {reference}
                       </Link>
