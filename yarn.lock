@@ -118,19 +118,33 @@
     "@ethersproject/providers" "^5.5.1"
     "@ethersproject/solidity" "^5.5.0"
 
-"@1hive/connect-ethereum@^0.9.13":
+"@1hive/connect-core@^0.9.14":
+  version "0.9.14"
+  resolved "https://registry.yarnpkg.com/@1hive/connect-core/-/connect-core-0.9.14.tgz#3f516e3e14895e389a60411fc6dcfeae2092abff"
+  integrity sha512-SPo5oIb3hxlVJ9x+MYEdoTZ2qL5223TpUVNpE/ogTQlMp8Yxs/LMLn35TZxiwE5v62TdiGaILNSz/s7fa6u+uQ==
+  dependencies:
+    "@1hive/radspec" "^2.0.0"
+    "@ethersproject/abi" "^5.5.0"
+    "@ethersproject/address" "^5.5.0"
+    "@ethersproject/bignumber" "^5.5.0"
+    "@ethersproject/contracts" "^5.5.0"
+    "@ethersproject/hash" "^5.5.0"
+    "@ethersproject/providers" "^5.5.1"
+    "@ethersproject/solidity" "^5.5.0"
+
+"@1hive/connect-ethereum@^0.9.14":
   version "0.9.13"
   resolved "https://registry.yarnpkg.com/@1hive/connect-ethereum/-/connect-ethereum-0.9.13.tgz#8bd024bcf2840ecfbb687c088eda10431540db3f"
   integrity sha512-Km0Nmi/GuWxkKZIn1a3oj5YP0qPIEBTWK/5RPqPdx26eBg5/sa/vDvuMfOohtZLsHgbOwf9aQaoqEmw/Hu7vVQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
 
-"@1hive/connect-react@^0.9.13":
-  version "0.9.13"
-  resolved "https://registry.yarnpkg.com/@1hive/connect-react/-/connect-react-0.9.13.tgz#be8cbfcd9aa53162dc0ac2011d8fe5d6411991a6"
-  integrity sha512-6AVY2Q6dQ6ufrCM1cmxj+rVoD9NkHs3hsPuiTNbk3URFiJX/ISzqIrtI7kzEAJR8Ni6WSk70Hq9Z718sPYFaug==
+"@1hive/connect-react@^0.9.14":
+  version "0.9.14"
+  resolved "https://registry.yarnpkg.com/@1hive/connect-react/-/connect-react-0.9.14.tgz#b302d2b3c9719be052ce7ab21518cc326e885cd6"
+  integrity sha512-Vi9yF2+YdG4SzWQNe/ngnxC/D4xppqE23GzQ9CPtlCsaqspTPSaCcjB1EUBLUnN5RznZ9qw6pLRomL8OQociog==
   dependencies:
-    "@1hive/connect" "^0.9.13"
+    "@1hive/connect" "^0.9.14"
 
 "@1hive/connect-thegraph@^0.9.13":
   version "0.9.13"
@@ -145,19 +159,32 @@
     isomorphic-ws "^4.0.1"
     subscriptions-transport-ws "^0.9.16"
 
+"@1hive/connect-thegraph@^0.9.14":
+  version "0.9.14"
+  resolved "https://registry.yarnpkg.com/@1hive/connect-thegraph/-/connect-thegraph-0.9.14.tgz#422818b886db903a1e6ee887ed7a846ed470cfa6"
+  integrity sha512-hqhpLrET+ojZ1AZutBTQtCLMsosXeU8koEvhQjy4avFEXpaqrPxE0A32LJEMTHRdbl6b4XjBtYJktPGrIdhyCw==
+  dependencies:
+    "@1hive/connect-core" "^0.9.14"
+    "@urql/core" "^1.11.7"
+    graphql "^15.0.0"
+    graphql-tag "^2.10.3"
+    isomorphic-unfetch "^3.0.0"
+    isomorphic-ws "^4.0.1"
+    subscriptions-transport-ws "^0.9.16"
+
 "@1hive/connect-types@^0.9.13":
   version "0.9.13"
   resolved "https://registry.yarnpkg.com/@1hive/connect-types/-/connect-types-0.9.13.tgz#5ebc68f944c86b9eedc6758442debb67054e9502"
   integrity sha512-K5qGjILOCAOboR1WjP5+wKSTYxDLo1TL6sHwWPFV9y5jJxWNbZNsYh6x97QBY/264VXsSXxn/+YMHveoUyQU4A==
 
-"@1hive/connect@^0.9.13":
-  version "0.9.13"
-  resolved "https://registry.yarnpkg.com/@1hive/connect/-/connect-0.9.13.tgz#8c28492320a3e429fff75f5fc475b50fe0393396"
-  integrity sha512-hQsFWmZ2xCZcN+8L+ERU3rHbP5Wo/Awl2slemSz4OpL6QPc8adn9HmLbq8OA0AnyExpB2uA3oe1o1X5WiNwxoA==
+"@1hive/connect@^0.9.14":
+  version "0.9.14"
+  resolved "https://registry.yarnpkg.com/@1hive/connect/-/connect-0.9.14.tgz#c4b8fecc3fc46d419e9b7e57554904e75ffdd97d"
+  integrity sha512-Sx457khFaFajC7CCCSq0si+YLSVPQfg/4WRukgIiNEwzsmoE3SuR6wH1MRk847EE542gyPApP5a/NVJ6gvg9zw==
   dependencies:
-    "@1hive/connect-core" "^0.9.13"
-    "@1hive/connect-ethereum" "^0.9.13"
-    "@1hive/connect-thegraph" "^0.9.13"
+    "@1hive/connect-core" "^0.9.14"
+    "@1hive/connect-ethereum" "^0.9.14"
+    "@1hive/connect-thegraph" "^0.9.14"
 
 "@1hive/radspec@^2.0.0":
   version "2.0.0"
@@ -1211,29 +1238,29 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@blossom-labs/connect-an-delay@^0.3.1":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.2.tgz#0b1f9c74eb4032973acf1ba9790babd4e6585343"
-  integrity sha512-8HvpNnGWMDga3RurjytmGXnQL1n6B3Wx9lJFUpkeSlCQm5CeZhX5e8n6iGmHpB0uPjFKVrdyBtVhbYig7jcsCQ==
+"@blossom-labs/connect-an-delay@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-an-delay/-/connect-an-delay-0.3.3.tgz#bca7f71def8af01ee8a92c73b92ffef623635797"
+  integrity sha512-d3fO5bKy/S63hc8qDlPlNjnXWEbFksfl3Bsv5DOXWLpsb6jpdR4/gzyLqo4uUTShNeE9XZDLLI6RSH0C4KJF3Q==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
     graphql-tag "^2.10.3"
 
-"@blossom-labs/connect-bl-tao-voting@^0.3.0":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.3.3.tgz#4e81fcd307f6d3f405578917b561208ebca88aba"
-  integrity sha512-lbMfGKLaSyapS9DVXZXo6oBEYIco+GoARMeeMksSwJOpeI7/uROQNHoXiS/0iuBy6LnDvMNHhm1Lc/M+ziMHkA==
+"@blossom-labs/connect-bl-tao-voting@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-bl-tao-voting/-/connect-bl-tao-voting-0.3.4.tgz#241e6ea2fa7f2f1ed02e05b43077b4565e2746ed"
+  integrity sha512-dM+zGqMu8eI56j61JQ0Om/TDLII/Zp7V+TPjxZNgiv/WG2agT+9G1q9yi0IQ4ZYeNNGve4V7KXoV2VpjP8Ps2Q==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
     "@1hive/connect-types" "^0.9.13"
     graphql-tag "^2.10.3"
 
-"@blossom-labs/connect-finance@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-finance/-/connect-finance-0.1.0.tgz#8c8d3956a30cd5e8ddc3ae3bf2765c29b4ca17d3"
-  integrity sha512-tK6WWA69px3uA7/3iJKXT8js+3wZZbQPN4p8cgzbsZYflDc+o29szX1wtX3rEprUkV/IxZnJf7Sn4XqHaJRNSQ==
+"@blossom-labs/connect-finance@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@blossom-labs/connect-finance/-/connect-finance-0.1.1.tgz#2d91c1c5ecad1b1a96c9198b563246dcd000dfbc"
+  integrity sha512-SO8zSH1+6vs1P4eKOpLPMFBaShk9Xph/b+/orNKeaPCReS+vXzoV5Ctfhkunkq2W6DLwNrZOnboBkLDr1fdlTQ==
   dependencies:
     "@1hive/connect-core" "^0.9.13"
     "@1hive/connect-thegraph" "^0.9.13"
