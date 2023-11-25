@@ -2,18 +2,23 @@ function processCommaSeparatedValues(value) {
   return value.split(',').map(v => v.trim().toLowerCase())
 }
 
-function throwIfNotExists(envName) {
-  if (!envName) {
+function throwIfNotExists(envName, envValue) {
+  if (!envValue) {
     throw new Error(`Missing required environment variable: ${envName}`)
   }
-  return envName
+
+  return envValue
 }
 
 const ENV_VARS = {
-  CHAIN_ID: parseInt(throwIfNotExists(process.env.CHAIN_ID)),
-  DAO_ID: throwIfNotExists(process.env.DAO_ID),
-  STATIC_ETH_NODE: throwIfNotExists(process.env.STATIC_ETH_NODE),
+  CHAIN_ID: parseInt(throwIfNotExists('CHAIN_ID', process.env.CHAIN_ID)),
+  DAO_ID: throwIfNotExists('DAO_ID', process.env.DAO_ID),
+  STATIC_ETH_NODE: throwIfNotExists(
+    'STATIC_ETH_NODE',
+    process.env.STATIC_ETH_NODE
+  ),
   GUARDIANS_TOKEN_MANAGER: throwIfNotExists(
+    'GUARDIANS_TOKEN_MANAGER',
     process.env.GUARDIANS_TOKEN_MANAGER
   ),
   BUDGET_APP_ADDRESSES: processCommaSeparatedValues(
