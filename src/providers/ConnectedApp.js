@@ -1,7 +1,6 @@
 import React, { createContext, useContext } from 'react'
 import { useOrganizationState } from './OrganizationProvider'
 import connectVoting from '@blossom-labs/connect-bl-tao-voting'
-import connectTokenWrapper from '@blossom-labs/connect-token-wrapper'
 import connectFinance from '@blossom-labs/connect-finance'
 import { connectANDelay } from '@blossom-labs/connect-an-delay'
 import { usePath } from '@/hooks/shared'
@@ -18,8 +17,6 @@ const getConnector = appName => {
     case 'an-delay':
     case 'delay':
       return connectANDelay
-    case 'blossom-token-wrapper':
-      return connectTokenWrapper
     case 'finance':
       return connectFinance
   }

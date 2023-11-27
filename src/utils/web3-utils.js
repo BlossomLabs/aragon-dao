@@ -10,6 +10,15 @@ import {
 const DEFAULT_LOCAL_CHAIN = '1337'
 
 const networks = {
+  optimism: {
+    chainId: 10,
+    ensRegistry: '0x6f2CA655f58d5fb94A08460aC19A552EB19909FD',
+    name: 'Optimism',
+    type: 'optimism',
+    network: 'optimism',
+    explorer: 'etherscan',
+    nativeToken: 'ETH',
+  },
   xdai: {
     chainId: 100,
     ensRegistry: '0xaafca6b0c89521752e559650206d7c925fd0e530',
@@ -52,10 +61,16 @@ let STATIC_PROVIDER = null
 export function getNetworkType(chainId = CHAIN_ID) {
   chainId = String(chainId)
 
-  if (chainId === '1') return 'main'
-  if (chainId === '100') return 'xdai'
-
-  return DEFAULT_LOCAL_CHAIN
+  switch (chainId) {
+    case '1':
+      return 'main'
+    case '10':
+      return 'optimism'
+    case '100':
+      return 'xdai'
+    default:
+      return DEFAULT_LOCAL_CHAIN
+  }
 }
 
 export function isLocalOrUnknownNetwork(chainId = CHAIN_ID) {

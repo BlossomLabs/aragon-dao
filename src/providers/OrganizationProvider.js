@@ -7,7 +7,7 @@ function OrganizationProvider({ children }) {
   const [org, orgStatus] = useConnect()
   const [apps, appsStatus] = useConnect(org => org.apps())
   const [permissions, permissionsStatus] = useConnect(org => org.permissions())
-
+  console.log(orgStatus)
   const loading =
     orgStatus.loading || appsStatus.loading || permissionsStatus.loading
   const error = orgStatus.error || appsStatus.error || permissionsStatus.error

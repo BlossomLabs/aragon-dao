@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Transition, animated } from 'react-spring/renderprops'
-import { ScrollView, GU } from '@aragon/ui'
 import LoadingFullscreen from './Loading/LoadingFullscreen'
-import Header from './Header/Header'
 import { useOrganizationState } from '../providers/OrganizationProvider'
 
 const AnimatedDiv = animated.div
@@ -11,6 +9,7 @@ const AnimatedDiv = animated.div
 const MainView = React.memo(function MainView({ children }) {
   const { loading: appsLoading } = useOrganizationState()
 
+  console.log(appsLoading)
   return (
     <div>
       {!appsLoading && <>{children}</>}
