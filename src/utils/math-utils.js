@@ -1,5 +1,7 @@
 import BN from 'bn.js'
 
+export const ZERO_BN = new BN(0)
+
 /**
  * Calculates a number between two numbers at a specific increment. The
  * progress parameter is the amount to interpolate between the two values where
