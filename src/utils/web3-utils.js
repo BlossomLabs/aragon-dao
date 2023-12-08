@@ -135,12 +135,29 @@ export const getStaticProvider = () => {
   return provider
 }
 
-function getBackendServicesKeys() {
+function buildProviderAPIKeys() {
+  const alchemy = env('ALCHEMY_API_KEY')
+  const infura = env('INFURA_API_KEY')
+  const pocket = env('POCKET_API_KEY')
+  const ankr = env('ANKR_API_KEY')
+
+  const apiKeysDefined = alchemy || infura || pocket || ankr
+
+  if (!apiKeysDefined) {
+    return undefined
+  }
+
+  /**
+   * Selectively use providers with defined API keys. Undefined keys are replaced with a dash ('-')
+   * to prevent ethers.js from defaulting to shared API keys. This ensures ethers.js only attempts
+   * JSON-RPC requests with specified providers.
+   */
   return {
-    alchemy: env('ALCHEMY_API_KEY'),
-    infura: env('INFURA_API_KEY'),
-    pocket: env('POCKET_API_KEY'),
-    ankr: env('ANKR_API_KEY'),
+    alchemy: alchemy ?? '-',
+    infura: infura ?? '-',
+    pocket: pocket ?? '-',
+    ankr: ankr ?? '-',
+    etherscan: '-',
   }
 }
 
@@ -154,7 +171,7 @@ export function getDefaultProvider(chainId = CHAIN_ID) {
 
   return ethers.getDefaultProvider(
     getEthersNetwork(chainId),
-    getBackendServicesKeys()
+    buildProviderAPIKeys()
   )
 }
 
