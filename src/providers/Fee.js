@@ -62,11 +62,13 @@ function FeeProvider({ children, type = '' }) {
     delayData?.feeToken?.address,
     account
   )
+  const noFeeAmountRequired = !!delayData && delayData.feeAmount.eq(ZERO_BN)
   const hasFeeTokens =
-    !!feeTokenBalance &&
-    !!delayData &&
-    feeTokenBalance.gt(ZERO_BN) &&
-    feeTokenBalance.gte(delayData.feeAmount)
+    noFeeAmountRequired ||
+    (!!feeTokenBalance &&
+      !!delayData &&
+      feeTokenBalance.gt(ZERO_BN) &&
+      feeTokenBalance.gte(delayData.feeAmount))
   const loading = delayDataStatus.loading || balanceStatus.loading
   const error = delayDataStatus.error || balanceStatus.error
 
