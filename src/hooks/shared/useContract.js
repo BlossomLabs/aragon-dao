@@ -1,15 +1,17 @@
 import { useMemo } from 'react'
-import { Contract as EthersContract } from 'ethers'
+import { Contract } from 'ethers'
 import { useWallet } from '../../providers/Wallet'
-import { getDefaultProvider } from '@/utils/web3-utils'
 
-export function useContractReadOnly(address, abi, chainId) {
+export function useContractReadOnly(address, abi) {
+  const { ethers } = useWallet()
+
   return useMemo(() => {
-    if (!address) {
+    if (!address || ethers || !abi) {
       return null
     }
-    return getContractWithProvider(address, abi, getDefaultProvider(chainId))
-  }, [abi, address, chainId])
+
+    return new Contract(address, abi, ethers)
+  }, [abi, address, ethers])
 }
 
 export function useContract(address, abi, signer) {
@@ -23,23 +25,6 @@ export function useContract(address, abi, signer) {
       return null
     }
 
-    return getContractWithProvider(
-      address,
-      abi,
-      signer ? ethers.getSigner() : ethers
-    )
+    return new Contract(address, abi, signer ? ethers.getSigner() : ethers)
   }, [abi, account, address, ethers, signer])
-}
-
-export function getContractWithProvider(
-  address,
-  abi,
-  provider = getDefaultProvider()
-) {
-  return new EthersContract(address, abi, provider)
-}
-
-export function getContract(address, abi, chainId) {
-  const provider = getDefaultProvider(chainId)
-  return new EthersContract(address, abi, provider)
 }
