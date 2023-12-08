@@ -1,72 +1,76 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useConnect } from '@1hive/connect-react'
+import { useMemo, useState } from 'react'
+import { erc20ABI, useConnect } from '@1hive/connect-react'
 import { useConnectedApp } from '@/providers/ConnectedApp'
-import { getContract } from '@/hooks/shared/useContract'
 import { useMounted } from '@/hooks/shared/useMounted'
 import BN from 'bn.js'
 
-import vaultBalanceAbi from '../abi/vault-balance.json'
-import minimeTokenAbi from '@/abi/minimeToken.json'
 import { useNetwork } from '@/hooks/shared'
-import { constants } from 'ethers'
+import { Contract, constants } from 'ethers'
+import { useInterval } from '@/hooks/shared/useInterval'
+import { useWallet } from '@/providers/Wallet'
 
-const cachedContracts = new Map([])
+const CONTRACTS_CACHE = {}
 
-const getContractInstance = (address, abi, chainId) => {
-  if (cachedContracts.has(address)) {
-    return cachedContracts.get(address)
+const getContractInstance = (address, abi, provider) => {
+  if (CONTRACTS_CACHE[address]) {
+    return CONTRACTS_CACHE[address]
   }
-  const contract = getContract(address, abi, chainId)
-  cachedContracts.set(contract)
+
+  const contract = new Contract(address, abi, provider)
+  CONTRACTS_CACHE[address] = contract
+
   return contract
 }
 
-const useBalances = (timeout = 5000) => {
+const useBalances = (pollingTime = 5000) => {
+  const [tokens, setTokens] = useState()
+  const [isFirstBalanceFetching, setIsFirstBalancesFetching] = useState(true)
+  const { ethers } = useWallet()
   const mounted = useMounted()
-  const [polledTokenBalances, setPolledTokenBalances] = useState()
-  const { chainId } = useNetwork()
-  const { nativeToken } = useNetwork()
+  const { nativeToken: nativeTokenSymbol } = useNetwork()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
-  const [tokenBalances, tokenBalancesStatus] = useConnect(
-    () => connectedFinanceApp?.onBalance(),
-    [connectedFinanceApp]
-  )
-  const [vaultContract, vaultContractStatus] = useConnect(async () => {
+  const [vaultAddress, vaultAddressStatus] = useConnect(async () => {
     if (!connectedFinanceApp) {
       return
     }
 
-    const financeContract = connectedFinanceApp._app.ethersContract()
+    const financeContract = getContractInstance(
+      connectedFinanceApp.address,
+      connectedFinanceApp._app.abi,
+      ethers
+    )
     const vaultAddress = await financeContract.vault()
-    return getContract(vaultAddress, vaultBalanceAbi, chainId)
-  }, [connectedFinanceApp, chainId])
-  const [tokenData, tokenDataStatus] = useConnect(async () => {
-    if (!vaultContract || !tokenBalances) {
+
+    return vaultAddress
+  }, [connectedFinanceApp, ethers])
+  const [tokensData, tokensDataStatus] = useConnect(async () => {
+    if (!connectedFinanceApp || !ethers) {
       return
     }
 
+    const financeTokenBalances = await connectedFinanceApp?.balanceForApp()
     const tokensWithData = await Promise.all(
-      tokenBalances.map(async tokenBalance => {
+      financeTokenBalances.map(async tokenBalance => {
+        const isNativeToken = tokenBalance.token === constants.AddressZero
+
+        if (isNativeToken) {
+          return {
+            address: tokenBalance.token,
+            decimals: 18,
+            symbol: nativeTokenSymbol,
+          }
+        }
+
         const tokenContract = getContractInstance(
           tokenBalance.token,
-          minimeTokenAbi,
-          chainId
+          erc20ABI,
+          ethers
         )
+        const [decimals, symbol] = await Promise.all([
+          tokenContract.decimals(),
 
-        let decimals
-        let symbol
-        if (tokenBalance.token === constants.AddressZero) {
-          decimals = 18
-          symbol = nativeToken
-        } else {
-          const [dec, symb] = await Promise.all([
-            tokenContract.decimals(),
-            tokenContract.symbol(),
-          ])
-
-          decimals = dec
-          symbol = symb
-        }
+          tokenContract.symbol(),
+        ])
 
         return {
           address: tokenBalance.token,
@@ -77,63 +81,62 @@ const useBalances = (timeout = 5000) => {
     )
 
     return tokensWithData
-  }, [vaultContract, tokenBalances])
-  const loading =
-    tokenBalancesStatus.loading ||
-    vaultContractStatus.loading ||
-    tokenDataStatus.loading
-  const error =
-    tokenBalancesStatus.error ||
-    vaultContractStatus.error ||
-    tokenDataStatus.error
+  }, [connectedFinanceApp, ethers])
+  const startBalancesFetching = tokensData && vaultAddress
+  const pollingTime_ = startBalancesFetching
+    ? isFirstBalanceFetching
+      ? 0
+      : pollingTime
+    : null
+  const loading = tokensDataStatus.loading || vaultAddressStatus.loading
+  const error = tokensDataStatus.error || vaultAddressStatus.error
 
-  useEffect(() => {
-    if (!vaultContract || !tokenData) {
-      return
+  useInterval(async () => {
+    if (isFirstBalanceFetching && mounted()) {
+      setIsFirstBalancesFetching(prevFirstFetch => !prevFirstFetch)
     }
 
-    let timeoutId
+    try {
+      const tokensWithBalances = await Promise.all(
+        tokensData.map(async tokenData => {
+          const isNativeToken = tokenData.address === constants.AddressZero
 
-    const pollAccountBalance = async () => {
-      try {
-        const tokensWithBalances = await Promise.all(
-          tokenData.map(async tokenData => {
-            const vaultBalance = await vaultContract.balance(tokenData.address)
-
+          if (isNativeToken) {
+            const vaultBalance = await ethers.getBalance(vaultAddress)
             return {
               ...tokenData,
               balance: new BN(vaultBalance.toString()),
             }
-          })
-        )
+          }
 
-        if (mounted()) {
-          setPolledTokenBalances(tokensWithBalances)
-        }
-      } catch (err) {
-        console.error(`Error fetching balance: ${err} retrying...`)
-      }
+          const vaultBalance = await getContractInstance(
+            tokenData.token,
+            erc20ABI,
+            ethers
+          ).balanceOf(vaultAddress)
+
+          return {
+            ...tokenData,
+            balance: new BN(vaultBalance.toString()),
+          }
+        })
+      )
 
       if (mounted()) {
-        timeoutId = window.setTimeout(pollAccountBalance, timeout)
+        setTokens(tokensWithBalances)
       }
+    } catch (err) {
+      console.error(`Error fetching balance: ${err} retrying...`)
     }
+  }, pollingTime_)
 
-    pollAccountBalance()
-
-    return () => {
-      window.clearTimeout(timeoutId)
-    }
-  }, [chainId, timeout, tokenData, vaultContract, mounted])
-
-  const balancesKey = polledTokenBalances
-    ?.map(token => token.balance.toString())
-    .map(String)
-    .join('')
+  const balancesKey = tokens
+    ? tokens.map(token => token.balance.toString()).join('-')
+    : ''
 
   return [
     useMemo(() => {
-      return polledTokenBalances
+      return tokens
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [balancesKey]),
     { loading, error },
