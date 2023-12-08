@@ -6,12 +6,11 @@ import React, { useContext, useMemo } from 'react'
 import { rawLoadOrCreateConnectedApp } from './ConnectedApp'
 import { useOrganizationState } from './OrganizationProvider'
 import { useWallet } from './Wallet'
+import { ZERO_BN } from '@/utils/math-utils'
 
 const FeeContext = React.createContext()
 
 const FORWARDER_FEE_APP_NAME = 'an-delay'
-
-const ZERO_BN = new BN(0)
 
 const BUDGET_APP_ADDRESSES = env('BUDGET_APP_ADDRESSES')
 const GOVERNANCE_APP_ADDRESSES = env('GOVERNANCE_APP_ADDRESSES')
@@ -39,6 +38,7 @@ function FeeProvider({ children, type = '' }) {
     const delays = apps.filter(app => app.name === FORWARDER_FEE_APP_NAME)
     let labeledAppAddresses
     let delay
+
     if (type.toLowerCase() === 'budget') {
       labeledAppAddresses = BUDGET_APP_ADDRESSES
     } else if (type.toLowerCase() === 'governance') {
@@ -62,11 +62,13 @@ function FeeProvider({ children, type = '' }) {
     delayData?.feeToken?.address,
     account
   )
+  const noFeeAmountRequired = !!delayData && delayData.feeAmount.eq(ZERO_BN)
   const hasFeeTokens =
-    !!feeTokenBalance &&
-    !!delayData &&
-    feeTokenBalance.gt(ZERO_BN) &&
-    feeTokenBalance.gte(delayData.feeAmount)
+    noFeeAmountRequired ||
+    (!!feeTokenBalance &&
+      !!delayData &&
+      feeTokenBalance.gt(ZERO_BN) &&
+      feeTokenBalance.gte(delayData.feeAmount))
   const loading = delayDataStatus.loading || balanceStatus.loading
   const error = delayDataStatus.error || balanceStatus.error
 

@@ -19,15 +19,8 @@ import { useNetwork } from '@/hooks/shared'
 import { useWallet } from '@/providers/Wallet'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import QRCode from 'qrcode.react'
-import tokenAbi from '@/abi/minimeToken.json'
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
-import {
-  ETHER_TOKEN_FAKE_ADDRESS,
-  tokenDataOverride,
-  getTokenSymbol,
-  getAccountEthBalance,
-} from '../../lib/token-utils'
-import { getContract } from '@/hooks/shared/useContract'
+import { ETHER_TOKEN_FAKE_ADDRESS, getTokenSymbol } from '../../lib/token-utils'
 import { addressesEqual } from '@/utils/web3-utils'
 import AmountInput from '../../../../components/AmountInput'
 import ToggleContent from '../ToggleContent'
@@ -36,6 +29,8 @@ import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
 import { ValidationError } from '@/components/ValidationError'
+import { erc20ABI } from '@1hive/connect-react'
+import { Contract } from 'ethers'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -157,7 +152,7 @@ class Deposit extends React.Component {
 
     // ETH
     if (addressesEqual(address, ETHER_TOKEN_FAKE_ADDRESS)) {
-      const userBalance = await getAccountEthBalance(connectedAccount)
+      const userBalance = await this.props.provider.getBalance(connectedAccount)
 
       return {
         decimals: network?.nativeCurrency?.decimals || 18,
@@ -169,7 +164,7 @@ class Deposit extends React.Component {
 
     // Tokens
 
-    const token = getContract(address, tokenAbi)
+    const token = new Contract(address, erc20ABI, this.props.provider)
     let userBalance
     try {
       userBalance = await token.balanceOf(connectedAccount)
@@ -182,12 +177,10 @@ class Deposit extends React.Component {
     }
 
     const fetchSymbol = async () => {
-      const override = tokenDataOverride(address, 'symbol', network?.type)
-      return override || getTokenSymbol(address).catch(() => '')
+      return getTokenSymbol(address).catch(() => '')
     }
     const fetchDecimals = async () => {
-      const override = tokenDataOverride(address, 'decimals', network?.type)
-      const decimals = override || (await token.decimals())
+      const decimals = await token.decimals()
       return parseInt(decimals, 10)
     }
 
@@ -482,12 +475,13 @@ export default props => {
   const { next } = useMultiModal()
   const { connectedApp } = useConnectedApp()
   const network = useNetwork()
-  const { account } = useWallet()
+  const { account, ethers } = useWallet()
 
   return (
     <Deposit
       appAddress={connectedApp && connectedApp.address}
       connectedAccount={account}
+      provider={ethers}
       network={network}
       next={next}
       {...props}

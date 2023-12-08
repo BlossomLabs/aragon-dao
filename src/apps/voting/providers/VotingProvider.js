@@ -1,14 +1,12 @@
 import BN from 'bn.js'
 import React, { useContext, useEffect, useState } from 'react'
-import { useConnect } from '@1hive/connect-react'
+import { erc20ABI, useConnect } from '@1hive/connect-react'
 
 import { useMounted } from '@/hooks/shared/useMounted'
 import { DisputableStatusType } from '../types/disputable-statuses'
-import minimeTokenAbi from '@/abi/minimeToken.json'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useContractReadOnly } from '@/hooks/shared/useContract'
 import { constants } from 'ethers'
-import { useNetwork } from '@/hooks/shared'
 import { getAppType } from '@/utils/app-utils'
 
 const VotingContext = React.createContext()
@@ -88,7 +86,6 @@ const formatAppData = rawAppData => {
 }
 
 function VotingProvider({ children }) {
-  const { chainId } = useNetwork()
   const { connectedApp } = useConnectedApp()
   const [votes, setVotes] = useState([])
   const [appData, appDataStatus] = useConnect(async () => {
@@ -98,11 +95,7 @@ function VotingProvider({ children }) {
     const rawAppData = await connectedApp.taoVoting()
     return formatAppData(rawAppData)
   }, [connectedApp])
-  const tokenContract = useContractReadOnly(
-    appData?.token.address,
-    minimeTokenAbi,
-    chainId
-  )
+  const tokenContract = useContractReadOnly(appData?.token.address, erc20ABI)
   const [rawVotes, rawVotesStatus] = useConnect(() => connectedApp?.onVotes(), [
     connectedApp,
   ])

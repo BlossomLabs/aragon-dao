@@ -33,6 +33,7 @@ function Balances({ tokenBalances, loading }) {
   const balanceItems = useBalanceItems(tokenBalances)
 
   const compact = below('medium')
+
   return (
     <div>
       <Box heading="Token Balances" padding={0}>

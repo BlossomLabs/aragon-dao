@@ -3,30 +3,38 @@ import { noop } from '@aragon/ui'
 import { BN } from 'bn.js'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useWallet } from '@/providers/Wallet'
-import { getContract } from '@/hooks/shared/useContract'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { encodeFunctionData } from '@/utils/web3-utils'
 import radspec from '@/radspec'
 import financeActions from '../actions/finance-action-types'
 
-import tokenAbi from '@/abi/minimeToken.json'
-import { constants } from 'ethers'
-import { useNetwork } from '@/hooks/shared'
+import { Contract, constants } from 'ethers'
 import { describeIntent } from '@/utils/tx-utils'
+import { erc20ABI } from '@1hive/connect-react'
+
+const CONTRACTS_CACHE = {}
+
+function getContractInstance(address, abi, provider) {
+  if (CONTRACTS_CACHE[address]) {
+    return CONTRACTS_CACHE[address]
+  }
+
+  const contract = new Contract(address, abi, provider)
+  CONTRACTS_CACHE[address] = contract
+
+  return contract
+}
 
 export default function useActions() {
-  const { chainId } = useNetwork()
-  const { account } = useWallet()
+  const { account, ethers } = useWallet()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
   const mounted = useMounted()
 
   const getAllowance = useCallback(
     async tokenAddress => {
-      const tokenContract = getContract(tokenAddress, tokenAbi, chainId)
-      if (!connectedFinanceApp || !tokenContract) {
-        return
-      }
-      if (!tokenContract) {
+      const tokenContract = getContractInstance(tokenAddress, erc20ABI, ethers)
+
+      if (!connectedFinanceApp) {
         return
       }
 
@@ -37,7 +45,7 @@ export default function useActions() {
 
       return new BN(allowance.toString())
     },
-    [account, chainId, connectedFinanceApp]
+    [account, connectedFinanceApp, ethers]
   )
 
   const deposit = useCallback(
@@ -113,7 +121,7 @@ export default function useActions() {
 
   const approveTokenAmount = useCallback(
     async (tokenAddress, depositAmount, onDone = noop) => {
-      const tokenContract = getContract(tokenAddress, tokenAbi, chainId)
+      const tokenContract = getContractInstance(tokenAddress, erc20ABI, ethers)
       if (!tokenContract || !connectedFinanceApp) {
         return
       }
@@ -139,7 +147,7 @@ export default function useActions() {
         onDone(transactions)
       }
     },
-    [approve, chainId, connectedFinanceApp, mounted]
+    [approve, connectedFinanceApp, ethers, mounted]
   )
 
   return useMemo(

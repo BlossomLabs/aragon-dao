@@ -7,8 +7,7 @@ import BN from 'bn.js'
 import LoadingScreen from '@/components/MultiModal/screens/LoadingScreen'
 import { addressesEqual } from '@/utils/web3-utils'
 import { constants } from 'ethers'
-
-const ZERO_BN = new BN(0)
+import { ZERO_BN } from '@/utils/math-utils'
 
 function NewTransferScreens({ tokens, opened }) {
   const [transactions, setTransactions] = useState([])

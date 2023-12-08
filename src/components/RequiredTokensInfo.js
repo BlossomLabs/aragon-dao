@@ -4,14 +4,19 @@ import { GU, IconInfo, Info } from '@aragon/ui'
 import { useFee } from '@/providers/Fee'
 import { formatTokenAmount } from '@/utils/token'
 import { formatTime } from '@/utils/time-utils'
+import { ZERO_BN } from '@/utils/math-utils'
 
 export default function RequiredTokensError({ ...props }) {
   const { executionDelay, feeAmount, feeToken, hasFeeTokens } = useFee()
-  const formattedRequiredFeeAmount = formatTokenAmount(
-    feeAmount,
-    feeToken.decimals
-  )
+  const formattedRequiredFeeAmount =
+    feeToken && feeAmount
+      ? formatTokenAmount(feeAmount, feeToken.decimals)
+      : undefined
   const formattedExecutionDelay = formatTime(executionDelay, true)
+
+  if (!feeToken || feeAmount.eq(ZERO_BN)) {
+    return null
+  }
 
   return (
     <Info

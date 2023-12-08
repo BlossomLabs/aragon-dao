@@ -9,7 +9,6 @@ const AnimatedDiv = animated.div
 const MainView = React.memo(function MainView({ children }) {
   const { loading: appsLoading } = useOrganizationState()
 
-  console.log(appsLoading)
   return (
     <div>
       {!appsLoading && <>{children}</>}

@@ -1,9 +1,13 @@
 function processCommaSeparatedValues(value) {
+  if (!value) {
+    return []
+  }
+
   return value.split(',').map(v => v.trim().toLowerCase())
 }
 
 function throwIfNotExists(envName, envValue) {
-  if (!envValue) {
+  if (!envValue || (Array.isArray(envValue) && envValue.length === 0)) {
     throw new Error(`Missing required environment variable: ${envName}`)
   }
 
@@ -22,10 +26,10 @@ const ENV_VARS = {
     process.env.GUARDIANS_TOKEN_MANAGER
   ),
   BUDGET_APP_ADDRESSES: processCommaSeparatedValues(
-    process.env.BUDGET_APP_ADDRESSES || ''
+    process.env.BUDGET_APP_ADDRESSES
   ),
   GOVERNANCE_APP_ADDRESSES: processCommaSeparatedValues(
-    process.env.GOVERNANCE_APP_ADDRESSES || ''
+    process.env.GOVERNANCE_APP_ADDRESSES
   ),
   ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY || null,
   ANKR_API_KEY: process.env.ANKR_API_KEY || null,
