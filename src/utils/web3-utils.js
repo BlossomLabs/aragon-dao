@@ -5,7 +5,7 @@ import {
   BLOCKSCOUT_TYPES,
   ETHERSCAN_NETWORK_TYPES,
   ETHERSCAN_TYPES,
-} from './provider-types'
+} from './explorers'
 
 const DEFAULT_LOCAL_CHAIN = '1337'
 
