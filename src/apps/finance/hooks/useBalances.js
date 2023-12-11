@@ -130,17 +130,7 @@ const useBalances = (pollingTime = 5000) => {
     }
   }, pollingTime_)
 
-  const balancesKey = tokens
-    ? tokens.map(token => token.balance.toString()).join('-')
-    : ''
-
-  return [
-    useMemo(() => {
-      return tokens
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [balancesKey]),
-    { loading, error },
-  ]
+  return [useMemo(() => tokens, [tokens]), { loading, error }]
 }
 
 export default useBalances
