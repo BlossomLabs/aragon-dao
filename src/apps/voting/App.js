@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, GU, IconPlus, IconToken, Tabs, useViewport } from '@aragon/ui'
 import { constants } from 'ethers'
 
-import { FeeProvider } from '@/providers/Fee'
 import { useUserState } from './providers/User'
 import MultiModal from '../../components/MultiModal/MultiModal'
 import DelegateVotingScreens from './components/ModalFlows/DelegateVotingScreens/DelegateVotingScreens'
@@ -234,8 +233,4 @@ function DelegationButton({ user, onClick, compactMode, ...props }) {
   )
 }
 
-export default () => (
-  <FeeProvider type="budget">
-    <App />
-  </FeeProvider>
-)
+export default () => <App />

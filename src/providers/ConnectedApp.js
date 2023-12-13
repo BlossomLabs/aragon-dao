@@ -1,12 +1,11 @@
 import React, { createContext, useContext } from 'react'
-import { useOrganizationState } from './OrganizationProvider'
 import connectVoting from '@blossom-labs/connect-bl-tao-voting'
 import connectFinance from '@blossom-labs/connect-finance'
 import { connectANDelay } from '@blossom-labs/connect-an-delay'
-import { usePath } from '@/hooks/shared'
 import { isAddress } from 'ethers/lib/utils'
 import { addressesEqual } from '@/utils/web3-utils'
 import { useConnect } from '@1hive/connect-react'
+import { useCurrentApp } from '@/hooks/shared/useCurrentApp'
 
 const AppConnectorContext = createContext()
 
@@ -24,7 +23,7 @@ const getConnector = appName => {
 
 const CONNECTED_APPS_CACHE = {}
 
-async function rawLoadOrCreateConnectedApp(app) {
+async function lazyFetchConnectedApp(app) {
   const connect = getConnector(app.name)
 
   if (!app || !connect) {
@@ -38,7 +37,7 @@ async function rawLoadOrCreateConnectedApp(app) {
   return connectedApp
 }
 
-async function loadOrCreateConnectedApp(appAddress, apps) {
+async function lazyFetchConnectedAppByAddress(appAddress, apps) {
   if (!apps) {
     return
   }
@@ -53,17 +52,17 @@ async function loadOrCreateConnectedApp(appAddress, apps) {
 
   const app = apps.find(app => addressesEqual(app.address, appAddress))
 
-  return rawLoadOrCreateConnectedApp(app)
+  return lazyFetchConnectedApp(app)
 }
 
 function ConnectedAppProvider({ children }) {
-  const [path] = usePath()
-
-  const { apps } = useOrganizationState()
-  const [connectedApp, connectedAppStatus] = useConnect(async () => {
-    const [, , currentAppAddress] = path.split('/')
-    return loadOrCreateConnectedApp(currentAppAddress, apps)
-  }, [apps, path])
+  const currentApp = useCurrentApp()
+  const [connectedApp, connectedAppStatus] = useConnect(() => {
+    if (!currentApp) {
+      return
+    }
+    return lazyFetchConnectedApp(currentApp)
+  }, [currentApp])
 
   return (
     <AppConnectorContext.Provider value={{ connectedApp, connectedAppStatus }}>
@@ -79,6 +78,6 @@ function useConnectedApp() {
 export {
   ConnectedAppProvider,
   useConnectedApp,
-  loadOrCreateConnectedApp,
-  rawLoadOrCreateConnectedApp,
+  lazyFetchConnectedAppByAddress,
+  lazyFetchConnectedApp,
 }

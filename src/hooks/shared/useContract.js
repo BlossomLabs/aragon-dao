@@ -6,7 +6,7 @@ export function useContractReadOnly(address, abi) {
   const { ethers } = useWallet()
 
   return useMemo(() => {
-    if (!address || ethers || !abi) {
+    if (!address || !ethers || !abi) {
       return null
     }
 

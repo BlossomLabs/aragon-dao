@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import BN from 'bn.js'
 import { useContractReadOnly } from './useContract'
-import { erc20ABI, useConnect } from '@1hive/connect-react'
+import { useConnect } from '@1hive/connect-react'
+import { ERC20ABI } from '@/utils/token'
 
 export function useTokenBalanceOf(tokenAddress, account) {
-  const tokenContract = useContractReadOnly(tokenAddress, erc20ABI)
+  const tokenContract = useContractReadOnly(tokenAddress, ERC20ABI)
 
   return useConnect(async () => {
     if (!tokenContract) {
@@ -27,7 +28,7 @@ export function useTokenBalances(account, token) {
     totalSupply: new BN(-1),
   })
   const [loading, setLoading] = useState(true)
-  const tokenContract = useContractReadOnly(token, erc20ABI)
+  const tokenContract = useContractReadOnly(token, ERC20ABI)
 
   useEffect(() => {
     if (!token || !tokenContract) {

@@ -15,9 +15,9 @@ import {
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
 import AmountInput from '../../../../components/AmountInput'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
-import RequiredTokensError from '@/components/RequiredTokensInfo'
-import { useFee } from '@/providers/Fee'
+import RequiredTokensInfo from '@/components/RequiredTokensInfo'
 import { FinancialComplianceFormDisclaimer } from '@/components/Disclaimers'
+import { useRequiredFeesForAction } from '@/hooks/shared/useRequiredFeesForAction'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const RECEIPIENT_NOT_ADDRESS_ERROR = Symbol('RECEIPIENT_NOT_ADDRESS_ERROR')
@@ -139,7 +139,8 @@ class Withdrawal extends React.Component {
   }
 
   render() {
-    const { title, hasFeeTokens } = this.props
+    const { title, feeData } = this.props
+    const { feeForwarder, tokenBalance, enoughFeeTokenBalance } = feeData
     const { amount, recipient, reference, selectedToken } = this.state
 
     const tokens = this.nonZeroTokens()
@@ -159,7 +160,7 @@ class Withdrawal extends React.Component {
         !recipient.value ||
         !amount.value ||
         selectedToken === NULL_SELECTED_TOKEN ||
-        !hasFeeTokens
+        !enoughFeeTokenBalance
     )
 
     const isVisibleMaxButton = Boolean(selectedToken !== NULL_SELECTED_TOKEN)
@@ -217,11 +218,15 @@ class Withdrawal extends React.Component {
             Submit withdrawal
           </Button>
         </FinancialComplianceFormDisclaimer>
-        <RequiredTokensError
-          css={`
-            margin-top: ${2 * GU}px;
-          `}
-        />
+        {Boolean(feeForwarder && tokenBalance) && (
+          <RequiredTokensInfo
+            feeForwarder={feeForwarder}
+            tokenBalance={tokenBalance}
+            css={`
+              margin-top: ${2 * GU}px;
+            `}
+          />
+        )}
 
         {errorMessage && <ValidationError message={errorMessage} />}
       </form>
@@ -266,7 +271,9 @@ const ValidationError = ({ message }) => {
 }
 
 export default props => {
-  const { hasFeeTokens } = useFee()
+  const [feeData] = useRequiredFeesForAction({
+    role: 'CREATE_PAYMENTS_ROLE',
+  })
   const { next } = useMultiModal()
   const [readyToFocus, setReadyToFocus] = useState(false)
 
@@ -278,7 +285,7 @@ export default props => {
     <Withdrawal
       readyToFocus={readyToFocus}
       next={next}
-      hasFeeTokens={hasFeeTokens}
+      feeData={feeData}
       {...props}
     />
   )

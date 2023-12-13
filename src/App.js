@@ -14,6 +14,7 @@ import { ConnectedAppProvider } from './providers/ConnectedApp'
 import { GuardianProvider } from './providers/Guardian'
 import { ErrorHandler } from './components/Error/ErrorHandler'
 import { useAppTheme } from './providers/AppTheme'
+import { FeeForwardersProvider } from './providers/FeeForwarders'
 
 function App() {
   const { below } = useViewport()
@@ -123,7 +124,9 @@ function AppWrapper() {
           <Connect>
             <OrganizationProvider>
               <GuardianProvider>
-                <AragonApp />
+                <FeeForwardersProvider>
+                  <AragonApp />
+                </FeeForwardersProvider>
               </GuardianProvider>
             </OrganizationProvider>
           </Connect>
