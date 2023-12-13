@@ -7,13 +7,14 @@ import { useWallet } from '@/providers/Wallet'
 import radspec from '@/radspec'
 import { useMounted } from '@/hooks/shared/useMounted'
 import { EMPTY_CALLSCRIPT } from '@/utils/evmscript'
-import { describeIntent } from '@/utils/tx-utils'
 import votingActions from '../actions/voting-action-types'
+import { useDescribeIntent } from '@/hooks/shared/useDescribeIntent'
 
 export default function useActions() {
   const mounted = useMounted()
   const { account } = useWallet()
   const { connectedApp: votingApp } = useConnectedApp()
+  const describeIntent = useDescribeIntent()
 
   const delegateVoting = useCallback(
     async (representative, onDone = noop) => {
@@ -36,7 +37,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, mounted]
+    [votingApp, account, describeIntent, mounted]
   )
 
   const vote = useCallback(
@@ -57,7 +58,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, mounted]
+    [votingApp, account, describeIntent, mounted]
   )
 
   const newVote = useCallback(
@@ -76,7 +77,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, mounted]
+    [votingApp, account, describeIntent, mounted]
   )
 
   const voteOnBehalfOf = useCallback(
@@ -98,7 +99,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, mounted]
+    [votingApp, account, describeIntent, mounted]
   )
 
   const executeVote = useCallback(
@@ -116,7 +117,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, votingApp, mounted]
+    [votingApp, account, describeIntent, mounted]
   )
 
   return useMemo(

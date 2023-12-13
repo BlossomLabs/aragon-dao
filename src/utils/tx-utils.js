@@ -20,10 +20,6 @@ const NETWORK_GAS_DATA = {
   },
 }
 
-const KNOWN_DESCRIPTIONS = {
-  '0x095ea7b3': 'Approve ANT for required action',
-}
-
 export async function getRecommendedGasLimit(chainId, provider, tx) {
   const { blockGasLimit, gasLimit, gasFuzzFactor } = NETWORK_GAS_DATA[chainId]
   let estimatedGas
@@ -43,18 +39,4 @@ export async function getRecommendedGasLimit(chainId, provider, tx) {
   const bufferedGasLimit = Math.round(estimatedGas * gasFuzzFactor)
 
   return Math.min(bufferedGasLimit, upperGasLimit)
-}
-
-export function describeIntent(intent, description) {
-  return {
-    ...intent,
-    transactions: intent.transactions.map(tx => {
-      const signature = tx.data.slice(0, 10)
-      const knownDescription = KNOWN_DESCRIPTIONS[signature]
-      return {
-        ...tx,
-        description: knownDescription ?? description,
-      }
-    }),
-  }
 }

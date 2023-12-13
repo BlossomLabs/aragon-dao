@@ -6,8 +6,8 @@ import anDelayActions from '../actions/an-delay-action.types'
 import { useConnectedApp } from '@/providers/ConnectedApp'
 import { useGuardianState } from '@/providers/Guardian'
 import { useANDelaySettings } from '../providers/ANDelaySettingsProvider'
-import { describeIntent } from '@/utils/tx-utils'
 import { useMounted } from '@/hooks/shared/useMounted'
+import { useDescribeIntent } from '@/hooks/shared/useDescribeIntent'
 
 export default function useActions() {
   const mounted = useMounted()
@@ -15,6 +15,7 @@ export default function useActions() {
   const { callAsGuardian } = useGuardianState()
   const { connectedApp: connectedANDelayApp } = useConnectedApp()
   const { executionDelay } = useANDelaySettings()
+  const describeIntent = useDescribeIntent()
 
   const execute = useCallback(
     async (script, onDone = noop) => {
@@ -32,7 +33,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedANDelayApp, mounted]
+    [account, connectedANDelayApp, describeIntent, mounted]
   )
 
   const delayExecution = useCallback(
@@ -57,7 +58,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedANDelayApp, executionDelay, mounted]
+    [account, connectedANDelayApp, describeIntent, executionDelay, mounted]
   )
 
   const pauseExecution = useCallback(
@@ -75,7 +76,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [callAsGuardian, connectedANDelayApp, mounted]
+    [callAsGuardian, connectedANDelayApp, describeIntent, mounted]
   )
 
   const resumeExecution = useCallback(
@@ -97,7 +98,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedANDelayApp, mounted]
+    [account, connectedANDelayApp, describeIntent, mounted]
   )
 
   const cancelExecution = useCallback(
@@ -115,7 +116,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [connectedANDelayApp, callAsGuardian, mounted]
+    [callAsGuardian, connectedANDelayApp, describeIntent, mounted]
   )
 
   return useMemo(

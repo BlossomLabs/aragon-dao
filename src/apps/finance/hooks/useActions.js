@@ -9,8 +9,8 @@ import radspec from '@/radspec'
 import financeActions from '../actions/finance-action-types'
 
 import { Contract, constants } from 'ethers'
-import { describeIntent } from '@/utils/tx-utils'
 import { ERC20ABI } from '@/utils/token'
+import { useDescribeIntent } from '@/hooks/shared/useDescribeIntent'
 
 const CONTRACTS_CACHE = {}
 
@@ -28,6 +28,7 @@ function getContractInstance(address, abi, provider) {
 export default function useActions() {
   const { account, ethers } = useWallet()
   const { connectedApp: connectedFinanceApp } = useConnectedApp()
+  const describeIntent = useDescribeIntent()
   const mounted = useMounted()
 
   const getAllowance = useCallback(
@@ -75,7 +76,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted]
+    [account, connectedFinanceApp, describeIntent, mounted]
   )
 
   const withdraw = useCallback(
@@ -94,7 +95,7 @@ export default function useActions() {
         onDone(intent.transactions)
       }
     },
-    [account, connectedFinanceApp, mounted]
+    [account, connectedFinanceApp, describeIntent, mounted]
   )
 
   const approve = useCallback(
