@@ -29,8 +29,8 @@ import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
 import { ValidationError } from '@/components/ValidationError'
-import { erc20ABI } from '@1hive/connect-react'
 import { Contract } from 'ethers'
+import { ERC20ABI } from '@/utils/token'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -164,7 +164,7 @@ class Deposit extends React.Component {
 
     // Tokens
 
-    const token = new Contract(address, erc20ABI, this.props.provider)
+    const token = new Contract(address, ERC20ABI, this.props.provider)
     let userBalance
     try {
       userBalance = await token.balanceOf(connectedAccount)
@@ -176,8 +176,8 @@ class Deposit extends React.Component {
       }
     }
 
-    const fetchSymbol = async () => {
-      return getTokenSymbol(address).catch(() => '')
+    const fetchSymbol = () => {
+      return getTokenSymbol(token).catch(() => '')
     }
     const fetchDecimals = async () => {
       const decimals = await token.decimals()
@@ -297,7 +297,7 @@ class Deposit extends React.Component {
           selectedIndex={selectedToken.index}
           tokens={tokens}
         />
-        <SelectedTokenBalance network={network} selectedToken={selectedToken} />
+        <SelectedTokenBalance selectedToken={selectedToken} />
         <Field label="Amount">
           <AmountInput
             onChange={this.handleAmountUpdate}
@@ -407,7 +407,7 @@ class Deposit extends React.Component {
   }
 }
 
-const SelectedTokenBalance = ({ network, selectedToken }) => {
+const SelectedTokenBalance = ({ selectedToken }) => {
   const theme = useTheme()
   const {
     data: { decimals, loading, symbol, userBalance },
