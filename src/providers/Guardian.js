@@ -8,10 +8,6 @@ import { useWallet } from './Wallet'
 
 let GUARDIANS_TOKEN_MANAGER = env('GUARDIANS_TOKEN_MANAGER')
 
-if (!GUARDIANS_TOKEN_MANAGER) {
-  throw new Error('Missing GUARDIANS_TOKEN_MANAGER env variable')
-}
-
 const TOKEN_MANAGER_INTERFACE = new utils.Interface(tokenManagerAbi)
 
 const GuardianContext = React.createContext()
