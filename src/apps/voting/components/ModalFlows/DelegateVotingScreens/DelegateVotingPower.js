@@ -9,6 +9,7 @@ import {
   TextInput,
   textStyle,
   useTheme,
+  TokenBadge,
 } from '@aragon/ui'
 import { useAppState } from '../../../providers/VotingProvider'
 import { useTokenBalances } from '@/hooks/shared/useAccountTokenBalance'
@@ -67,9 +68,10 @@ function DelegateVotingPower({ onCreateTransaction }) {
             `}
           />
         ) : (
-          <>{`${formatTokenAmount(balance, token.decimals)} ${
-            token.symbol
-          } `}</>
+          <>
+            {`${formatTokenAmount(balance, token.decimals)}`}{' '}
+            <TokenBadge address={token.address} symbol={token.symbol} />
+          </>
         )}
       </Field>
       <Field
