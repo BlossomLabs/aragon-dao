@@ -10,7 +10,7 @@ import financeActions from '../actions/finance-action-types'
 
 import { Contract, constants } from 'ethers'
 import { describeIntent } from '@/utils/tx-utils'
-import { erc20ABI } from '@1hive/connect-react'
+import { ERC20ABI } from '@/utils/token'
 
 const CONTRACTS_CACHE = {}
 
@@ -32,7 +32,7 @@ export default function useActions() {
 
   const getAllowance = useCallback(
     async tokenAddress => {
-      const tokenContract = getContractInstance(tokenAddress, erc20ABI, ethers)
+      const tokenContract = getContractInstance(tokenAddress, ERC20ABI, ethers)
 
       if (!connectedFinanceApp) {
         return
@@ -121,7 +121,7 @@ export default function useActions() {
 
   const approveTokenAmount = useCallback(
     async (tokenAddress, depositAmount, onDone = noop) => {
-      const tokenContract = getContractInstance(tokenAddress, erc20ABI, ethers)
+      const tokenContract = getContractInstance(tokenAddress, ERC20ABI, ethers)
       if (!tokenContract || !connectedFinanceApp) {
         return
       }

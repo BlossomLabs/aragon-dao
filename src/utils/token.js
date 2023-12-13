@@ -1,4 +1,12 @@
+import { erc20ABI as connectERC20ABI } from '@1hive/connect-react'
 import { round } from './math-utils'
+
+export const ERC20ABI = [
+  ...connectERC20ABI,
+  'function symbol() public view returns (string)',
+  'function decimals() public view returns (uint8)',
+  'function totalSupply() view returns (uint256)',
+]
 
 export async function getUserBalanceAt(
   connectedAccount,
