@@ -16,7 +16,6 @@ import { fromDecimals, toDecimals } from '@/utils/math-utils'
 import AmountInput from '../../../../components/AmountInput'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensInfo from '@/components/RequiredTokensInfo'
-import { FinancialComplianceFormDisclaimer } from '@/components/Disclaimers'
 import { useRequiredFeesForAction } from '@/hooks/shared/useRequiredFeesForAction'
 
 const NO_ERROR = Symbol('NO_ERROR')
@@ -209,15 +208,9 @@ class Withdrawal extends React.Component {
             wide
           />
         </Field>
-        <FinancialComplianceFormDisclaimer
-          css={`
-            margin: ${2 * GU}px 0;
-          `}
-        >
-          <Button disabled={disabled} mode="strong" type="submit" wide>
-            Submit withdrawal
-          </Button>
-        </FinancialComplianceFormDisclaimer>
+        <Button disabled={disabled} mode="strong" type="submit" wide>
+          Submit withdrawal
+        </Button>
         {Boolean(feeForwarder && tokenBalance) && (
           <RequiredTokensInfo
             feeForwarder={feeForwarder}

@@ -3,30 +3,15 @@ import { useWallet } from '@/providers/Wallet'
 import { Checkbox, GU, Link } from '@aragon/ui'
 import React, { useEffect, useState } from 'react'
 
-const PARTICIPATION_DISCLAIMER = 'ARAGON_DAO_PARTICIPATION_TERMS'
-const TERMS_OF_USE_DISCLAIMER = 'ARAGON_DAO_TERMS_OF_USE'
-const FINANCIAL_COMPLIANCE_FORM = 'ARAGON_DAO_FINANCIAL_COMPLIANCE_FORM'
+const COVENANT_DISCLAIMER = 'COVENANT_DISCLAIMER'
 
 const PLACEHOLDER = '%s'
 
 const DISCLAIMERS = {
-  [PARTICIPATION_DISCLAIMER]: {
+  [COVENANT_DISCLAIMER]: {
     text: `I have read and accept the ${PLACEHOLDER}.`,
-    link:
-      'https://bafybeidgxjx5v3cka5uhz3k7hqx43xprtjxlpccbn3ud2jixalqvz52hla.ipfs.nftstorage.link/AragonDAOpaprticipationagreementpublicversion.html',
-    label: 'Aragon DAO Participation Agreement',
-  },
-  [TERMS_OF_USE_DISCLAIMER]: {
-    text: `I have read and accept the ${PLACEHOLDER}.`,
-    link:
-      'https://bafybeidgxjx5v3cka5uhz3k7hqx43xprtjxlpccbn3ud2jixalqvz52hla.ipfs.nftstorage.link/AragonDAOproposaltermspublicversion.docx.html',
-    label: 'Aragon DAO Terms of Use',
-  },
-  [FINANCIAL_COMPLIANCE_FORM]: {
-    text: `I have completed a ${PLACEHOLDER} for this Withdraw Request.`,
-    link: 'https://aragonassociation.typeform.com/to/OzRifY1N',
-    label: 'Financial Compliance Form',
-    startUnchecked: true,
+    link: 'https://ipfs.io/ipfs/QmUtprKHxscpcDV5W6YMz4Bu3oMzvqzgS7Bx6YyVfZt6ps',
+    label: "Common's DAO Covenant",
   },
 }
 
@@ -153,27 +138,9 @@ export function DisclaimerLayout({ children, types, ...props }) {
   )
 }
 
-export function ParticipationDisclaimer({ children, ...props }) {
+export function CovenantDisclaimer({ children }) {
   return (
-    <DisclaimerLayout types={[PARTICIPATION_DISCLAIMER]} {...props}>
-      {children}
-    </DisclaimerLayout>
-  )
-}
-
-export function TermsOfUseDisclaimer({ children }) {
-  return (
-    <DisclaimerLayout types={[TERMS_OF_USE_DISCLAIMER]}>
-      {children}
-    </DisclaimerLayout>
-  )
-}
-
-export function FinancialComplianceFormDisclaimer({ children }) {
-  return (
-    <DisclaimerLayout
-      types={[TERMS_OF_USE_DISCLAIMER, FINANCIAL_COMPLIANCE_FORM]}
-    >
+    <DisclaimerLayout types={[COVENANT_DISCLAIMER]}>
       {children}
     </DisclaimerLayout>
   )

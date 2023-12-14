@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { Button, Field, GU, Info, TextInput, textStyle } from '@aragon/ui'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensInfo from '@/components/RequiredTokensInfo'
-import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
+import { CovenantDisclaimer } from '@/components/Disclaimers'
 import { URL_REGEX } from '@/utils/text-utils'
 import { buildContext } from '@/utils/evmscript'
 import { ValidationError } from '@/components/ValidationError'
@@ -102,7 +102,7 @@ function CreateNewVote({ getTransactions }) {
         any direct repercussions on the organization.
       </Info>
 
-      <TermsOfUseDisclaimer>
+      <CovenantDisclaimer>
         <Button
           mode="strong"
           wide
@@ -114,7 +114,7 @@ function CreateNewVote({ getTransactions }) {
         >
           Create new Proposal
         </Button>
-      </TermsOfUseDisclaimer>
+      </CovenantDisclaimer>
 
       {feeForwarder && tokenBalance && (
         <RequiredTokensInfo

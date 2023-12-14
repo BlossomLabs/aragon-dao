@@ -27,7 +27,6 @@ import ToggleContent from '../ToggleContent'
 import TokenSelector from '../TokenSelector'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
-import { TermsOfUseDisclaimer } from '@/components/Disclaimers'
 import { ValidationError } from '@/components/ValidationError'
 import { Contract } from 'ethers'
 import { ERC20ABI } from '@/utils/token'
@@ -348,15 +347,9 @@ class Deposit extends React.Component {
           )}
         </Info>
 
-        <TermsOfUseDisclaimer
-          css={`
-            margin: ${2 * GU}px 0;
-          `}
-        >
-          <Button wide mode="strong" type="submit" disabled={disabled}>
-            Submit deposit
-          </Button>
-        </TermsOfUseDisclaimer>
+        <Button wide mode="strong" type="submit" disabled={disabled}>
+          Submit deposit
+        </Button>
         {errorMessage && <ValidationError message={errorMessage} />}
 
         <VSpace size={2} />
