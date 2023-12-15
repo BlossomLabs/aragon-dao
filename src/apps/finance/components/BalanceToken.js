@@ -47,7 +47,16 @@ function BalanceToken({
             `}
           />
         )}
-        {symbol || '?'}
+        <div
+          css={`
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          `}
+        >
+          {symbol || '?'}
+        </div>
       </div>
       <div>
         <div

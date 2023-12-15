@@ -1,16 +1,28 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { DropDown, GU, DateRangePicker } from '@aragon/ui'
+import TokenSelectorInstance from './TokenSelectorInstance'
 
 const TransfersFilters = ({
   dateRangeFilter,
   onDateRangeChange,
   onTokenChange,
-  symbols,
+  tokens,
   tokenFilter,
   transferTypes,
   transferTypeFilter,
   onTransferTypeChange,
 }) => {
+  const tokenInstances = useMemo(() => {
+    return tokens.map(({ address, name, logoUrl, symbol }) => (
+      <TokenSelectorInstance
+        address={address}
+        name={name}
+        logoUrl={logoUrl}
+        symbol={symbol}
+      />
+    ))
+  }, [tokens])
+
   return (
     <div
       css={`
@@ -31,7 +43,7 @@ const TransfersFilters = ({
       <DropDown
         placeholder="Token"
         header="Token"
-        items={symbols}
+        items={tokenInstances}
         selected={tokenFilter}
         onChange={onTokenChange}
         width="128px"

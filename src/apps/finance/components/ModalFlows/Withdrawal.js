@@ -1,5 +1,4 @@
 import React, { useLayoutEffect, useState } from 'react'
-import styled from 'styled-components'
 import {
   DropDown,
   IconCross,
@@ -13,10 +12,11 @@ import {
   Button,
 } from '@aragon/ui'
 import { fromDecimals, toDecimals } from '@/utils/math-utils'
-import AmountInput from '../../../../components/AmountInput'
+import AmountInput from '@/components/AmountInput'
 import { useMultiModal } from '@/components/MultiModal/MultiModalProvider'
 import RequiredTokensInfo from '@/components/RequiredTokensInfo'
 import { useRequiredFeesForAction } from '@/hooks/shared/useRequiredFeesForAction'
+import TokenSelectorInstance from '../TokenSelectorInstance'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const RECEIPIENT_NOT_ADDRESS_ERROR = Symbol('RECEIPIENT_NOT_ADDRESS_ERROR')
@@ -143,7 +143,14 @@ class Withdrawal extends React.Component {
     const { amount, recipient, reference, selectedToken } = this.state
 
     const tokens = this.nonZeroTokens()
-    const symbols = tokens.map(({ symbol }) => symbol)
+    const tokenInstances = tokens.map(({ address, name, symbol, logoUrl }) => (
+      <TokenSelectorInstance
+        address={address}
+        name={name}
+        logoUrl={logoUrl}
+        symbol={symbol}
+      />
+    ))
 
     let errorMessage
     if (recipient.error === RECEIPIENT_NOT_ADDRESS_ERROR) {
@@ -178,28 +185,25 @@ class Withdrawal extends React.Component {
             onChange={this.handleRecipientUpdate}
           />
         </Field>
+        <Field label="Token" required>
+          <DropDown
+            header="Token"
+            placeholder="Token"
+            items={tokenInstances}
+            selected={selectedToken}
+            onChange={this.handleSelectToken}
+            wide
+          />
+        </Field>
         <Field label="Amount" required>
-          <CombinedInput>
-            <AmountInput
-              onChange={this.handleAmountUpdate}
-              onMaxClick={this.setMaxUserBalance}
-              showMax={isVisibleMaxButton}
-              value={amount.value}
-              required
-              wide
-            />
-
-            <DropDown
-              header="Token"
-              placeholder="Token"
-              items={symbols}
-              selected={selectedToken}
-              onChange={this.handleSelectToken}
-              css={`
-                margin-left: ${1.5 * GU}px;
-              `}
-            />
-          </CombinedInput>
+          <AmountInput
+            onChange={this.handleAmountUpdate}
+            onMaxClick={this.setMaxUserBalance}
+            showMax={isVisibleMaxButton}
+            value={amount.value}
+            required
+            wide
+          />
         </Field>
         <Field label="Reference (optional)">
           <TextInput
@@ -230,10 +234,6 @@ class Withdrawal extends React.Component {
     )
   }
 }
-
-const CombinedInput = styled.div`
-  display: flex;
-`
 
 const ValidationError = ({ message }) => {
   const theme = useTheme()

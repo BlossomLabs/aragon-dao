@@ -93,7 +93,6 @@ function useFilteredTransfers({ transactions, tokens }) {
       transactions,
     ]
   )
-  const symbols = tokensToFilter.map(({ symbol }) => symbol)
   const emptyResultsViaFilters =
     !filteredTransfers &&
     (selectedToken > 0 || selectedTransferType > 0 || selectedDateRange.start)
@@ -110,7 +109,7 @@ function useFilteredTransfers({ transactions, tokens }) {
     selectedDateRange,
     selectedToken,
     selectedTransferType,
-    symbols,
+    tokensToFilter,
     transferTypes: TRANSFER_TYPES_LABELS,
   }
 }

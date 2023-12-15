@@ -52,7 +52,7 @@ async function fetchTokensMarketData(tokenAddresses, network) {
 
 export function useFetchTokensMarketData(tokenAddressOrAddresses) {
   const { network } = useNetwork()
-  const tokensKey = tokenAddressOrAddresses.join('-')
+  const tokensKey = tokenAddressOrAddresses?.join('-')
 
   return useConnect(
     () =>

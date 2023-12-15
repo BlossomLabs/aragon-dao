@@ -1,50 +1,10 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Box, GU, textStyle, useTheme, useViewport } from '@aragon/ui'
 import BalanceToken from './BalanceToken'
-import { useFetchTokensMarketData } from '@/hooks/shared/useFetchTokensMarketData'
-import { getConvertedAmount } from '../lib/conversion-utils'
-import { BN } from 'bn.js'
-
-// Prepare the balances for the BalanceToken component
-function useBalanceItems(balances) {
-  const tokenAddresses = balances.map(({ address }) => address)
-  const [tokensMarketData, tokensMarketDataStatus] = useFetchTokensMarketData(
-    tokenAddresses
-  )
-
-  const balanceItems = useMemo(() => {
-    return balances.map(({ address, balance, decimals, symbol }) => {
-      let tokenMarketData =
-        tokensMarketData && tokensMarketData[address]
-          ? {
-              convertedAmount: getConvertedAmount(
-                balance,
-                tokensMarketData[address].price,
-                decimals
-              ),
-              logoUrl: tokensMarketData[address].logo,
-            }
-          : {
-              convertedAmount: new BN('-1'),
-            }
-
-      return {
-        ...tokenMarketData,
-        address,
-        balance,
-        decimals,
-        symbol,
-      }
-    })
-  }, [balances, tokensMarketData])
-
-  return [balanceItems, tokensMarketDataStatus]
-}
 
 function Balances({ tokenBalances }) {
   const theme = useTheme()
   const { below } = useViewport()
-  const [balanceItems] = useBalanceItems(tokenBalances)
   const compact = below('medium')
 
   return (
@@ -64,7 +24,7 @@ function Balances({ tokenBalances }) {
               padding: ${1 * GU}px;
             `}
           >
-            {!balanceItems?.length ? (
+            {!tokenBalances?.length ? (
               <div
                 css={`
                   display: flex;
@@ -89,7 +49,7 @@ function Balances({ tokenBalances }) {
                     : ''}
                 `}
               >
-                {balanceItems.map(
+                {tokenBalances.map(
                   ({
                     address,
                     balance,

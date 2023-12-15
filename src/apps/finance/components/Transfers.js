@@ -65,7 +65,7 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
     selectedDateRange,
     selectedToken,
     selectedTransferType,
-    symbols,
+    tokensToFilter,
     transferTypes,
   } = useFilteredTransfers({ transactions, tokens })
 
@@ -102,6 +102,7 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
     return 'default'
   }, [emptyResultsViaFilters, isSyncing, transactions.length])
 
+  console.log(tokensToFilter)
   return (
     <DataView
       status={dataViewStatus}
@@ -137,7 +138,7 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
               tokenFilter={selectedToken}
               transferTypeFilter={selectedTransferType}
               transferTypes={transferTypes}
-              symbols={symbols}
+              tokens={tokensToFilter}
             />
           )}
         </React.Fragment>

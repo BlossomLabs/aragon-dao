@@ -9,6 +9,8 @@ import { Contract, constants } from 'ethers'
 import { useInterval } from '@/hooks/shared/useInterval'
 import { useWallet } from '@/providers/Wallet'
 import { ERC20ABI } from '@/utils/token'
+import { useFetchTokensMarketData } from '@/hooks/shared/useFetchTokensMarketData'
+import { getConvertedAmount } from '../lib/conversion-utils'
 
 const TOKENS_CACHE = {}
 
@@ -32,7 +34,7 @@ async function getOrLoadToken(address, provider) {
   return TOKENS_CACHE[address]
 }
 
-const useBalances = (pollingTime = 5000) => {
+const useVaultTokens = (pollingTime = 5000) => {
   const [tokens, setTokens] = useState()
   const [isFirstBalanceFetching, setIsFirstBalancesFetching] = useState(true)
   const { ethers } = useWallet()
@@ -79,6 +81,9 @@ const useBalances = (pollingTime = 5000) => {
 
     return tokensWithData
   }, [connectedFinanceApp, ethers, financeTokenBalances])
+  const [tokensMarketData, tokensMarketDataStatus] = useFetchTokensMarketData(
+    tokensData?.map(({ address }) => address)
+  )
   const startBalancesFetching = tokensData && vaultAddress
   const pollingTime_ = startBalancesFetching
     ? isFirstBalanceFetching
@@ -88,11 +93,14 @@ const useBalances = (pollingTime = 5000) => {
   const loading =
     tokensDataStatus.loading ||
     vaultAddressStatus.loading ||
-    financeTokenBalancesStatus.loading
+    financeTokenBalancesStatus.loading ||
+    tokensMarketDataStatus.loading
   const error =
     tokensDataStatus.error ||
     vaultAddressStatus.error ||
-    financeTokenBalancesStatus.error
+    financeTokenBalancesStatus.error ||
+    tokensMarketDataStatus.error
+  const tokensKey = tokens?.map(({ balance }) => balance.toString()).join('-')
 
   useInterval(async () => {
     if (isFirstBalanceFetching && mounted()) {
@@ -133,7 +141,33 @@ const useBalances = (pollingTime = 5000) => {
     }
   }, pollingTime_)
 
-  return [useMemo(() => tokens, [tokens]), { loading, error }]
+  return [
+    useMemo(
+      () =>
+        tokens?.map(t => {
+          const marketData = tokensMarketData?.[t.address]
+            ? {
+                convertedAmount: getConvertedAmount(
+                  t.balance,
+                  tokensMarketData[t.address].price,
+                  t.decimals
+                ),
+                logoUrl: tokensMarketData[t.address].logo,
+              }
+            : {
+                convertedAmount: new BN('-1'),
+              }
+
+          return {
+            ...t,
+            ...marketData,
+          }
+        }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [tokensKey, tokensMarketData]
+    ),
+    { loading, error },
+  ]
 }
 
-export default useBalances
+export default useVaultTokens

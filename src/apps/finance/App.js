@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { Button, IconPlus, useViewport } from '@aragon/ui'
 import Balances from './components/Balances'
 import Transfers from './components/Transfers'
-import useBalances from './hooks/useBalances'
+import useVaultTokens from './hooks/useVaultTokens'
 import MultiModal from '@/components/MultiModal/MultiModal'
 import NewTransferScreens from './components/ModalFlows/NewTransferScreens'
 import AppHeader from '@/components/AppHeader'
@@ -14,7 +14,7 @@ const App = () => {
   const { below } = useViewport()
   const compactMode = below('medium')
 
-  const [tokenBalances, { loading: loadingTokenBalances }] = useBalances()
+  const [vaultTokens, { loading: loadingVaultTokens }] = useVaultTokens()
   const [modalVisible, setModalVisible] = useState(false)
 
   const handleShowModal = useCallback(() => {
@@ -27,8 +27,8 @@ const App = () => {
 
   return (
     <>
-      {!tokenBalances ? (
-        <LoadingAppScreen isLoading={loadingTokenBalances || !tokenBalances} />
+      {!vaultTokens ? (
+        <LoadingAppScreen isLoading={loadingVaultTokens || !vaultTokens} />
       ) : (
         <>
           <AppHeader
@@ -45,13 +45,13 @@ const App = () => {
               )
             }
           />
-          <Balances tokenBalances={tokenBalances} />
-          <Transfers tokens={tokenBalances} />
+          <Balances tokenBalances={vaultTokens} />
+          <Transfers tokens={vaultTokens} />
         </>
       )}
 
       <MultiModal visible={modalVisible} onClose={handleHideModal}>
-        <NewTransferScreens tokens={tokenBalances} opened={modalVisible} />
+        <NewTransferScreens tokens={vaultTokens} opened={modalVisible} />
       </MultiModal>
     </>
   )

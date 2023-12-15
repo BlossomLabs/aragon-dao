@@ -101,11 +101,11 @@ class TokenSelector extends React.Component {
   }
   getTokenItems() {
     const tokenItems = this.props.tokens.map(
-      ({ address, name, symbol, verified }) => (
+      ({ address, name, symbol, logoUrl }) => (
         <TokenSelectorInstance
           address={address}
           name={name}
-          showIcon={verified}
+          logoUrl={logoUrl}
           symbol={symbol}
         />
       )
