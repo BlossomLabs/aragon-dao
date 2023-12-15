@@ -32,12 +32,12 @@ function getPreActionDescription(type, tx, { feeTokens } = {}) {
 
 export function useDescribeIntent() {
   const { feeForwarders } = useFeeForwarders()
-  const feeTokens = Object.keys(feeForwarders ?? {})?.map(
-    forwarderAddress => feeForwarders[forwarderAddress].feeToken
-  )
 
   const describeIntent = useCallback(
     (intent, txDescription) => {
+      const feeTokens = Object.keys(feeForwarders ?? {})?.map(
+        forwarderAddress => feeForwarders[forwarderAddress].feeToken
+      )
       return {
         ...intent,
         transactions: intent.transactions.map(tx => {
@@ -58,7 +58,8 @@ export function useDescribeIntent() {
         }),
       }
     },
-    [feeTokens]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [feeForwarders]
   )
 
   return describeIntent
