@@ -1,15 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import BN from 'bn.js'
-import {
-  GU,
-  Help,
-  formatTokenAmount,
-  textStyle,
-  useTheme,
-  tokenIconUrl,
-} from '@aragon/ui'
-import { useNetwork } from '@/hooks/shared'
+import { GU, Help, formatTokenAmount, textStyle, useTheme } from '@aragon/ui'
 
 function BalanceToken({
   address,
@@ -18,9 +10,9 @@ function BalanceToken({
   convertedAmount,
   decimals,
   symbol,
+  logoUrl,
 }) {
   const theme = useTheme()
-  const network = useNetwork()
 
   const amountFormatted = formatTokenAmount(amount, decimals, {
     digits: decimals,
@@ -44,12 +36,12 @@ function BalanceToken({
           text-transform: uppercase;
         `}
       >
-        {address && (
+        {Boolean(address && logoUrl) && (
           <img
             alt=""
             width="20"
             height="20"
-            src={tokenIconUrl(address, symbol, network?.type)}
+            src={logoUrl}
             css={`
               margin-right: ${0.75 * GU}px;
             `}

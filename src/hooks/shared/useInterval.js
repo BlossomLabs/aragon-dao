@@ -19,5 +19,6 @@ export function useInterval(callback, delay) {
     const id = setInterval(() => savedCallback.current(), delay)
 
     return () => clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [delay])
 }

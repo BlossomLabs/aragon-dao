@@ -116,7 +116,7 @@ const useBalances = (pollingTime = 5000) => {
             tokenData.address,
             ethers
           )
-          const vaultBalance = tokenContract.balanceOf(vaultAddress)
+          const vaultBalance = await tokenContract.balanceOf(vaultAddress)
 
           return {
             ...tokenData,
