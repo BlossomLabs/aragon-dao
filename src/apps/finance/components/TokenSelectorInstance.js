@@ -10,6 +10,7 @@ const TokenSelectorInstance = React.memo(function TokenSelectorInstance({
   name,
   symbol,
   logoUrl,
+  showAddress = true,
 }) {
   return (
     <div
@@ -23,7 +24,7 @@ const TokenSelectorInstance = React.memo(function TokenSelectorInstance({
       ) : (
         <div
           css={`
-            width: ${3 * GU}px;
+            width: ${showAddress ? 3 * GU : 0}px;
           `}
         />
       )}
@@ -52,9 +53,9 @@ const TokenSelectorInstance = React.memo(function TokenSelectorInstance({
           ({name})
         </span>
       )}
-      {!addressesEqual(address, ETHER_TOKEN_FAKE_ADDRESS) && (
-        <LocalIdentityBadge badgeOnly compact entity={address} />
-      )}
+      {Boolean(
+        !addressesEqual(address, ETHER_TOKEN_FAKE_ADDRESS) && showAddress
+      ) && <LocalIdentityBadge badgeOnly compact entity={address} />}
     </div>
   )
 })

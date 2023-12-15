@@ -23,7 +23,11 @@ function normalizeTokenAddresses(tokenAddressOrAddresses) {
   ]
 }
 
-async function fetchTokensMarketData(tokenAddresses, network) {
+export async function fetchTokensMarketData(tokenAddresses, network) {
+  if (!PORTALS_API_KEY) {
+    return
+  }
+
   const normalizedTokenAddresses = normalizeTokenAddresses(tokenAddresses)
   const tokenIds = normalizedTokenAddresses
     .map(address => `${network}:${address}`)
@@ -56,7 +60,7 @@ export function useFetchTokensMarketData(tokenAddressOrAddresses) {
 
   return useConnect(
     () =>
-      PORTALS_API_KEY && tokenAddressOrAddresses?.length && network
+      tokenAddressOrAddresses?.length && network
         ? fetchTokensMarketData(tokenAddressOrAddresses, network)
         : undefined,
     [tokensKey, network]

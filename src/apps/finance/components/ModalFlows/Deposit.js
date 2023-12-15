@@ -9,7 +9,6 @@ import {
   Info,
   Link,
   TextInput,
-  TokenBadge,
   GU,
   textStyle,
   useTheme,
@@ -30,6 +29,8 @@ import LoadingSkeleton from '@/components/Loading/LoadingSkeleton'
 import { ValidationError } from '@/components/ValidationError'
 import { Contract } from 'ethers'
 import { ERC20ABI } from '@/utils/token'
+import { fetchTokensMarketData } from '@/hooks/shared/useFetchTokensMarketData'
+import TokenSelectorInstance from '../TokenSelectorInstance'
 
 const NO_ERROR = Symbol('NO_ERROR')
 const BALANCE_NOT_ENOUGH_ERROR = Symbol('BALANCE_NOT_ENOUGH_ERROR')
@@ -151,7 +152,9 @@ class Deposit extends React.Component {
 
     // ETH
     if (addressesEqual(address, ETHER_TOKEN_FAKE_ADDRESS)) {
-      const userBalance = await this.props.provider.getBalance(connectedAccount)
+      const userBalance = await Promise.all([
+        this.props.provider.getBalance(connectedAccount),
+      ])
 
       return {
         decimals: network?.nativeCurrency?.decimals || 18,
@@ -174,18 +177,12 @@ class Deposit extends React.Component {
         userBalance: '-1',
       }
     }
-
-    const fetchSymbol = () => {
-      return getTokenSymbol(token).catch(() => '')
-    }
-    const fetchDecimals = async () => {
-      const decimals = await token.decimals()
-      return parseInt(decimals, 10)
-    }
-
-    const [tokenSymbol, tokenDecimals] = await Promise.all([
-      fetchSymbol(),
-      fetchDecimals(),
+    const [tokenSymbol, tokenDecimals, tokenMarketData] = await Promise.all([
+      getTokenSymbol(token).catch(() => ''),
+      token.decimals().then(rawDecimals => parseInt(rawDecimals, 10)),
+      fetchTokensMarketData(address, network?.network).then(
+        tokensMarketData => tokensMarketData?.[address.toLowerCase()]
+      ),
     ])
 
     return {
@@ -193,6 +190,8 @@ class Deposit extends React.Component {
       decimals: tokenDecimals,
       loading: false,
       symbol: tokenSymbol,
+      logoUrl: tokenMarketData?.logo,
+      price: tokenMarketData?.price,
     }
   }
   validateInputs({ amount, selectedToken } = {}) {
@@ -403,7 +402,7 @@ class Deposit extends React.Component {
 const SelectedTokenBalance = ({ selectedToken }) => {
   const theme = useTheme()
   const {
-    data: { decimals, loading, symbol, userBalance },
+    data: { decimals, loading, symbol, userBalance, logoUrl },
     value: address,
   } = selectedToken
 
@@ -439,22 +438,26 @@ const SelectedTokenBalance = ({ selectedToken }) => {
           <IconCross size="tiny" /> Your {symbol} balance could not be found.
         </div>
       ) : (
-        <span
+        <div
           css={`
             ${textStyle('body3')};
             color: ${theme.contentSecondary};
+            font-weight: 600;
+            display: flex;
+            gap: ${0.5 * GU}px;
           `}
         >
-          {'You have '}
-          <span
-            css={`
-              font-weight: 600;
-            `}
-          >
+          <div>
+            {'You have '}
             {fromDecimals(userBalance.toString(), decimals)}{' '}
-            <TokenBadge address={address} symbol={symbol} />
-          </span>
-        </span>
+          </div>
+          <TokenSelectorInstance
+            address={address}
+            symbol={symbol}
+            logoUrl={logoUrl}
+            showAddress={false}
+          />
+        </div>
       )}
     </div>
   )

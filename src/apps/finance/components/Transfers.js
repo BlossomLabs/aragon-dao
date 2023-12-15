@@ -102,7 +102,6 @@ const Transfers = React.memo(({ tokens, transactions, isSyncing }) => {
     return 'default'
   }, [emptyResultsViaFilters, isSyncing, transactions.length])
 
-  console.log(tokensToFilter)
   return (
     <DataView
       status={dataViewStatus}
