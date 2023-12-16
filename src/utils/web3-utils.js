@@ -1,4 +1,3 @@
-import { ethers, providers as Providers } from 'ethers'
 import { env } from '@/environment'
 import {
   BLOCKSCOUT_NETWORK_TYPES,
@@ -51,12 +50,6 @@ const ETH_ADDRESS_SPLIT_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 const ETH_ADDRESS_TEST_REGEX = /(0x[a-fA-F0-9]{40}(?:\b|\.|,|\?|!|;))/g
 
 const CHAIN_ID = env('CHAIN_ID')
-const STATIC_ETH_NODE = env('STATIC_ETH_NODE')
-const LOCAL_ETH_NODES = ['http://127.0.0.1:8545', 'http://localhost:8545']
-
-const ETHERS_UNSUPPORTED_CHAIN_IDS = [100]
-
-let STATIC_PROVIDER = null
 
 export function getNetworkType(chainId = CHAIN_ID) {
   chainId = String(chainId)
@@ -120,58 +113,6 @@ export function shortenAddress(address, charsLength = 4) {
     address.slice(0, charsLength + prefixLength) +
     '…' +
     address.slice(-charsLength)
-  )
-}
-
-export const getStaticProvider = () => {
-  if (STATIC_PROVIDER) {
-    return STATIC_PROVIDER
-  }
-
-  const provider = new Providers.StaticJsonRpcProvider(STATIC_ETH_NODE)
-
-  STATIC_PROVIDER = provider
-
-  return provider
-}
-
-function buildProviderAPIKeys() {
-  const alchemy = env('ALCHEMY_API_KEY')
-  const infura = env('INFURA_API_KEY')
-  const pocket = env('POCKET_API_KEY')
-  const ankr = env('ANKR_API_KEY')
-
-  const apiKeysDefined = alchemy || infura || pocket || ankr
-
-  if (!apiKeysDefined) {
-    return undefined
-  }
-
-  /**
-   * Selectively use providers with defined API keys. Undefined keys are replaced with a dash ('-')
-   * to prevent ethers.js from defaulting to shared API keys. This ensures ethers.js only attempts
-   * JSON-RPC requests with specified providers.
-   */
-  return {
-    alchemy: alchemy ?? '-',
-    infura: infura ?? '-',
-    pocket: pocket ?? '-',
-    ankr: ankr ?? '-',
-    etherscan: '-',
-  }
-}
-
-export function getDefaultProvider(chainId = CHAIN_ID) {
-  if (
-    ETHERS_UNSUPPORTED_CHAIN_IDS.includes(chainId) ||
-    LOCAL_ETH_NODES.includes(STATIC_ETH_NODE)
-  ) {
-    return getStaticProvider()
-  }
-
-  return ethers.getDefaultProvider(
-    getEthersNetwork(chainId),
-    buildProviderAPIKeys()
   )
 }
 

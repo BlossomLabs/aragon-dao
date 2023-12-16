@@ -43,7 +43,6 @@ Below you can find a list of all the required variables:
 | `CHAIN_ID`                | The ID of the chain where the DAO is located on.                                        |
 | `DAO_ID`                  | The Aragon ID (ENS name) or address of the DAO.                                         |
 | `GUARDIANS_TOKEN_MANAGER` | The address of the Guardian Token Manager app.                                          |
-| `STATIC_ETH_NODE` | Ethereum JSON-RPC endpoint                                          |
 
 
 And here a list of optional variables:
