@@ -19,8 +19,7 @@ import { useAppTheme } from '@/providers/AppTheme'
 import { ICON_DARK_MODE } from '@/utils/assets-utils'
 import { useAsset } from '@/hooks/shared/useAsset'
 
-const GET_ANT_LINK =
-  'https://v2.info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae'
+const GET_TEC_LINK = 'https://convert.tecommons.org'
 
 function Header({ showMenu, onMenuClick, ...props }) {
   const theme = useTheme()
@@ -77,7 +76,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
             >
               <NavItem>
                 <Link
-                  href={GET_ANT_LINK}
+                  href={GET_TEC_LINK}
                   css={`
                     display: flex;
                     align-items: center;
@@ -87,7 +86,7 @@ function Header({ showMenu, onMenuClick, ...props }) {
                     ${unselectable};
                   `}
                 >
-                  Get ANT
+                  Get TEC
                   {!compactMode && (
                     <IconExternal
                       size="small"
