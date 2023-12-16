@@ -1,9 +1,9 @@
+import DarkLogo from '@/assets/dark/commons-logo.svg'
+import LightLogo from '@/assets/light/commons-logo.png'
+import LightLogoCompact from '@/assets/light/commons-logo-compact.png'
+import DarkLogoCompact from '@/assets/dark/commons-logo-compact.png'
 import IconDarkMode from '@/assets/light/icon_dark_mode.svg'
 import IconDarkModeDark from '@/assets/dark/icon_dark_mode.svg'
-import LogoTypeCompact from '@/assets/light/logo_type_compact.svg'
-import LogoTypeCompactDark from '@/assets/dark/logo_type_compact.svg'
-import LogoType from '@/assets/light/logo_type.svg'
-import LogoTypeDark from '@/assets/dark/logo_type.svg'
 
 export const ICON_DARK_MODE = Symbol('ICON_DARK_MODE')
 export const LOGO_TYPE_COMPACT = Symbol('LOGO_TYPE_COMPACT')
@@ -15,11 +15,11 @@ export default {
     dark: IconDarkModeDark,
   },
   [LOGO_TYPE_COMPACT]: {
-    light: LogoTypeCompact,
-    dark: LogoTypeCompactDark,
+    light: LightLogoCompact,
+    dark: DarkLogoCompact,
   },
   [LOGO_TYPE]: {
-    light: LogoType,
-    dark: LogoTypeDark,
+    light: LightLogo,
+    dark: DarkLogo,
   },
 }

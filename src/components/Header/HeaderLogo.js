@@ -19,7 +19,7 @@ function HeaderLogo() {
         align-items: center;
       `}
     >
-      <img alt="" src={logo} width={compactMode ? 12 * GU : 23 * GU} />
+      <img alt="" src={logo} width={compactMode ? 6 * GU : 23 * GU} />
     </div>
   )
 }
